@@ -65,8 +65,10 @@
 #include <gtk/gtk.h>
 #include <libsoup/soup.h>
 
+/* CHB
 #define WNCK_I_KNOW_THIS_IS_UNSTABLE
 #include <libwnck/libwnck.h>
+*/
 
 #include <webkit2/webkit2.h>
 
@@ -86,184 +88,214 @@ static void ephy_window_view_popup_windows_cb	(GtkAction *action,
 
 static const GtkActionEntry ephy_menu_entries [] = {
 
-	/* Toplevel */
+        /* Toplevel */
 
-	{ "Bookmarks", NULL, N_("_Bookmarks") },
-	{ "PopupAction", NULL, "" },
-	{ "PagePopupAction", NULL, "" },
-	{ "NotebookPopupAction", NULL, "" },
+        { "Bookmarks", NULL, N_("_Bookmarks") },
+        { "PopupAction", NULL, "" },
+        { "PagePopupAction", NULL, "" },
+        { "NotebookPopupAction", NULL, "" },
 
-	/* File actions. */
+        // File actions.
 
-	{ "FileNewWindow", NULL, N_("_New Window"), "<control>N", NULL,
-	  G_CALLBACK (window_cmd_file_new_window) },
-	{ "FileNewWindowIncognito", NULL, N_("New _Incognito Window"), "<control><shift>N", NULL,
-	  G_CALLBACK (window_cmd_file_new_incognito_window) },
-	{ "FileOpen", NULL, N_("_Open…"), "<control>O", NULL,
-	  G_CALLBACK (window_cmd_file_open) },
-	{ "FileSaveAs", NULL, N_("Save _As…"), "<shift><control>S", NULL,
-	  G_CALLBACK (window_cmd_file_save_as) },
-	{ "FileSaveAsApplication", NULL, N_("Save As _Web Application…"), "<shift><control>A", NULL,
-	  G_CALLBACK (window_cmd_file_save_as_application) },
-	{ "FilePrint", NULL, N_("_Print…"), "<control>P", NULL,
-	  G_CALLBACK (window_cmd_file_print) },
-	{ "FileSendTo", NULL, N_("S_end Link by Email…"), NULL, NULL,
-	  G_CALLBACK (window_cmd_file_send_to) },
-	{ "FileCloseTab", NULL, N_("_Close"), "<control>W", NULL,
-	  G_CALLBACK (window_cmd_file_close_window) },
-	{ "FileQuit", NULL, N_("_Quit"), "<control>Q", NULL,
-	  G_CALLBACK (window_cmd_file_quit) },
+        { "FileNewWindow", NULL, N_("_New Window"), NULL, // CHB "<control>N",
+        NULL,
+          G_CALLBACK (window_cmd_file_new_window) },
+        { "FileNewWindowIncognito", NULL, N_("New _Incognito Window"), NULL, // CHB "<control><shift>N",
+        NULL,
+          G_CALLBACK (window_cmd_file_new_incognito_window) },
+        { "FileOpen", NULL, N_("_Open…"), NULL, // CHB "<control>O",
+        NULL,
+          G_CALLBACK (window_cmd_file_open) },
+        { "FileSaveAs", NULL, N_("Save _As…"), NULL, // CHB "<shift><control>S",
+        NULL,
+          G_CALLBACK (window_cmd_file_save_as) },
+        { "FileSaveAsApplication", NULL, N_("Save As _Web Application…"), NULL, // CHB "<shift><control>A",
+        NULL,
+          G_CALLBACK (window_cmd_file_save_as_application) },
+        { "FilePrint", NULL, N_("_Print…"), NULL, // CHB "<control>P",
+        NULL,
+          G_CALLBACK (window_cmd_file_print) },
+        { "FileSendTo", NULL, N_("S_end Link by Email…"), NULL, NULL,
+          G_CALLBACK (window_cmd_file_send_to) },
+        { "FileCloseTab", NULL, N_("_Close"), NULL, // CHB "<control>W",
+        NULL,
+          G_CALLBACK (window_cmd_file_close_window) },
+        { "FileQuit", NULL, N_("_Quit"), NULL, // CHB "<control>Q",
+        NULL,
+          G_CALLBACK (window_cmd_file_quit) },
 
-	/* Edit actions. */
+        // Edit actions.
 
-	{ "EditUndo", NULL, N_("_Undo"), "<control>Z", NULL,
-	  G_CALLBACK (window_cmd_edit_undo) },
-	{ "EditRedo", NULL, N_("Re_do"), "<shift><control>Z", NULL,
-	  G_CALLBACK (window_cmd_edit_redo) },
-	{ "EditCut", NULL, N_("Cu_t"), "<control>X", NULL,
-	  G_CALLBACK (window_cmd_edit_cut) },
-	{ "EditCopy", NULL, N_("_Copy"), "<control>C", NULL,
-	  G_CALLBACK (window_cmd_edit_copy) },
-	{ "EditPaste", NULL, N_("_Paste"), "<control>V", NULL,
-	  G_CALLBACK (window_cmd_edit_paste) },
-	{ "EditDelete", NULL, NULL, NULL, NULL,
-	  G_CALLBACK (window_cmd_edit_delete) },
-	{ "EditSelectAll", NULL, N_("Select _All"), "<control>A", NULL,
-	  G_CALLBACK (window_cmd_edit_select_all) },
-	{ "EditFind", NULL, N_("_Find…"), "<control>F", NULL,
-	  G_CALLBACK (window_cmd_edit_find) },
-	{ "EditFindNext", NULL, N_("Find Ne_xt"), "<control>G", NULL,
-	  G_CALLBACK (window_cmd_edit_find_next) },
-	{ "EditFindPrev", NULL, N_("Find Pre_vious"), "<shift><control>G", NULL,
-	  G_CALLBACK (window_cmd_edit_find_prev) },
-	{ "EditBookmarks", NULL, N_("Edit _Bookmarks"), "<control>B", NULL,
-	  G_CALLBACK (window_cmd_edit_bookmarks) },
-	{ "EditHistory", NULL, N_("_History"), "<control>H", NULL,
-	  G_CALLBACK (window_cmd_edit_history) },
-	{ "EditPreferences", NULL, N_("Pr_eferences"), "<control>e", NULL,
-	  G_CALLBACK (window_cmd_edit_preferences) },
+        { "EditUndo", NULL, N_("_Undo"), NULL, // CHB "<control>Z",
+        NULL,
+          G_CALLBACK (window_cmd_edit_undo) },
+        { "EditRedo", NULL, N_("Re_do"), NULL, // CHB "<shift><control>Z",
+        NULL,
+          G_CALLBACK (window_cmd_edit_redo) },
+        { "EditCut", NULL, N_("Cu_t"), NULL, // CHB "<control>X",
+        NULL,
+          G_CALLBACK (window_cmd_edit_cut) },
+        { "EditCopy", NULL, N_("_Copy"), NULL, // CHB "<control>C",
+        NULL,
+          G_CALLBACK (window_cmd_edit_copy) },
+        { "EditPaste", NULL, N_("_Paste"), NULL, // CHB "<control>V",
+        NULL,
+          G_CALLBACK (window_cmd_edit_paste) },
+        { "EditDelete", NULL, NULL, NULL, NULL,
+          G_CALLBACK (window_cmd_edit_delete) },
+        { "EditSelectAll", NULL, N_("Select _All"), NULL, // CHB "<control>A",
+        NULL,
+          G_CALLBACK (window_cmd_edit_select_all) },
+        { "EditFind", NULL, N_("_Find…"), "<control>F", NULL,
+          G_CALLBACK (window_cmd_edit_find) },
+        { "EditFindNext", NULL, N_("Find Ne_xt"), NULL, // CHB "<control>G",
+        NULL,
+          G_CALLBACK (window_cmd_edit_find_next) },
+        { "EditFindPrev", NULL, N_("Find Pre_vious"), NULL, // CHB "<shift><control>G",
+        NULL,
+          G_CALLBACK (window_cmd_edit_find_prev) },
+        { "EditBookmarks", NULL, N_("Edit _Bookmarks"), "<control>B", NULL,
+          G_CALLBACK (window_cmd_edit_bookmarks) },
+        { "EditHistory", NULL, N_("_History"), "<control>H", NULL,
+          G_CALLBACK (window_cmd_edit_history) },
+        { "EditPreferences", NULL, N_("Pr_eferences"), "<control>e", NULL,
+          G_CALLBACK (window_cmd_edit_preferences) },
 
-	/* View actions. */
+        // View actions.
 
-	{ "ViewStop", NULL, N_("_Stop"), "Escape", NULL,
-	  G_CALLBACK (window_cmd_view_stop) },
-	{ "ViewAlwaysStop", NULL, N_("_Stop"), "Escape",
-	  NULL, G_CALLBACK (window_cmd_view_stop) },
-	{ "ViewReload", NULL, N_("_Reload"), "<control>R", NULL,
-	  G_CALLBACK (window_cmd_view_reload) },
-	{ "ViewZoomIn", NULL, N_("Zoom _In"), "<control>plus", NULL,
-	  G_CALLBACK (window_cmd_view_zoom_in) },
-	{ "ViewZoomOut", NULL, N_("Zoom O_ut"), "<control>minus", NULL,
-	  G_CALLBACK (window_cmd_view_zoom_out) },
-	{ "ViewZoomNormal", NULL, N_("_Normal Size"), "<control>0", NULL,
-	  G_CALLBACK (window_cmd_view_zoom_normal) },
-	{ "ViewEncoding", NULL, N_("Text _Encoding"), NULL, NULL, NULL },
-	{ "ViewPageSource", NULL, N_("_Page Source"), "<control>U", NULL,
-	  G_CALLBACK (window_cmd_view_page_source) },
+        { "ViewStop", NULL, N_("_Stop"), "Escape", NULL,
+          G_CALLBACK (window_cmd_view_stop) },
+        { "ViewAlwaysStop", NULL, N_("_Stop"), "Escape",
+          NULL, G_CALLBACK (window_cmd_view_stop) },
+        { "ViewReload", NULL, N_("_Reload"), "<control>R", NULL,
+          G_CALLBACK (window_cmd_view_reload) },
+        { "ViewZoomIn", NULL, N_("Zoom _In"), "<control>I", // CHB "<control>plus",
+        NULL,
+          G_CALLBACK (window_cmd_view_zoom_in) },
+        { "ViewZoomOut", NULL, N_("Zoom O_ut"), "<control>O", // CHB "<control>minus",
+        NULL,
+          G_CALLBACK (window_cmd_view_zoom_out) },
+        { "ViewZoomNormal", NULL, N_("_Normal Size"), NULL, // CHB "<control>0",
+        NULL,
+          G_CALLBACK (window_cmd_view_zoom_normal) },
+        { "ViewEncoding", NULL, N_("Text _Encoding"), NULL, NULL, NULL },
+        { "ViewPageSource", NULL, N_("_Page Source"), NULL, // CHB "<control>U",
+        NULL,
+          G_CALLBACK (window_cmd_view_page_source) },
 
-	/* Bookmarks actions. */
+        // Bookmarks actions.
 
-	{ "FileBookmarkPage", NULL, N_("_Add Bookmark…"), "<control>D", NULL,
-	  G_CALLBACK (window_cmd_file_bookmark_page) },
+        { "FileBookmarkPage", NULL, N_("_Add Bookmark…"), "<control>D", NULL,
+          G_CALLBACK (window_cmd_file_bookmark_page) },
 
-	/* Go actions. */
+        // Go actions.
 
-	{ "GoLocation", NULL, N_("_Location…"), "<control>L", NULL,
-	  G_CALLBACK (window_cmd_go_location) },
+        { "GoLocation", NULL, N_("_Location…"), NULL, // CHB "<control>L",
+        NULL,
+          G_CALLBACK (window_cmd_go_location) },
 
-	/* Tabs actions. */
+        // Tabs actions.
 
-	{ "TabsPrevious", NULL, N_("_Previous Tab"), "<control>Page_Up", NULL,
-	  G_CALLBACK (window_cmd_tabs_previous) },
-	{ "TabsNext", NULL, N_("_Next Tab"), "<control>Page_Down", NULL,
-	  G_CALLBACK (window_cmd_tabs_next) },
-	{ "TabsMoveLeft", NULL, N_("Move Tab _Left"), "<shift><control>Page_Up", NULL,
-	  G_CALLBACK (window_cmd_tabs_move_left) },
-	{ "TabsMoveRight", NULL, N_("Move Tab _Right"), "<shift><control>Page_Down", NULL,
-	  G_CALLBACK (window_cmd_tabs_move_right) },
+        { "TabsPrevious", NULL, N_("_Previous Tab"), NULL, // CHB "<control>Page_Up",
+        NULL,
+          G_CALLBACK (window_cmd_tabs_previous) },
+        { "TabsNext", NULL, N_("_Next Tab"), NULL, // CHB "<control>Page_Down",
+        NULL,
+          G_CALLBACK (window_cmd_tabs_next) },
+        { "TabsMoveLeft", NULL, N_("Move Tab _Left"), NULL, // CHB "<shift><control>Page_Up",
+        NULL,
+          G_CALLBACK (window_cmd_tabs_move_left) },
+        { "TabsMoveRight", NULL, N_("Move Tab _Right"), NULL, // CHB "<shift><control>Page_Down",
+        NULL,
+          G_CALLBACK (window_cmd_tabs_move_right) },
         { "TabsDetach", NULL, N_("_Detach Tab"), NULL, NULL,
           G_CALLBACK (window_cmd_tabs_detach) },
 
-	/* Help. */
+        // Help.
 
-	{ "HelpContents", NULL, N_("_Help"), NULL, NULL,
-	  G_CALLBACK (window_cmd_help_contents) },
-	{ "HelpAbout", NULL, N_("_About"), NULL, NULL,
-	  G_CALLBACK (window_cmd_help_about) }
+        { "HelpContents", NULL, N_("_Help"), NULL, NULL,
+          G_CALLBACK (window_cmd_help_contents) },
+        { "HelpAbout", NULL, N_("_About"), NULL, NULL,
+          G_CALLBACK (window_cmd_help_about) }
+
 };
 
 static const GtkToggleActionEntry ephy_menu_toggle_entries [] =
 {
-	/* View actions. */
 
-	{ "ViewDownloadsBar", NULL, N_("_Downloads Bar"), NULL, NULL,
-	  NULL, FALSE },
+        /* View actions. */
 
-	{ "ViewFullscreen", NULL, N_("_Fullscreen"), "F11", NULL,
-	  G_CALLBACK (window_cmd_view_fullscreen), FALSE },
-	{ "ViewPopupWindows", NULL, N_("Popup _Windows"), NULL, NULL,
-	  G_CALLBACK (ephy_window_view_popup_windows_cb), FALSE },
-	{ "BrowseWithCaret", NULL, N_("Selection Caret"), "F7", NULL,
-	  G_CALLBACK (window_cmd_browse_with_caret), FALSE }
+        { "ViewDownloadsBar", NULL, N_("_Downloads Bar"), NULL, NULL,
+          NULL, FALSE },
+
+        { "ViewFullscreen", NULL, N_("_Fullscreen"), NULL, //CHB "F11",
+        NULL,
+          G_CALLBACK (window_cmd_view_fullscreen), FALSE },
+        { "ViewPopupWindows", NULL, N_("Popup _Windows"), NULL, NULL,
+          G_CALLBACK (ephy_window_view_popup_windows_cb), FALSE },
+        { "BrowseWithCaret", NULL, N_("Selection Caret"), NULL, //CHB "F7",
+        NULL,
+          G_CALLBACK (window_cmd_browse_with_caret), FALSE }
+
 };
 
 static const GtkActionEntry ephy_popups_entries [] = {
         /* Document. */
 
-	{ "ContextBookmarkPage", NULL, N_("Add Boo_kmark…"), "<control>D", NULL,
-	  G_CALLBACK (window_cmd_file_bookmark_page) },
-	
-	/* Links. */
+        { "ContextBookmarkPage", NULL, N_("Add Boo_kmark…"), "<control>D", NULL,
+          G_CALLBACK (window_cmd_file_bookmark_page) },
 
-	{ "OpenLinkInNewWindow", NULL, N_("Open Link in New _Window"), NULL, NULL,
-	  G_CALLBACK (popup_cmd_link_in_new_window) },
-	{ "OpenLinkInNewTab", NULL, N_("Open Link in New _Tab"), NULL, NULL,
-	  G_CALLBACK (popup_cmd_link_in_new_tab) },
-	{ "OpenLinkInIncognitoWindow", NULL, N_("Open Link in I_ncognito Window"), NULL, NULL,
-	  G_CALLBACK (popup_cmd_link_in_incognito_window) },
-	{ "DownloadLinkAs", NULL, N_("_Save Link As…"), NULL, NULL,
-	  G_CALLBACK (popup_cmd_download_link_as) },
-	{ "CopyLinkAddress", NULL, N_("_Copy Link Address"), NULL,
-	  NULL, G_CALLBACK (popup_cmd_copy_link_address) },
-	{ "CopyEmailAddress", NULL, N_("_Copy E-mail Address"), NULL,
-	  NULL, G_CALLBACK (popup_cmd_copy_link_address) },
+        /* Links. */
 
-	/* Images. */
+        { "OpenLinkInNewWindow", NULL, N_("Open Link in New _Window"), NULL, NULL,
+          G_CALLBACK (popup_cmd_link_in_new_window) },
+        { "OpenLinkInNewTab", NULL, N_("Open Link in New _Tab"), NULL, NULL,
+          G_CALLBACK (popup_cmd_link_in_new_tab) },
+        { "OpenLinkInIncognitoWindow", NULL, N_("Open Link in I_ncognito Window"), NULL, NULL,
+          G_CALLBACK (popup_cmd_link_in_incognito_window) },
+        { "DownloadLinkAs", NULL, N_("_Save Link As…"), NULL, NULL,
+          G_CALLBACK (popup_cmd_download_link_as) },
+        { "CopyLinkAddress", NULL, N_("_Copy Link Address"), NULL,
+          NULL, G_CALLBACK (popup_cmd_copy_link_address) },
+        { "CopyEmailAddress", NULL, N_("_Copy E-mail Address"), NULL,
+          NULL, G_CALLBACK (popup_cmd_copy_link_address) },
 
-	{ "ViewImage", NULL, N_("View _Image in New Tab"), NULL,
-	  NULL, G_CALLBACK (popup_cmd_view_image_in_new_tab) },
-	{ "CopyImageLocation", NULL, N_("Copy I_mage Address"), NULL,
-	  NULL, G_CALLBACK (popup_cmd_copy_image_location) },
-	{ "SaveImageAs", NULL, N_("_Save Image As…"), NULL,
-	  NULL, G_CALLBACK (popup_cmd_save_image_as) },
-	{ "SetImageAsBackground", NULL, N_("Set as _Wallpaper"), NULL,
-	  NULL, G_CALLBACK (popup_cmd_set_image_as_background) },
+        /* Images. */
 
-	/* Video. */
+        { "ViewImage", NULL, N_("View _Image in New Tab"), NULL,
+          NULL, G_CALLBACK (popup_cmd_view_image_in_new_tab) },
+        { "CopyImageLocation", NULL, N_("Copy I_mage Address"), NULL,
+          NULL, G_CALLBACK (popup_cmd_copy_image_location) },
+        { "SaveImageAs", NULL, N_("_Save Image As…"), NULL,
+          NULL, G_CALLBACK (popup_cmd_save_image_as) },
+        { "SetImageAsBackground", NULL, N_("Set as _Wallpaper"), NULL,
+          NULL, G_CALLBACK (popup_cmd_set_image_as_background) },
 
-	{ "OpenVideoInNewWindow", NULL, N_("Open Video in New _Window"), NULL, NULL,
-	  G_CALLBACK (popup_cmd_media_in_new_window) },
-	{ "OpenVideoInNewTab", NULL, N_("Open Video in New _Tab"), NULL, NULL,
-	  G_CALLBACK (popup_cmd_media_in_new_tab) },
-	{ "SaveVideoAs", NULL, N_("_Save Video As…"), NULL,
-	  NULL, G_CALLBACK (popup_cmd_save_media_as) },
-	{ "CopyVideoLocation", NULL, N_("_Copy Video Address"), NULL,
-	  NULL, G_CALLBACK (popup_cmd_copy_media_location) },
+        /* Video. */
 
-	/* Audio. */
+        { "OpenVideoInNewWindow", NULL, N_("Open Video in New _Window"), NULL, NULL,
+          G_CALLBACK (popup_cmd_media_in_new_window) },
+        { "OpenVideoInNewTab", NULL, N_("Open Video in New _Tab"), NULL, NULL,
+          G_CALLBACK (popup_cmd_media_in_new_tab) },
+        { "SaveVideoAs", NULL, N_("_Save Video As…"), NULL,
+          NULL, G_CALLBACK (popup_cmd_save_media_as) },
+        { "CopyVideoLocation", NULL, N_("_Copy Video Address"), NULL,
+          NULL, G_CALLBACK (popup_cmd_copy_media_location) },
 
-	{ "OpenAudioInNewWindow", NULL, N_("Open Audio in New _Window"), NULL, NULL,
-	  G_CALLBACK (popup_cmd_media_in_new_window) },
-	{ "OpenAudioInNewTab", NULL, N_("Open Audio in New _Tab"), NULL, NULL,
-	  G_CALLBACK (popup_cmd_media_in_new_tab) },
-	{ "SaveAudioAs", NULL, N_("_Save Audio As…"), NULL,
-	  NULL, G_CALLBACK (popup_cmd_save_media_as) },
-	{ "CopyAudioLocation", NULL, N_("_Copy Audio Address"), NULL,
-	  NULL, G_CALLBACK (popup_cmd_copy_media_location) },
+        /* Audio. */
 
-	/* Selection */
-	{ "SearchSelection", NULL, "_Search Selection", NULL, NULL,
-	  G_CALLBACK (popup_cmd_search_selection) },
+        { "OpenAudioInNewWindow", NULL, N_("Open Audio in New _Window"), NULL, NULL,
+          G_CALLBACK (popup_cmd_media_in_new_window) },
+        { "OpenAudioInNewTab", NULL, N_("Open Audio in New _Tab"), NULL, NULL,
+          G_CALLBACK (popup_cmd_media_in_new_tab) },
+        { "SaveAudioAs", NULL, N_("_Save Audio As…"), NULL,
+          NULL, G_CALLBACK (popup_cmd_save_media_as) },
+        { "CopyAudioLocation", NULL, N_("_Copy Audio Address"), NULL,
+          NULL, G_CALLBACK (popup_cmd_copy_media_location) },
+
+        /* Selection */
+        { "SearchSelection", NULL, "_Search Selection", NULL, NULL,
+          G_CALLBACK (popup_cmd_search_selection) }
 };
 
 static const struct
@@ -273,45 +305,68 @@ static const struct
 	const gchar *action;
 	gboolean fromToolbar;
 } extra_keybindings [] = {
-	/* FIXME: PageMenu should have its accel without being in the
-	 * extra keybindings, but does not seem to work for some
-	 * reason. */
-	{ GDK_KEY_F10,		0,			"PageMenu",		 TRUE },
-	{ GDK_KEY_Home,		GDK_MOD1_MASK,	        "FileHome",		 TRUE },
-	/* FIXME: these are not in any menu for now, so add them here. */
-	{ GDK_KEY_F11,          0,                      "ViewFullscreen",        FALSE },
-	{ GDK_KEY_plus,         GDK_CONTROL_MASK,       "ViewZoomIn",            FALSE },
-	{ GDK_KEY_minus,        GDK_CONTROL_MASK,       "ViewZoomOut",           FALSE },
-	{ GDK_KEY_0,            GDK_CONTROL_MASK,       "ViewZoomNormal",        FALSE },
-	{ GDK_KEY_g,            GDK_CONTROL_MASK,       "EditFindNext",          FALSE },
-	{ GDK_KEY_G,            GDK_CONTROL_MASK |
-	                        GDK_SHIFT_MASK,         "EditFindPrev",          FALSE },
+        /* FIXME: PageMenu should have its accel without being in the
+         * extra keybindings, but does not seem to work for some
+         * reason. */
+        { 0, //CHB GDK_KEY_F10,
+        0,                      "PageMenu",              TRUE },
+        { 0, //CHB GDK_KEY_Home,
+        GDK_MOD1_MASK,          "FileHome",              TRUE },
+        /* FIXME: these are not in any menu for now, so add them here. */
+        { 0, //CHB GDK_KEY_F11,
+        0,                      "ViewFullscreen",        FALSE },
+        { GDK_KEY_i, //CHB GDK_KEY_plus,
+        GDK_CONTROL_MASK,       "ViewZoomIn",            FALSE },
+        { GDK_KEY_o, //CHB GDK_KEY_minus,
+        GDK_CONTROL_MASK,       "ViewZoomOut",           FALSE },
+        { 0, //CHB GDK_KEY_0,
+        GDK_CONTROL_MASK,       "ViewZoomNormal",        FALSE },
+        { 0, //CHB GDK_KEY_g,
+        GDK_CONTROL_MASK,       "EditFindNext",          FALSE },
+        { 0, //CHB GDK_KEY_G,
+        GDK_CONTROL_MASK |
+                                GDK_SHIFT_MASK,         "EditFindPrev",          FALSE },
 
-	{ GDK_KEY_s,		GDK_CONTROL_MASK,	"FileSaveAs",		 FALSE },
-	{ GDK_KEY_r,		GDK_CONTROL_MASK,	"ViewReload",		 FALSE },
-	{ GDK_KEY_R,		GDK_CONTROL_MASK,	"ViewReload",		 FALSE },
-	{ GDK_KEY_R,		GDK_CONTROL_MASK |
-				GDK_SHIFT_MASK,		"ViewReload",		 FALSE },
-	/* Tab navigation */
-	{ GDK_KEY_Page_Up,      GDK_CONTROL_MASK,       "TabsPrevious",          FALSE },
-	{ GDK_KEY_Page_Down,    GDK_CONTROL_MASK,       "TabsNext",              FALSE },
-	{ GDK_KEY_Page_Up,      GDK_CONTROL_MASK |
-	                        GDK_SHIFT_MASK,         "TabsMoveLeft",          FALSE },
-	{ GDK_KEY_Page_Down,    GDK_CONTROL_MASK |
-	                        GDK_SHIFT_MASK,         "TabsMoveRight",         FALSE },
-	/* Go */
-	{ GDK_KEY_l,            GDK_CONTROL_MASK,       "GoLocation",            FALSE },
-	{ GDK_KEY_F6,           0,			"GoLocation",            FALSE },
-	/* Support all the MSIE tricks as well ;) */
-	{ GDK_KEY_F5,		0,			"ViewReload",		 FALSE },
-	{ GDK_KEY_F5,		GDK_CONTROL_MASK,	"ViewReload",		 FALSE },
-	{ GDK_KEY_F5,		GDK_SHIFT_MASK,		"ViewReload",		 FALSE },
-	{ GDK_KEY_F5,		GDK_CONTROL_MASK |
-				GDK_SHIFT_MASK,		"ViewReload",		 FALSE },
-	{ GDK_KEY_KP_Add,	GDK_CONTROL_MASK,	"ViewZoomIn",		 FALSE },
-	{ GDK_KEY_KP_Subtract,	GDK_CONTROL_MASK,	"ViewZoomOut",		 FALSE },
-	{ GDK_KEY_equal,	GDK_CONTROL_MASK,	"ViewZoomIn",		 FALSE },
-	{ GDK_KEY_KP_0,		GDK_CONTROL_MASK,	"ViewZoomNormal",	 FALSE },
+        { 0, //CHB GDK_KEY_s,
+        GDK_CONTROL_MASK,       "FileSaveAs",            FALSE },
+        { GDK_KEY_r,    GDK_CONTROL_MASK,       "ViewReload",            FALSE },
+        { GDK_KEY_R,    GDK_CONTROL_MASK,       "ViewReload",            FALSE },
+        { GDK_KEY_R,    GDK_CONTROL_MASK |
+                                GDK_SHIFT_MASK,         "ViewReload",            FALSE },
+        /* Tab navigation */
+        { 0, //CHB GDK_KEY_Page_Up,
+        GDK_CONTROL_MASK,       "TabsPrevious",          FALSE },
+        { 0, //CHB GDK_KEY_Page_Down,
+    GDK_CONTROL_MASK,       "TabsNext",              FALSE },
+        { 0, //CHB GDK_KEY_Page_Up,
+        GDK_CONTROL_MASK |
+                                GDK_SHIFT_MASK,         "TabsMoveLeft",          FALSE },
+        { 0, //CHB GDK_KEY_Page_Down,
+    GDK_CONTROL_MASK |
+                                GDK_SHIFT_MASK,         "TabsMoveRight",         FALSE },
+        /* Go */
+        { 0, //CHB GDK_KEY_l,
+        GDK_CONTROL_MASK,       "GoLocation",            FALSE },
+        { 0, //CHB GDK_KEY_F6,
+        0,                      "GoLocation",            FALSE },
+        /* Support all the MSIE tricks as well ;) */
+        { 0, //CHB GDK_KEY_F5,
+        0,                      "ViewReload",            FALSE },
+        { 0, //CHB GDK_KEY_F5,
+        GDK_CONTROL_MASK,       "ViewReload",            FALSE },
+        { 0, //CHB GDK_KEY_F5,
+        GDK_SHIFT_MASK,         "ViewReload",            FALSE },
+        { 0, //CHB GDK_KEY_F5,
+        GDK_CONTROL_MASK |
+                                GDK_SHIFT_MASK,         "ViewReload",            FALSE },
+        { GDK_KEY_i, //CHB GDK_KEY_KP_Add,
+        GDK_CONTROL_MASK,       "ViewZoomIn",            FALSE },
+        { GDK_KEY_o, //CHB GDK_KEY_KP_Subtract,
+        GDK_CONTROL_MASK,       "ViewZoomOut",           FALSE },
+        { 0, //CHB GDK_KEY_equal,
+        GDK_CONTROL_MASK,       "ViewZoomIn",            FALSE },
+        { 0, //CHB GDK_KEY_KP_0,
+        GDK_CONTROL_MASK,       "ViewZoomNormal",        FALSE },
 	/* These keys are a bit strange: when pressed with no modifiers, they emit
 	 * KP_PageUp/Down Control; when pressed with Control+Shift they are KP_9/3,
 	 * when NumLock is on they are KP_9/3 and with NumLock and Control+Shift
@@ -1134,6 +1189,7 @@ edit_menu_hide_cb (GtkWidget *menu,
                   EphyWindow *window)
 {
        enable_edit_actions_sensitivity (window);
+       gtk_toggle_button_set_active_simple (GTK_TOGGLE_BUTTON (gtk_menu_get_attach_widget (GTK_MENU(menu))), FALSE); //CHB added
 }
 
 static void
@@ -1259,7 +1315,8 @@ setup_ui_manager (EphyWindow *window)
 			       "icon-name", "tab-new-symbolic",
 			       "label", _("New _Tab"),
 			       NULL);
-	gtk_action_group_add_action_with_accel (action_group, action, "<control>T");
+        gtk_action_group_add_action (action_group, action); //CHB
+	// gtk_action_group_add_action_with_accel (action_group, action, "<control>T"); CHB
 	g_object_unref (action);
 
 	action =
@@ -1830,11 +1887,13 @@ populate_context_menu (WebKitWebView *web_view,
 		{
 			add_action_to_context_menu (context_menu,
 						    priv->popups_action_group, "OpenLinkInNewTab");
+			/*CHB
 			add_action_to_context_menu (context_menu,
 						    priv->popups_action_group, "OpenLinkInNewWindow");
 			if (!incognito_mode)
 				add_action_to_context_menu (context_menu,
 							    priv->popups_action_group, "OpenLinkInIncognitoWindow");
+			*/
 			webkit_context_menu_append (context_menu,
 						    webkit_context_menu_item_new_separator ());
 		}
@@ -1845,19 +1904,23 @@ populate_context_menu (WebKitWebView *web_view,
 						    priv->popups_action_group, "SearchSelection");
 		webkit_context_menu_append (context_menu,
 					    webkit_context_menu_item_new_separator ());
+		/*CHB
 		add_action_to_context_menu (context_menu,
 					    priv->popups_action_group, "DownloadLinkAs");
+		*/
 
 		if (g_str_has_prefix (uri, "mailto:"))
 		{
 			add_action_to_context_menu (context_menu,
 						    priv->popups_action_group, "CopyEmailAddress");
 		}
+		/*
 		else
 		{
 			add_action_to_context_menu (context_menu,
 						    priv->popups_action_group, "CopyLinkAddress");
 		}
+		*/
 	}
 	else if (webkit_hit_test_result_context_is_editable (hit_test_result))
 	{
@@ -1941,14 +2004,18 @@ populate_context_menu (WebKitWebView *web_view,
 	{
 		webkit_context_menu_append (context_menu,
 					    webkit_context_menu_item_new_separator ());
+		/*CHB
 		add_action_to_context_menu (context_menu,
 					    priv->popups_action_group, "SaveImageAs");
 		add_action_to_context_menu (context_menu,
 					    priv->popups_action_group, "CopyImageLocation");
+		*/
 		add_action_to_context_menu (context_menu,
 					    priv->popups_action_group, "ViewImage");
+		/*CHB
 		add_action_to_context_menu (context_menu,
 					    priv->popups_action_group, "SetImageAsBackground");
+		*/
 	}
 
 	if (is_media)
@@ -1962,23 +2029,31 @@ populate_context_menu (WebKitWebView *web_view,
 					    webkit_context_menu_item_new_separator ());
 		if (is_video)
 		{
+			/*CHB
 			add_action_to_context_menu (context_menu, priv->popups_action_group,
 						    "OpenVideoInNewWindow");
+			*/
 			add_action_to_context_menu (context_menu, priv->popups_action_group,
 						    "OpenVideoInNewTab");
+			/*CHB
 			add_action_to_context_menu (context_menu, priv->popups_action_group,
 						    "SaveVideoAs");
+			*/
 			add_action_to_context_menu (context_menu, priv->popups_action_group,
 						    "CopyVideoLocation");
 		}
 		else if (is_audio)
 		{
+			/*CHB
 			add_action_to_context_menu (context_menu, priv->popups_action_group,
 						    "OpenAudioInNewWindow");
+			*/
 			add_action_to_context_menu (context_menu, priv->popups_action_group,
 						    "OpenAudioInNewTab");
+			/*CHB
 			add_action_to_context_menu (context_menu, priv->popups_action_group,
 						    "SaveAudioAs");
+			*/
 			add_action_to_context_menu (context_menu, priv->popups_action_group,
 						    "CopyAudioLocation");
 		}
@@ -1990,7 +2065,7 @@ populate_context_menu (WebKitWebView *web_view,
 
 	if (app_mode)
 		return FALSE;
-
+	/*CHB
 	if (is_document && !is_image && !is_media)
 	{
 		webkit_context_menu_append (context_menu,
@@ -2003,7 +2078,7 @@ populate_context_menu (WebKitWebView *web_view,
 				    webkit_context_menu_item_new_separator ());
 	webkit_context_menu_append (context_menu,
 				    webkit_context_menu_item_new_from_stock_action (WEBKIT_CONTEXT_MENU_ACTION_INSPECT_ELEMENT));
-
+	*/
 	return FALSE;
 }
 
@@ -3509,6 +3584,8 @@ ephy_window_constructor (GType type,
 
 	}
 
+        g_object_set(G_OBJECT (settings), "gtk-titlebar-double-click", "none", NULL);//CHB
+
 	settings_change_notify (settings, window);
 
 	/* Setup the UI manager and connect verbs */
@@ -3659,8 +3736,9 @@ ephy_window_show (GtkWidget *widget)
 		if (!priv->is_popup)
 			flags = EPHY_INITIAL_STATE_WINDOW_SAVE_SIZE;
 
-		ephy_initial_state_add_window (widget, "main_window", 600, 500,
-					       TRUE, flags);
+		ephy_initial_state_add_window (widget, "main_window", 
+                                   	       1000, 500, FALSE,  //600, 500, TRUE,      CHB
+					       flags);
 		priv->has_size = TRUE;
 	}
 
@@ -3981,6 +4059,7 @@ ephy_window_get_location_controller (EphyWindow *window)
 gboolean
 ephy_window_is_on_current_workspace (EphyWindow *window)
 {
+	/*CHB
 	GdkWindow *gdk_window = NULL;
 	WnckWorkspace *workspace = NULL;
 	WnckWindow *wnck_window = NULL;
@@ -3990,22 +4069,24 @@ ephy_window_is_on_current_workspace (EphyWindow *window)
 
 	gdk_window = gtk_widget_get_window (GTK_WIDGET (window));
 
-	if(!GDK_IS_X11_WINDOW (gdk_window))
+	if(!GDK_IS_X11_WINDOW (gdk_window)) */
 		return TRUE;
 
-	workspace = wnck_screen_get_active_workspace (wnck_screen_get_default ());
+	// workspace = wnck_screen_get_active_workspace (wnck_screen_get_default ()); CHB
 
 	/* From WNCK docs:
 	 * "May return NULL sometimes, if libwnck is in a weird state due to
 	 *  the asynchronous nature of the interaction with the window manager."
 	 * In such a case we cannot really check, so assume we are.
 	 */
+	/*CHB
 	if (!workspace)
 		return TRUE;
 
 	wnck_window = wnck_window_get (GDK_WINDOW_XID (gdk_window));
 
 	return wnck_window_is_on_workspace (wnck_window, workspace);
+	*/
 }
 
 typedef struct {

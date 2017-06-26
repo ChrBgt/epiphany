@@ -26,7 +26,7 @@
 #ifndef GNOME_DESKTOP_USE_UNSTABLE_API
 #define GNOME_DESKTOP_USE_UNSTABLE_API
 #endif
-#include <libgnome-desktop/gnome-desktop-thumbnail.h>
+//CHB   #include <libgnome-desktop/gnome-desktop-thumbnail.h>
 #include <webkit2/webkit2.h>
 
 #define EPHY_SNAPSHOT_SERVICE_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), EPHY_TYPE_SNAPSHOT_SERVICE, EphySnapshotServicePrivate))
@@ -34,7 +34,7 @@
 struct _EphySnapshotServicePrivate
 {
   /* Disk cache */
-  GnomeDesktopThumbnailFactory *factory;
+//CHB     GnomeDesktopThumbnailFactory *factory;
 
   /* Memory cache */
   GHashTable *cache;
@@ -95,7 +95,7 @@ static void
 ephy_snapshot_service_init (EphySnapshotService *self)
 {
   self->priv = EPHY_SNAPSHOT_SERVICE_GET_PRIVATE (self);
-  self->priv->factory = gnome_desktop_thumbnail_factory_new (GNOME_DESKTOP_THUMBNAIL_SIZE_LARGE);
+//CHB     self->priv->factory = gnome_desktop_thumbnail_factory_new (GNOME_DESKTOP_THUMBNAIL_SIZE_LARGE);
   self->priv->cache = g_hash_table_new_full (g_str_hash, g_str_equal,
                                              (GDestroyNotify)g_free,
                                              (GDestroyNotify)snapshot_path_cached_data_free);
@@ -139,9 +139,9 @@ ephy_snapshot_service_prepare_snapshot (cairo_surface_t *surface,
     }
 
     snapshot = gdk_pixbuf_get_from_surface (surface, x_offset, 0, new_width, new_height);
-    scaled = gnome_desktop_thumbnail_scale_down_pixbuf (snapshot,
-                                                        EPHY_THUMBNAIL_WIDTH,
-                                                        EPHY_THUMBNAIL_HEIGHT);
+    scaled = NULL; //CHB   gnome_desktop_thumbnail_scale_down_pixbuf (snapshot,
+                           //CHB                                EPHY_THUMBNAIL_WIDTH,
+                           //CHB                                EPHY_THUMBNAIL_HEIGHT);
   }
 
   g_object_unref (snapshot);
@@ -487,7 +487,7 @@ get_snapshot_for_url_thread (GTask *task,
   GdkPixbuf *snapshot;
   GError *error = NULL;
 
-  data->path = gnome_desktop_thumbnail_factory_lookup (service->priv->factory, data->url, data->mtime);
+  data->path = NULL;  //CHB   gnome_desktop_thumbnail_factory_lookup (service->priv->factory, data->url, data->mtime);
   if (data->path == NULL) {
     g_task_return_new_error (task,
                              EPHY_SNAPSHOT_SERVICE_ERROR,
@@ -771,14 +771,15 @@ save_snapshot_thread (GTask *task,
                       GCancellable *cancellable)
 {
   char *path;
-
+/*CHB
   gnome_desktop_thumbnail_factory_save_thumbnail (service->priv->factory,
                                                   data->snapshot,
                                                   data->url,
                                                   data->mtime);
+*/
   g_idle_add (idle_emit_snapshot_saved, save_snapshot_async_data_ref (data));
 
-  path = gnome_desktop_thumbnail_path_for_uri (data->url, GNOME_DESKTOP_THUMBNAIL_SIZE_LARGE);
+  path = NULL; //CHB   gnome_desktop_thumbnail_path_for_uri (data->url, GNOME_DESKTOP_THUMBNAIL_SIZE_LARGE);
   cache_snapshot_data_in_idle (service, data->url, path, SNAPSHOT_FRESH);
 
   g_task_return_pointer (task, path, g_free);
@@ -826,7 +827,7 @@ get_snapshot_path_for_url_thread (GTask *task,
 {
   char *path;
 
-  path = gnome_desktop_thumbnail_factory_lookup (service->priv->factory, data->url, data->mtime);
+  path = NULL;   //CHB   gnome_desktop_thumbnail_factory_lookup (service->priv->factory, data->url, data->mtime);
   if (!path) {
     g_task_return_new_error (task,
                              EPHY_SNAPSHOT_SERVICE_ERROR,
