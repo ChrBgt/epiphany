@@ -327,6 +327,7 @@ ephy_bookmark_properties_constructor (GType type,
 	g_signal_connect (properties, "destroy",
 			  G_CALLBACK (bookmark_properties_destroy_cb), properties);
 
+	/* CHB prevents window from accepting a different size
 	if (!priv->creating)
 	{
 		ephy_initial_state_add_window (widget,
@@ -335,6 +336,7 @@ ephy_bookmark_properties_constructor (GType type,
                                                EPHY_INITIAL_STATE_WINDOW_SAVE_POSITION |
                                                EPHY_INITIAL_STATE_WINDOW_SAVE_SIZE);
 	}
+	*/
 	/* Lockdown */
 	lockdown = g_settings_get_boolean (EPHY_SETTINGS_LOCKDOWN,
 					   EPHY_PREFS_LOCKDOWN_BOOKMARK_EDITING);

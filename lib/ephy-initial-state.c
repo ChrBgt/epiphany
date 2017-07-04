@@ -125,7 +125,6 @@ ephy_state_window_set_size (GtkWidget *window, EphyNode *node)
   height = ephy_node_get_property_int (node, EPHY_NODE_INITIAL_STATE_PROP_HEIGHT);
   maximize = ephy_node_get_property_boolean (node, EPHY_NODE_INITIAL_STATE_PROP_MAXIMIZE);
   size = ephy_node_get_property_boolean (node, EPHY_NODE_INITIAL_STATE_PROP_SIZE);
-
   gtk_window_get_default_size (GTK_WINDOW (window), &w, &h);
 
   if (size && w == -1 && h == -1) {
@@ -141,8 +140,17 @@ ephy_state_window_set_size (GtkWidget *window, EphyNode *node)
                                  MIN (height, screen_height));
   }
 
+  //CHB
+  gtk_window_set_default_size (GTK_WINDOW (window), 1000, 500);
+  gtk_widget_set_size_request(GTK_WIDGET(window), 1000, 500);
+  //gtk_window_set_type_hint(GTK_WINDOW(window), GDK_WINDOW_TYPE_HINT_MENU);//wozu war das noch? TODO
+  //gtk_window_set_resizable(GTK_WIDGET(window), FALSE); kein effekt
+  //eof CHB
+  
   if (maximize)
     gtk_window_maximize (GTK_WINDOW (window));
+
+  //CHB Bemerkung: maximize führt bei aktivierung zu Problemen  
 }
 
 static void

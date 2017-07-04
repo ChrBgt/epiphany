@@ -156,17 +156,19 @@ static const GtkActionEntry ephy_bookmark_popup_entries [] = {
 	{ "PopupAction", NULL, "" },
 
 	/* File Menu*/
-	{ "NewTopic", NULL, N_("_New Topic"), "<control>N",
+	{ "NewTopic", NULL, N_("_New Topic"), NULL, // CHB "<control>N",
 	  N_("Create a new topic"), 
 	  G_CALLBACK (cmd_add_topic) },
+	/* CHB: the following entry is skipped due to configuration in /opt/epiphany/epiphany-3.18.3/src/resources/ */
 	{ "OpenInWindow", NULL, N_("Open in New _Window"), "<control>O",
 	  N_("Open the selected bookmark in a new window"), 
 	  G_CALLBACK (cmd_open_bookmarks_in_browser) },
-	{ "OpenInTab", NULL, N_("Open in New _Tab"), "<shift><control>O",
+	{ "OpenInTab", NULL, N_("Open in New _Tab"), NULL, // CHB "<shift><control>O",
 	  N_("Open the selected bookmark in a new tab"), 
 	  G_CALLBACK (cmd_open_bookmarks_in_tabs) },
 	{ "Rename", NULL, N_("_Rename…"), "F2",
 	  N_("Rename the selected bookmark or topic"), G_CALLBACK (cmd_rename) },
+	/* CHB: the following entries are skipped due to configuration in /opt/epiphany/epiphany-3.18.3/src/resources/ */
 	{ "Properties", NULL, N_("_Properties"), "<alt>Return",
 	  N_("View or modify the properties of the selected bookmark"), 
 	  G_CALLBACK (cmd_bookmark_properties) },
@@ -179,7 +181,7 @@ static const GtkActionEntry ephy_bookmark_popup_entries [] = {
 	{ "Close", NULL, N_("_Close"), "<control>W",
 	  N_("Close the bookmarks window"), 
 	  G_CALLBACK (cmd_close) },
-
+	  
 	/* Edit Menu */
 	{ "Cut", NULL, N_("Cu_t"), "<control>X",
 	  N_("Cut the selection"), 
@@ -190,7 +192,7 @@ static const GtkActionEntry ephy_bookmark_popup_entries [] = {
 	{ "Paste", NULL, N_("_Paste"), "<control>V",
 	  N_("Paste the clipboard"), 
 	  G_CALLBACK (cmd_paste) },
-	{ "Delete", NULL, N_("_Delete"), "<control>T",
+	{ "Delete", NULL, N_("_Delete"), NULL, //CHB "<control>T",  affects the outer browser
 	  N_("Delete the selected bookmark or topic"), 
 	  G_CALLBACK (cmd_delete) },
 	{ "SelectAll", NULL, N_("Select _All"), "<control>A",
@@ -1521,7 +1523,6 @@ ephy_bookmarks_editor_construct (EphyBookmarksEditor *editor)
 				      G_N_ELEMENTS (ephy_bookmark_popup_entries), editor);
 	gtk_action_group_add_toggle_actions (action_group, ephy_bookmark_toggle_entries,
 					     G_N_ELEMENTS (ephy_bookmark_toggle_entries), editor);
-
 	gtk_ui_manager_insert_action_group (ui_merge,
 					    action_group, 0);
 	gtk_ui_manager_add_ui_from_resource (ui_merge,
@@ -1533,7 +1534,7 @@ ephy_bookmarks_editor_construct (EphyBookmarksEditor *editor)
 
 	editor->priv->ui_merge = ui_merge;
 	editor->priv->action_group = action_group;
-
+	
 	hpaned = gtk_paned_new (GTK_ORIENTATION_HORIZONTAL);
 	gtk_container_set_border_width (GTK_CONTAINER (hpaned), 0);
 	gtk_box_pack_end (GTK_BOX (editor->priv->main_vbox), hpaned,
@@ -1637,7 +1638,7 @@ ephy_bookmarks_editor_construct (EphyBookmarksEditor *editor)
 				   EPHY_NODE_VIEW_SORTABLE |
 				   EPHY_NODE_VIEW_ELLIPSIZED,
 				   provide_favicon, &(editor->priv->title_col));
-	gtk_tree_view_column_set_min_width (editor->priv->title_col, 300);
+	gtk_tree_view_column_set_min_width (editor->priv->title_col, 200);//CHB 300
 	gtk_tree_view_column_set_resizable (editor->priv->title_col, TRUE);
 
 	url_col_id = ephy_node_view_add_column_full
@@ -1647,7 +1648,7 @@ ephy_bookmarks_editor_construct (EphyBookmarksEditor *editor)
 				   EPHY_NODE_VIEW_ELLIPSIZED,
 				   unescape_bookmark_uri, NULL,
 				   NULL, &(editor->priv->address_col));
-	gtk_tree_view_column_set_min_width (editor->priv->address_col, 300);
+	gtk_tree_view_column_set_min_width (editor->priv->address_col, 200);//CHB 300
 	gtk_tree_view_column_set_resizable (editor->priv->address_col, TRUE);
 
 	ephy_node_view_enable_drag_source (EPHY_NODE_VIEW (bm_view),
@@ -1701,12 +1702,12 @@ ephy_bookmarks_editor_construct (EphyBookmarksEditor *editor)
 			  "changed",
 			  G_CALLBACK (view_selection_changed_cb),
 			  editor);
-
+/* CHB cannot control width of window with this command... therefore removed
 	ephy_initial_state_add_window (GTK_WIDGET(editor),
                                        "bookmarks_editor",
                                        450, 400, FALSE,
                                        EPHY_INITIAL_STATE_WINDOW_SAVE_SIZE | EPHY_INITIAL_STATE_WINDOW_SAVE_POSITION);
-	ephy_initial_state_add_paned  (GTK_WIDGET (hpaned),
+*/	ephy_initial_state_add_paned  (GTK_WIDGET (hpaned),
                                        "bookmarks_paned",
                                        130);
 

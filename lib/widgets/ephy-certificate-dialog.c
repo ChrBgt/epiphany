@@ -320,6 +320,12 @@ ephy_certificate_dialog_new (GtkWindow *parent,
                                      "modal", TRUE,
                                      "use-header-bar", TRUE,
 				     NULL));
+// CHB added
+  gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
+  gtk_window_set_default_size (GTK_WINDOW(dialog), 1000-40, 500-40);
+  gtk_window_move (GTK_WINDOW(dialog), 20, 10);					 
+//eof CHB
+					 
   if (parent)
     gtk_window_set_transient_for (GTK_WINDOW (dialog), parent);
 

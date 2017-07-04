@@ -44,7 +44,7 @@ struct _EphyToolbarPrivate {
   GtkWidget *entry;
   GtkWidget *navigation_box;
   GtkWidget *page_menu_button;
-  GtkWidget *new_tab_button;
+  GtkWidget *new_tab_button; 
 };
 
 static void
@@ -187,9 +187,9 @@ ephy_toolbar_constructed (GObject *object)
   gtk_widget_set_valign (button, GTK_ALIGN_CENTER);
   manager = ephy_window_get_ui_manager (priv->window);
   menu = gtk_ui_manager_get_widget (manager, "/ui/PagePopup");
-  gtk_widget_set_halign (menu, GTK_ALIGN_END);
+  gtk_widget_set_halign (menu, GTK_ALIGN_START); //CHB GTK_ALIGN_END
   gtk_menu_button_set_popup (GTK_MENU_BUTTON (button), menu);
-  gtk_header_bar_pack_end (GTK_HEADER_BAR (toolbar), button);
+  gtk_header_bar_pack_start (GTK_HEADER_BAR (toolbar), button); // CHB gtk_header_bar_pack_end
 }
 
 static void
@@ -227,7 +227,7 @@ ephy_toolbar_new (EphyWindow *window)
     g_return_val_if_fail (EPHY_IS_WINDOW (window), NULL);
 
     return GTK_WIDGET (g_object_new (EPHY_TYPE_TOOLBAR,
-                                     "show-close-button", TRUE,
+                                     "show-close-button", FALSE, //CHB TRUE
                                      "window", window,
                                      NULL));
 }

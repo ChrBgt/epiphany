@@ -166,6 +166,8 @@ static void
 download_clicked_cb (GtkButton *button,
                      EphyDownloadWidget *widget)
 {
+  gtk_label_set_text (widget->priv->text, "See download area ...  "); //CHB
+/*CHB
   EphyDownload *download;
 
   if (!widget->priv->finished)
@@ -174,6 +176,7 @@ download_clicked_cb (GtkButton *button,
   download = widget->priv->download;
   if (ephy_download_do_download_action (download, EPHY_DOWNLOAD_ACTION_AUTO))
     gtk_widget_destroy (GTK_WIDGET (widget));
+*/
 }
 
 static void
@@ -302,7 +305,7 @@ widget_finished_cb (WebKitDownload *download,
 {
   widget->priv->finished = TRUE;
   update_popup_menu (widget);
-  update_download_label_and_tooltip (widget, _("Finished"));
+  update_download_label_and_tooltip (widget, _("Download Finished")); //CHB "Download" in string added
   widget_attention_needed (widget);
 }
 
@@ -404,7 +407,7 @@ widget_destination_changed_cb (WebKitDownload *download,
                                EphyDownloadWidget *widget)
 {
   update_download_destination (widget);
-  add_popup_menu (widget);
+  //add_popup_menu (widget); CHB
 }
 
 static void
@@ -618,7 +621,7 @@ create_widget (EphyDownloadWidget *widget)
                             G_CALLBACK (widget_attention_unneeded), widget);
 
   gtk_widget_show_all (button);
-  gtk_widget_show_all (menu_button);
+  // gtk_widget_show_all (menu_button); CHB
 
 }
 

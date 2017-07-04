@@ -56,7 +56,7 @@
 #include <glib.h>
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
-#include <libnotify/notify.h>
+//CHB #include <libnotify/notify.h>
 #include <libsoup/soup.h>
 #include <string.h>
 #include <webkit2/webkit2.h>
@@ -686,6 +686,7 @@ fill_default_application_title (EphyApplicationDialogData *data)
 	ephy_web_view_get_web_app_title (data->view, NULL, fill_default_application_title_cb, data);
 }
 
+/*CHB removed
 static void
 notify_launch_cb (NotifyNotification *notification,
 		  char *action,
@@ -696,6 +697,7 @@ notify_launch_cb (NotifyNotification *notification,
 	ephy_file_launch_desktop_file (desktop_file, NULL, 0, NULL);
 	g_free (desktop_file);
 }
+*/
 
 static gboolean
 confirm_web_application_overwrite (GtkWindow *parent, const char *title)
@@ -734,7 +736,7 @@ dialog_save_as_application_response_cb (GtkDialog *dialog,
 	const char *app_name;
 	char *desktop_file;
 	char *message;
-	NotifyNotification *notification;
+	//NotifyNotification *notification; CHB
 
 	if (response == GTK_RESPONSE_OK) {
 		app_name = gtk_entry_get_text (GTK_ENTRY (data->entry));
@@ -758,24 +760,27 @@ dialog_save_as_application_response_cb (GtkDialog *dialog,
 			message = g_strdup_printf (_("The application '%s' could not be created"),
 						   app_name);
 
-		notification = notify_notification_new (message,
-							NULL, NULL);
+		// notification = notify_notification_new (message,      CHB
+		//					NULL, NULL);     CHB
 		g_free (message);
 
 		if (desktop_file) {
-			notify_notification_add_action (notification, "launch", _("Launch"),
+			/* CHB removed
+                        notify_notification_add_action (notification, "launch", _("Launch"),
 							(NotifyActionCallback)notify_launch_cb,
 							g_path_get_basename (desktop_file),
 							NULL);
 			notify_notification_set_icon_from_pixbuf (notification, gtk_image_get_pixbuf (GTK_IMAGE (data->image)));
-			g_free (desktop_file);
+			eof CHB removed*/
+                        g_free (desktop_file);
 		}
-
+                /* CHB removed
 		notify_notification_set_timeout (notification, NOTIFY_EXPIRES_DEFAULT);
 		notify_notification_set_urgency (notification, NOTIFY_URGENCY_LOW);
 		notify_notification_set_hint (notification, "desktop-entry", g_variant_new_string ("epiphany"));
 		notify_notification_set_hint (notification, "transient", g_variant_new_boolean (TRUE));
 		notify_notification_show (notification, NULL);
+                eof CHB removed */
 	}
 
 	ephy_application_dialog_data_free (data);
@@ -1119,6 +1124,19 @@ window_cmd_edit_bookmarks (GtkAction *action,
 	GtkWidget *bwindow;
 	
 	bwindow = ephy_shell_get_bookmarks_editor (ephy_shell_get_default ());
+	
+	//CHB
+	if (GTK_WINDOW (window) != gtk_window_get_transient_for (GTK_WINDOW (bwindow)))
+		gtk_window_set_transient_for (GTK_WINDOW (bwindow),
+                                      GTK_WINDOW (window));
+
+    gtk_window_set_modal (GTK_WINDOW(bwindow), TRUE);
+	//gtk_window_set_decorated (bwindow, FALSE); 
+    gtk_window_set_type_hint(GTK_WINDOW(bwindow), GDK_WINDOW_TYPE_HINT_MENU);//prevents minimize and maximize buttons
+    gtk_window_set_default_size (GTK_WINDOW(bwindow), 1000-40, 500-40); //Hoehe bringt nichts, könnte abhängig von der "Summe des Innenlebens" sein TODO
+    gtk_window_move (GTK_WINDOW(bwindow), 20, 10);
+	//eof CHB
+	
 	gtk_window_present (GTK_WINDOW (bwindow));
 }
 
@@ -1133,6 +1151,12 @@ window_cmd_edit_history (GtkAction *action,
 	if (GTK_WINDOW (window) != gtk_window_get_transient_for (GTK_WINDOW (hwindow)))
 		gtk_window_set_transient_for (GTK_WINDOW (hwindow),
                                               GTK_WINDOW (window));
+	//CHB
+    gtk_window_set_modal (GTK_WINDOW(hwindow), TRUE);
+    gtk_window_set_default_size (GTK_WINDOW(hwindow), 1000-40, 500-40); //Hoehe bringt nichts TODO
+    gtk_window_move (GTK_WINDOW(hwindow), 20, 10);
+	//eof CHB
+
 	gtk_window_present (GTK_WINDOW (hwindow));
 }
 
@@ -1146,8 +1170,13 @@ window_cmd_edit_preferences (GtkAction *action,
 
 	if (GTK_WINDOW (window) != gtk_window_get_transient_for (dialog))
 		gtk_window_set_transient_for (dialog,
-                                              GTK_WINDOW (window));
-
+                                      GTK_WINDOW (window));
+	//CHB
+    gtk_window_set_modal (GTK_WINDOW(dialog), TRUE);
+    gtk_window_set_default_size (GTK_WINDOW(dialog), 1000-40, 500-40); //Hoehe bringt nichts, könnte abhängig von der "Summe des Innenlebens" sein TODO
+    gtk_window_move (GTK_WINDOW(dialog), 20, 10);
+	//eof CHB
+	
 	gtk_window_present (dialog);
 }
 

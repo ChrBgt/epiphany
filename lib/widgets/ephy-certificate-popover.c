@@ -110,7 +110,7 @@ ephy_certificate_popover_set_security_level (EphyCertificatePopover *popover,
   case EPHY_SECURITY_LEVEL_BROKEN_SECURITY:
     address_text = g_markup_printf_escaped ("<span weight=\"bold\">%s</span>", priv->hostname);
     /* Label in certificate popover when site is untrusted. %s is a URL. */
-    label_text = g_strdup_printf (_("This web site’s digital identification is not trusted. "
+    label_text = g_strdup_printf (_("Not trusted! "   //"This web site’s digital identification is not trusted. " CHB shorten the text to avoid popover size issue
                                     "You may have connected to an attacker pretending to be %s."),
                                   address_text);
     gtk_label_set_markup (GTK_LABEL (priv->security_label), label_text);

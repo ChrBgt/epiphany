@@ -322,6 +322,12 @@ ephy_bookmarks_ui_add_bookmark (GtkWindow *parent,
 			  G_CALLBACK (properties_dialog_destroy_cb), bookmark);
 	g_hash_table_insert (properties_dialogs,
 			     bookmark, dialog);
+
+    //CHB added
+	gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
+	gtk_window_set_default_size (GTK_WINDOW(dialog), 1000-40, 500-40);
+    gtk_window_move (GTK_WINDOW(dialog), 20, 10);
+	//eof CHB
 	
 	gtk_window_present_with_time (GTK_WINDOW (dialog),
 				      gtk_get_current_event_time ());
@@ -354,7 +360,12 @@ ephy_bookmarks_ui_show_bookmark (EphyNode *bookmark)
 		g_hash_table_insert (properties_dialogs,
 				     bookmark, dialog);
 	}
-
+	//CHB added
+	gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
+	gtk_window_set_default_size (GTK_WINDOW(dialog), 1000-40, 500-40);
+    gtk_window_move (GTK_WINDOW(dialog), 20, 10);
+	//eof CHB
+	
 	gtk_window_present_with_time (GTK_WINDOW (dialog),
 				      gtk_get_current_event_time ());
 }

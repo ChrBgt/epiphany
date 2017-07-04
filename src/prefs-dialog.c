@@ -62,8 +62,8 @@ enum
 struct PrefsDialogPrivate
 {
 	/* general */
-	GtkWidget *download_button_hbox;
-	GtkWidget *download_button_label;
+	//GtkWidget *download_button_hbox;  CHB
+	//GtkWidget *download_button_label;  CHB
 	GtkWidget *automatic_downloads_checkbutton;
 	GtkWidget *search_engine_combo;
 	GtkWidget *popups_allow_checkbutton;
@@ -78,7 +78,7 @@ struct PrefsDialogPrivate
 	GtkWidget *mono_fontbutton;
 	GtkWidget *css_checkbox;
 	GtkWidget *css_edit_button;
-
+    
 	/* privacy */
 	GtkWidget *always;
 	GtkWidget *no_third_party;
@@ -152,6 +152,8 @@ on_manage_cookies_button_clicked (GtkWidget *button,
 				       NULL);
 	gtk_window_set_transient_for (GTK_WINDOW (cookies_dialog), GTK_WINDOW (dialog));
 	gtk_window_set_modal (GTK_WINDOW (cookies_dialog), TRUE);
+	gtk_window_set_default_size (GTK_WINDOW(cookies_dialog), 1000-40, 500-40); //CHB added
+    gtk_window_move (GTK_WINDOW(cookies_dialog), 20, 10); //CHB added
 	gtk_window_present (GTK_WINDOW (cookies_dialog));
 }
 
@@ -166,6 +168,8 @@ on_manage_passwords_button_clicked (GtkWidget *button,
 					 NULL);
 	gtk_window_set_transient_for (GTK_WINDOW (passwords_dialog), GTK_WINDOW (dialog));
 	gtk_window_set_modal (GTK_WINDOW (passwords_dialog), TRUE);
+	gtk_window_set_default_size (GTK_WINDOW(passwords_dialog), 1000-40, 500-40); //CHB added
+    gtk_window_move (GTK_WINDOW(passwords_dialog), 20, 10); //CHB added
 	gtk_window_present (GTK_WINDOW (passwords_dialog));
 }
 
@@ -180,15 +184,16 @@ prefs_dialog_class_init (PrefsDialogClass *klass)
 	gtk_widget_class_set_template_from_resource (widget_class,
 	                                             "/org/gnome/epiphany/prefs-dialog.ui");
 	/* general */
-	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, automatic_downloads_checkbutton);
+	//gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, automatic_downloads_checkbutton); CHB
 	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, search_engine_combo);
 	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, popups_allow_checkbutton);
 	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, adblock_allow_checkbutton);
 	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, enable_plugins_checkbutton);
-	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, download_button_hbox);
-	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, download_button_label);
+	//gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, download_button_hbox);  CHB
+	//gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, download_button_label); CHB
 
 	/* fonts */
+	/*
 	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, use_gnome_fonts_checkbutton);
 	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, custom_fonts_table);
 	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, sans_fontbutton);
@@ -196,7 +201,8 @@ prefs_dialog_class_init (PrefsDialogClass *klass)
 	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, mono_fontbutton);
 	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, css_checkbox);
 	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, css_edit_button);
-
+    */
+	
 	/* privacy */
 	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, always);
 	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, no_third_party);
@@ -206,13 +212,13 @@ prefs_dialog_class_init (PrefsDialogClass *klass)
 	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, clear_personal_data_button);
 
 	/* language */
-	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, default_encoding_combo);
+	//gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, default_encoding_combo); CHB
 	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, lang_treeview);
 	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, lang_add_button);
 	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, lang_remove_button);
 	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, lang_up_button);
 	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, lang_down_button);
-	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, enable_spell_checking_checkbutton);
+	//gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, enable_spell_checking_checkbutton);  CHB
 
 	gtk_widget_class_bind_template_callback (widget_class, on_manage_cookies_button_clicked);
 	gtk_widget_class_bind_template_callback (widget_class, on_manage_passwords_button_clicked);
@@ -935,8 +941,8 @@ create_download_path_button (PrefsDialog *dialog)
 						 DOWNLOAD_BUTTON_WIDTH);
 	g_signal_connect (button, "selection-changed",
 			  G_CALLBACK (download_path_changed_cb), dialog);
-	gtk_label_set_mnemonic_widget (GTK_LABEL (dialog->priv->download_button_label), button);
-	gtk_box_pack_start (GTK_BOX (dialog->priv->download_button_hbox), button, TRUE, TRUE, 0);
+	//gtk_label_set_mnemonic_widget (GTK_LABEL (dialog->priv->download_button_label), button);  CHB
+	//gtk_box_pack_start (GTK_BOX (dialog->priv->download_button_hbox), button, TRUE, TRUE, 0); CHB
 	gtk_widget_show (button);
 
 	g_settings_bind_writable (EPHY_SETTINGS_STATE,
@@ -1192,7 +1198,7 @@ setup_general_page (PrefsDialog *dialog)
 			 "active",
 			 G_SETTINGS_BIND_DEFAULT);
 
-	create_download_path_button (dialog);
+	//create_download_path_button (dialog);   CHB
 	create_search_engine_combo (GTK_COMBO_BOX (dialog->priv->search_engine_combo));
 }
 
@@ -1309,15 +1315,17 @@ setup_language_page (PrefsDialog *dialog)
 
 	web_settings = ephy_settings_get (EPHY_PREFS_WEB_SCHEMA);
 
+	/* CHB
 	g_settings_bind (web_settings,
 			 EPHY_PREFS_WEB_ENABLE_SPELL_CHECKING,
 			 priv->enable_spell_checking_checkbutton,
 			 "active",
 			 G_SETTINGS_BIND_DEFAULT);
-
+    */
+	
 	encodings = EPHY_ENCODINGS (ephy_embed_shell_get_encodings (EPHY_EMBED_SHELL (ephy_shell_get_default ())));
 
-	create_node_combo (dialog, encodings, "ISO-8859-1");
+	//create_node_combo (dialog, encodings, "ISO-8859-1");  CHB
 
 	create_language_section (dialog);
 }
@@ -1329,7 +1337,7 @@ prefs_dialog_init (PrefsDialog *dialog)
 	gtk_widget_init_template (GTK_WIDGET (dialog));
 
 	setup_general_page (dialog);
-	setup_fonts_page (dialog);
+	//setup_fonts_page (dialog); CHB
 	setup_privacy_page (dialog);
 	setup_language_page (dialog);
 

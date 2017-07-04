@@ -31,7 +31,19 @@ name_acquired_cb (GDBusConnection *connection,
                   EphyWebExtension *extension)
 {
   ephy_web_extension_dbus_register (extension, connection);
+g_printerr("name_acquired_cb: %s\n", name);//CHB
 }
+
+//CHB
+static void
+name_lost_cb (GDBusConnection *connection,
+                         const gchar *name,
+                         gpointer user_data)
+{
+  g_printerr("name_lost_cb: ");
+  if (!connection) g_printerr("NULL\n"); else g_printerr("not NULL, %s\n", name);
+}
+//eof CHB
 
 /* Placate -Wmissing-prototype */
 void
@@ -48,7 +60,7 @@ webkit_web_extension_initialize_with_user_data (WebKitWebExtension *extension,
   const char *dot_dir;
   gboolean private_profile;
   GError *error = NULL;
-
+g_printerr("webkit_web_extension_initialize_with_user_data\n");//CHB
   g_variant_get (user_data, "(&s&sb)", &extension_id, &dot_dir, &private_profile);
 
   if (!ephy_file_helpers_init (dot_dir, 0, &error)) {
@@ -59,6 +71,7 @@ webkit_web_extension_initialize_with_user_data (WebKitWebExtension *extension,
   ephy_debug_init ();
 
   web_extension = ephy_web_extension_get ();
+
   ephy_web_extension_initialize (web_extension, extension, dot_dir, private_profile);
 
   service_name = g_strdup_printf ("%s-%s", EPHY_WEB_EXTENSION_SERVICE_NAME, extension_id);
@@ -67,8 +80,9 @@ webkit_web_extension_initialize_with_user_data (WebKitWebExtension *extension,
                   G_BUS_NAME_OWNER_FLAGS_NONE,
                   NULL,
                   (GBusNameAcquiredCallback)name_acquired_cb,
-                  NULL,
+                  (GBusNameLostCallback)name_lost_cb, //CHB NULL,
                   web_extension, NULL);
+g_printerr("eof webkit_web_extension_initialize_with_user_data %s\n", service_name);//CHB
   g_free (service_name);
 }
 

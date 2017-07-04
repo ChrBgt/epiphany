@@ -22,6 +22,9 @@
 
 #include "config.h"
 
+//CHB test
+#include <time.h>
+
 #include "ephy-debug.h"
 #include "ephy-file-helpers.h"
 #include "ephy-initial-state.h"
@@ -36,7 +39,7 @@
 #include <errno.h>
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
-#include <libnotify/notify.h>
+//CHB #include <libnotify/notify.h>
 #include <libxml/xmlversion.h>
 #include <string.h>
 
@@ -238,6 +241,15 @@ main (int argc,
   int status;
   EphyFileHelpersFlags flags;
 
+/*CHB test
+{   unsigned int retTime;
+    g_printerr("begin delay\n");
+    retTime = time(0) + 60;   // Get finishing time.
+    while (time(0) < retTime);               // Loop until it arrives.
+	g_printerr("end delay\n");
+}
+//eof CHB test
+*/
   /* Initialize the i18n stuff */
   bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR);
   bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
@@ -248,7 +260,7 @@ main (int argc,
    */
   LIBXML_TEST_VERSION;
 
-  notify_init (PACKAGE);
+  //CHB notify_init (PACKAGE);
 
   /* If we're given -remote arguments, translate them */
   if (argc >= 2 && strcmp (argv[1], "-remote") == 0) {
@@ -300,7 +312,7 @@ main (int argc,
     
     g_strfreev (arguments);
   }
-  
+
   /* Initialise our debug helpers */
   ephy_debug_init ();
   
@@ -405,6 +417,8 @@ main (int argc,
 
 #ifdef GDK_WINDOWING_X11
   /* Get a timestamp manually if need be */
+  g_printerr("GDK_WINDOWING_X11 set - ?"); //CHB added
+  
   if (user_time == 0) {
     GdkDisplay* display =
       gdk_display_manager_get_default_display (gdk_display_manager_get ());
@@ -487,8 +501,10 @@ main (int argc,
   g_object_unref (ephy_shell);
   g_free (profile_directory);
 
+  /*CHB removed
   if (notify_is_initted ())
     notify_uninit ();
+  */
 
   ephy_initial_state_save ();
   ephy_settings_shutdown ();
