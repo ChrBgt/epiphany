@@ -1310,23 +1310,24 @@ static void
 setup_language_page (PrefsDialog *dialog)
 {
 	PrefsDialogPrivate *priv = dialog->priv;
+
+	/*CHB
 	GSettings *web_settings;
 	EphyEncodings *encodings;
 
 	web_settings = ephy_settings_get (EPHY_PREFS_WEB_SCHEMA);
 
-	/* CHB
 	g_settings_bind (web_settings,
 			 EPHY_PREFS_WEB_ENABLE_SPELL_CHECKING,
 			 priv->enable_spell_checking_checkbutton,
 			 "active",
 			 G_SETTINGS_BIND_DEFAULT);
+	
+	encodings = EPHY_ENCODINGS (ephy_embed_shell_get_encodings (EPHY_EMBED_SHELL (ephy_shell_get_default ())));  CHB
+
+	create_node_combo (dialog, encodings, "ISO-8859-1");
     */
 	
-	encodings = EPHY_ENCODINGS (ephy_embed_shell_get_encodings (EPHY_EMBED_SHELL (ephy_shell_get_default ())));
-
-	//create_node_combo (dialog, encodings, "ISO-8859-1");  CHB
-
 	create_language_section (dialog);
 }
 

@@ -23,7 +23,7 @@
 #include "ephy-debug.h"
 
 #include <ctype.h>
-#include <gdk/gdkx.h>
+//#include <gdk/gdkx.h>  CHB
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 #include <string.h>
@@ -392,7 +392,7 @@ ephy_gui_window_update_user_time (GtkWidget *window,
 	if (user_time != 0)
 	{
 		gtk_widget_realize (window);
-
+/* CHB
 #ifdef GDK_WINDOWING_X11
 		if (GDK_IS_X11_DISPLAY (gdk_display_get_default ()))
 		{
@@ -400,6 +400,7 @@ ephy_gui_window_update_user_time (GtkWidget *window,
 						      user_time);
 		}
 #endif
+*/
 	}
 
 }

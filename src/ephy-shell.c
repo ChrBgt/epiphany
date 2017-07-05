@@ -45,7 +45,7 @@
 #include "window-commands.h"
 
 #include <glib/gi18n.h>
-#include <gdk/gdkx.h>
+//#include <gdk/gdkx.h> CHB
 #include <gtk/gtk.h>
 /*CHB remove
 #define WNCK_I_KNOW_THIS_IS_UNSTABLE

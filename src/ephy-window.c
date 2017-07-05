@@ -59,7 +59,7 @@
 #include "window-commands.h"
 
 #include <gdk/gdkkeysyms.h>
-#include <gdk/gdkx.h>
+//#include <gdk/gdkx.h>  CHB
 #include <gio/gio.h>
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
@@ -1792,8 +1792,8 @@ populate_context_menu (WebKitWebView *web_view,
 	WebKitContextMenuItem *fullscreen_item = NULL;
 	GList *spelling_guess_items = NULL;
 	EphyEmbedEvent *embed_event;
-	gboolean is_document = FALSE;
-	gboolean app_mode, incognito_mode;
+	//gboolean is_document = FALSE;          CHB
+	gboolean app_mode; //, incognito_mode;   CHB
 	gboolean is_image;
 	gboolean is_media = FALSE;
 	gboolean is_video = FALSE;
@@ -1868,7 +1868,7 @@ populate_context_menu (WebKitWebView *web_view,
 	g_object_unref (embed_event);
 
 	app_mode = ephy_embed_shell_get_mode (ephy_embed_shell_get_default ()) == EPHY_EMBED_SHELL_MODE_APPLICATION;
-	incognito_mode = ephy_embed_shell_get_mode (ephy_embed_shell_get_default ()) == EPHY_EMBED_SHELL_MODE_INCOGNITO;
+	//incognito_mode = ephy_embed_shell_get_mode (ephy_embed_shell_get_default ()) == EPHY_EMBED_SHELL_MODE_INCOGNITO; CHB
 
 	update_edit_actions_sensitivity (window, FALSE);
 
@@ -1969,7 +1969,7 @@ populate_context_menu (WebKitWebView *web_view,
 	}
 	else
 	{
-		is_document = TRUE;
+		//is_document = TRUE; CHB
 
 		update_edit_actions_sensitivity (window, TRUE);
 

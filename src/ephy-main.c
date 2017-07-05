@@ -43,9 +43,11 @@
 #include <libxml/xmlversion.h>
 #include <string.h>
 
+/*CHB
 #ifdef GDK_WINDOWING_X11
 #include <gdk/gdkx.h>
 #endif
+*/
 
 static gboolean open_in_new_tab = FALSE;
 static gboolean open_in_new_window = FALSE;
@@ -134,7 +136,7 @@ get_startup_id (void)
   return retval;
 }
 
-#ifdef GDK_WINDOWING_X11
+//#ifdef GDK_WINDOWING_X11          CHB
 /*
  * FIXME: Need a solution for windowing-systems other than X11.
  */
@@ -142,6 +144,7 @@ get_startup_id (void)
 /* Copied from libnautilus/nautilus-program-choosing.c; Needed in case
  * we have no DESKTOP_STARTUP_ID (with its accompanying timestamp).
  */
+/* CHB
 static Time
 slowly_and_stupidly_obtain_timestamp (Display *xdisplay)
 {
@@ -190,6 +193,7 @@ slowly_and_stupidly_obtain_timestamp (Display *xdisplay)
   return event.xproperty.time;
 }
 #endif
+*/
 
 static void
 show_error_message (GError **error)
@@ -415,8 +419,9 @@ main (int argc,
     arguments = args;
   }
 
+/* CHB
 #ifdef GDK_WINDOWING_X11
-  /* Get a timestamp manually if need be */
+  //Get a timestamp manually if need be
   g_printerr("GDK_WINDOWING_X11 set - ?"); //CHB added
   
   if (user_time == 0) {
@@ -427,7 +432,7 @@ main (int argc,
         slowly_and_stupidly_obtain_timestamp (GDK_DISPLAY_XDISPLAY (display));
   }
 #endif
-
+*/
   /* Delete the requested web application, if any. Must happen after
    * ephy_file_helpers_init (). */
   if (application_to_delete) {
