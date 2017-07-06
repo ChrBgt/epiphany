@@ -212,14 +212,16 @@ prefs_dialog_class_init (PrefsDialogClass *klass)
 	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, clear_personal_data_button);
 
 	/* language */
-	//gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, default_encoding_combo); CHB
+	/*CHB
+	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, default_encoding_combo);
 	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, lang_treeview);
 	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, lang_add_button);
 	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, lang_remove_button);
 	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, lang_up_button);
 	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, lang_down_button);
-	//gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, enable_spell_checking_checkbutton);  CHB
-
+	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, enable_spell_checking_checkbutton);
+    */
+	
 	gtk_widget_class_bind_template_callback (widget_class, on_manage_cookies_button_clicked);
 	gtk_widget_class_bind_template_callback (widget_class, on_manage_passwords_button_clicked);
 }
@@ -1340,7 +1342,7 @@ prefs_dialog_init (PrefsDialog *dialog)
 	setup_general_page (dialog);
 	//setup_fonts_page (dialog); CHB
 	setup_privacy_page (dialog);
-	setup_language_page (dialog);
+	//setup_language_page (dialog); CHB test
 
 	ephy_gui_ensure_window_group (GTK_WINDOW (dialog));
 	g_signal_connect (dialog, "response",
