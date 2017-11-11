@@ -175,7 +175,7 @@ ephy_web_extension_proxy_form_auth_data_save_confirmation_response (EphyWebExten
 
   if (!web_extension->priv->proxy)
     return;
-
+  
   g_dbus_proxy_call (web_extension->priv->proxy,
                      "FormAuthDataSaveConfirmationResponse",
                      g_variant_new ("(ub)", request_id, response),

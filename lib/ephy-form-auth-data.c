@@ -101,6 +101,7 @@ ephy_form_auth_data_store (const char *uri,
   char *origin;
   char *label;
   GTask *task;
+  GError *err = NULL;//CHB
 
   g_return_if_fail (uri);
   g_return_if_fail (form_password);
@@ -126,12 +127,24 @@ ephy_form_auth_data_store (const char *uri,
      */
     label = g_strdup_printf (_("Password in a form in %s"), origin);
   }
+  
+  /*CHB test
+  secret_service_store_sync (NULL, EPHY_FORM_PASSWORD_SCHEMA,
+                             attributes, NULL, label, value,
+                             NULL,
+                             &err); 
+  if (err && err->message) {
+    g_printerr ("Problem in secret service store: %s\n", err->message);
+    g_error_free (err);
+  }							 
+  */
+  
   secret_service_store (NULL, EPHY_FORM_PASSWORD_SCHEMA,
                         attributes, NULL, label, value,
                         NULL,
                         (GAsyncReadyCallback)store_form_password_cb,
                         g_object_ref (task));
-
+  
   g_free (label);
   secret_value_unref (value);
   g_hash_table_unref (attributes);

@@ -819,6 +819,7 @@ start_browsing (GaClient *ga_client,
 				  G_CALLBACK (browser_new_service_cb), bookmarks);
 		g_signal_connect (browser, "removed-service",
 				  G_CALLBACK (browser_removed_service_cb), bookmarks);
+	    		
 		if (!ga_service_browser_attach (browser,
 						ga_client,
 						NULL))
@@ -846,7 +847,7 @@ ga_client_state_changed_cb (GaClient *ga_client,
                         g_object_unref (priv->ga_client);
                         priv->ga_client = NULL;
 
-                        ephy_local_bookmarks_start_client (bookmarks);
+                        //ephy_local_bookmarks_start_client (bookmarks); CHB avahi not supported
 		}
 	}
 	if (state == GA_CLIENT_STATE_S_RUNNING)
@@ -881,7 +882,7 @@ ephy_local_bookmarks_init (EphyBookmarks *bookmarks)
 	priv->resolve_handles =	g_hash_table_new_full (g_str_hash, g_str_equal,
 						       g_free,
 						       (GDestroyNotify) resolve_data_free);
-        ephy_local_bookmarks_start_client (bookmarks);
+    //ephy_local_bookmarks_start_client (bookmarks); CHB no avahi support
 }
 
 static void

@@ -1342,7 +1342,7 @@ prefs_dialog_init (PrefsDialog *dialog)
 	setup_general_page (dialog);
 	//setup_fonts_page (dialog); CHB
 	setup_privacy_page (dialog);
-	//setup_language_page (dialog); CHB test
+	//setup_language_page (dialog); CHB
 
 	ephy_gui_ensure_window_group (GTK_WINDOW (dialog));
 	g_signal_connect (dialog, "response",
