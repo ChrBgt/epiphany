@@ -1133,7 +1133,7 @@ window_cmd_edit_bookmarks (GtkAction *action,
     gtk_window_set_modal (GTK_WINDOW(bwindow), TRUE);
 	//gtk_window_set_decorated (bwindow, FALSE); 
     gtk_window_set_type_hint(GTK_WINDOW(bwindow), GDK_WINDOW_TYPE_HINT_MENU);//prevents minimize and maximize buttons
-    gtk_window_set_default_size (GTK_WINDOW(bwindow), 1000-40, 500-40); //Hoehe bringt nichts, könnte abhängig von der "Summe des Innenlebens" sein TODO
+    gtk_window_set_default_size (GTK_WINDOW(bwindow), atoi(getenv("EPI_W"))-40, atoi(getenv("EPI_H"))-40); //Hoehe bringt nichts, könnte abhängig von der "Summe des Innenlebens" sein TODO
     gtk_window_move (GTK_WINDOW(bwindow), 20, 10);
 	//eof CHB
 	
@@ -1153,7 +1153,7 @@ window_cmd_edit_history (GtkAction *action,
                                               GTK_WINDOW (window));
 	//CHB
     gtk_window_set_modal (GTK_WINDOW(hwindow), TRUE);
-    gtk_window_set_default_size (GTK_WINDOW(hwindow), 1000-40, 500-40); //Hoehe bringt nichts TODO
+    gtk_window_set_default_size (GTK_WINDOW(hwindow), atoi(getenv("EPI_W"))-40, atoi(getenv("EPI_H"))-40); //Hoehe bringt nichts TODO
     gtk_window_move (GTK_WINDOW(hwindow), 20, 10);
 	//eof CHB
 
@@ -1173,7 +1173,7 @@ window_cmd_edit_preferences (GtkAction *action,
                                       GTK_WINDOW (window));
 	//CHB
     gtk_window_set_modal (GTK_WINDOW(dialog), TRUE);
-    gtk_window_set_default_size (GTK_WINDOW(dialog), 1000-40, 500-40); //Hoehe bringt nichts, könnte abhängig von der "Summe des Innenlebens" sein TODO
+    gtk_window_set_default_size (GTK_WINDOW(dialog), atoi(getenv("EPI_W"))-40, atoi(getenv("EPI_H"))-40); //Hoehe bringt nichts, könnte abhängig von der "Summe des Innenlebens" sein TODO
     gtk_window_move (GTK_WINDOW(dialog), 20, 10);
 	//eof CHB
 	

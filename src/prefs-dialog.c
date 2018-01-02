@@ -152,7 +152,7 @@ on_manage_cookies_button_clicked (GtkWidget *button,
 				       NULL);
 	gtk_window_set_transient_for (GTK_WINDOW (cookies_dialog), GTK_WINDOW (dialog));
 	gtk_window_set_modal (GTK_WINDOW (cookies_dialog), TRUE);
-	gtk_window_set_default_size (GTK_WINDOW(cookies_dialog), 1000-40, 500-40); //CHB added
+	gtk_window_set_default_size (GTK_WINDOW(cookies_dialog), atoi(getenv("EPI_W"))-40, atoi(getenv("EPI_H"))-40); //CHB added
     gtk_window_move (GTK_WINDOW(cookies_dialog), 20, 10); //CHB added
 	gtk_window_present (GTK_WINDOW (cookies_dialog));
 }
@@ -168,7 +168,7 @@ on_manage_passwords_button_clicked (GtkWidget *button,
 					 NULL);
 	gtk_window_set_transient_for (GTK_WINDOW (passwords_dialog), GTK_WINDOW (dialog));
 	gtk_window_set_modal (GTK_WINDOW (passwords_dialog), TRUE);
-	gtk_window_set_default_size (GTK_WINDOW(passwords_dialog), 1000-40, 500-40); //CHB added
+	gtk_window_set_default_size (GTK_WINDOW(passwords_dialog), atoi(getenv("EPI_W"))-40, atoi(getenv("EPI_H"))-40); //CHB added
     gtk_window_move (GTK_WINDOW(passwords_dialog), 20, 10); //CHB added
 	gtk_window_present (GTK_WINDOW (passwords_dialog));
 }

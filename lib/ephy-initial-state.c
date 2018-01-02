@@ -141,8 +141,8 @@ ephy_state_window_set_size (GtkWidget *window, EphyNode *node)
   }
 
   //CHB
-  gtk_window_set_default_size (GTK_WINDOW (window), 1000, 500);
-  gtk_widget_set_size_request(GTK_WIDGET(window), 1000, 500);
+  gtk_window_set_default_size (GTK_WINDOW (window), atoi(getenv("EPI_W")), atoi(getenv("EPI_H")));
+  gtk_widget_set_size_request(GTK_WIDGET(window), atoi(getenv("EPI_W")), atoi(getenv("EPI_H")));
   //gtk_window_set_type_hint(GTK_WINDOW(window), GDK_WINDOW_TYPE_HINT_MENU);//wozu war das noch? TODO
   //gtk_window_set_resizable(GTK_WIDGET(window), FALSE); kein effekt
   //eof CHB

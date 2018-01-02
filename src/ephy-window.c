@@ -3737,7 +3737,7 @@ ephy_window_show (GtkWidget *widget)
 			flags = EPHY_INITIAL_STATE_WINDOW_SAVE_SIZE;
 
 		ephy_initial_state_add_window (widget, "main_window", 
-                                   	       1000, 500, FALSE,  //600, 500, TRUE,      CHB
+                           atoi(getenv("EPI_W")), atoi(getenv("EPI_H")), FALSE,  //600, 500, TRUE,      CHB
 					       flags);
 		priv->has_size = TRUE;
 	}

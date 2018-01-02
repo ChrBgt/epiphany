@@ -325,7 +325,7 @@ ephy_bookmarks_ui_add_bookmark (GtkWindow *parent,
 
     //CHB added
 	gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
-	gtk_window_set_default_size (GTK_WINDOW(dialog), 1000-40, 500-40);
+	gtk_window_set_default_size (GTK_WINDOW(dialog), atoi(getenv("EPI_W"))-40, atoi(getenv("EPI_H"))-40);
     gtk_window_move (GTK_WINDOW(dialog), 20, 10);
 	//eof CHB
 	
@@ -362,7 +362,7 @@ ephy_bookmarks_ui_show_bookmark (EphyNode *bookmark)
 	}
 	//CHB added
 	gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
-	gtk_window_set_default_size (GTK_WINDOW(dialog), 1000-40, 500-40);
+	gtk_window_set_default_size (GTK_WINDOW(dialog), atoi(getenv("EPI_W"))-40, atoi(getenv("EPI_H"))-40);
     gtk_window_move (GTK_WINDOW(dialog), 20, 10);
 	//eof CHB
 	
