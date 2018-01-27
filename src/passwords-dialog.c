@@ -57,7 +57,7 @@ struct PasswordsDialogPrivate
 	GtkWidget *password_column;
 	GtkWidget *password_renderer;
 	GtkWidget *treeview_popup_menu;
-	GtkWidget *copy_password_menuitem;
+	//GtkWidget *copy_password_menuitem; CHB
 	GtkWidget *copy_username_menuitem;
 
 	SecretService *ss;
@@ -291,7 +291,7 @@ get_selected_item (PasswordsDialog *dialog,
 
 	return value;
 }
-
+/* CHB
 static void
 on_copy_password_menuitem_activate (GtkMenuItem *menuitem,
 				    PasswordsDialog *dialog)
@@ -306,7 +306,7 @@ on_copy_password_menuitem_activate (GtkMenuItem *menuitem,
 	}
 	g_free (password);
 }
-
+*/
 static void
 on_copy_username_menuitem_activate (GtkMenuItem *menuitem,
 				    PasswordsDialog *dialog)
@@ -336,7 +336,7 @@ on_passwords_treeview_button_press_event (GtkWidget       *widget,
 		if (n == 0)
 			return FALSE;
 
-		gtk_widget_set_sensitive (dialog->priv->copy_password_menuitem, (n == 1));
+		//gtk_widget_set_sensitive (dialog->priv->copy_password_menuitem, (n == 1)); CHB
 		gtk_widget_set_sensitive (dialog->priv->copy_username_menuitem, (n == 1));
 
 		gtk_menu_popup (GTK_MENU (dialog->priv->treeview_popup_menu),
@@ -369,7 +369,7 @@ passwords_dialog_class_init (PasswordsDialogClass *klass)
 	gtk_widget_class_bind_template_child_private (widget_class, PasswordsDialog, password_column);
 	gtk_widget_class_bind_template_child_private (widget_class, PasswordsDialog, password_renderer);
 	gtk_widget_class_bind_template_child_private (widget_class, PasswordsDialog, treeview_popup_menu);
-	gtk_widget_class_bind_template_child_private (widget_class, PasswordsDialog, copy_password_menuitem);
+	//gtk_widget_class_bind_template_child_private (widget_class, PasswordsDialog, copy_password_menuitem);  CHB
 	gtk_widget_class_bind_template_child_private (widget_class, PasswordsDialog, copy_username_menuitem);
 
 	gtk_widget_class_bind_template_callback (widget_class, on_passwords_treeview_key_press_event);
@@ -378,7 +378,7 @@ passwords_dialog_class_init (PasswordsDialogClass *klass)
 	gtk_widget_class_bind_template_callback (widget_class, on_remove_button_clicked);
 	//gtk_widget_class_bind_template_callback (widget_class, on_show_passwords_button_toggled);  CHB
 	gtk_widget_class_bind_template_callback (widget_class, on_search_entry_changed);
-	gtk_widget_class_bind_template_callback (widget_class, on_copy_password_menuitem_activate);
+	//gtk_widget_class_bind_template_callback (widget_class, on_copy_password_menuitem_activate);  CHB
 	gtk_widget_class_bind_template_callback (widget_class, on_copy_username_menuitem_activate);
 }
 
