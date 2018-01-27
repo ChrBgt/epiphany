@@ -1537,14 +1537,18 @@ window_cmd_help_about (GtkAction *action,
 	g_key_file_free (key_file);
 
 	comments = g_strdup_printf (_("A simple, clean, beautiful view of the web.\n"
-				      "Powered by WebKit %d.%d.%d"),
+				      "Powered by WebKit"));
+					/* CHB
+					 %d.%d.%d"),
 				    webkit_get_major_version (),
 				    webkit_get_minor_version (),
 				    webkit_get_micro_version ());
-
+					*/
 	gtk_show_about_dialog (window ? GTK_WINDOW (window) : NULL,
-			       "program-name", _("Web"),
-			       "version", VERSION,
+			       "program-name", _("Web/augtention.com"), // CHB  /augtention.com added
+			       "version",
+				   "", //CHB
+				   //VERSION, CHB
 			       "copyright", "Copyright © 2002–2004 Marco Pesenti Gritti\n"
 			                    "Copyright © 2003–2014 The Web Developers",
 			       "artists", artists,

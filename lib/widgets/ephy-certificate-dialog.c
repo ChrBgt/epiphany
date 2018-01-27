@@ -311,6 +311,7 @@ ephy_certificate_dialog_new (GtkWindow *parent,
                              GTlsCertificateFlags tls_errors)
 {
   GtkWidget *dialog;
+  GdkGeometry windowProperties;//CHB
 
   g_return_val_if_fail (address != NULL, NULL);
   g_return_val_if_fail (G_IS_TLS_CERTIFICATE (certificate), NULL);
@@ -323,9 +324,15 @@ ephy_certificate_dialog_new (GtkWindow *parent,
                                      "use-header-bar", TRUE,
 				     NULL));
 // CHB added
-  gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
-  gtk_window_set_default_size (GTK_WINDOW(dialog), atoi(getenv("EPI_W"))-40, atoi(getenv("EPI_H"))-40);
-  gtk_window_move (GTK_WINDOW(dialog), 20, 10);					 
+  gtk_window_set_modal(GTK_WINDOW (dialog), TRUE);
+  windowProperties.min_width = atoi(getenv("EPI_W"))-40;
+  windowProperties.min_height = atoi(getenv("EPI_H"))-40;
+  windowProperties.max_width = windowProperties.min_width 
+  windowProperties.max_height = windowProperties.min_height;
+  windowProperties.base_width = windowProperties.min_width
+  windowProperties.base_height = windowProperties.min_height;
+  gtk_window_set_geometry_hints(GTK_WINDOW(dialog), NULL, &windowProperties, GDK_HINT_MIN_SIZE | GDK_HINT_MAX_SIZE | GDK_HINT_BASE_SIZE);
+  gtk_window_move (GTK_WINDOW(dialog), 20, 10);
 //eof CHB
 					 
   if (parent)

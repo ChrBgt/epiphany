@@ -264,39 +264,47 @@ ephy_about_handler_handle_about (EphyAboutHandler *handler,
                                  WebKitURISchemeRequest *request)
 {
   char *data;
+  /*CHB
   char *version;
   GtkIconInfo *icon_info;
 
   version = g_strdup_printf (_("Version %s"), VERSION);
 
+
   icon_info = gtk_icon_theme_lookup_icon (gtk_icon_theme_get_default (),
                                           "web-browser",
                                           256,
                                           GTK_ICON_LOOKUP_GENERIC_FALLBACK);
-
+  */
   data = g_strdup_printf ("<html><head><title>%s</title>"
                           "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />"
                           "<link href=\""EPHY_PAGE_TEMPLATE_ABOUT_CSS"\" rel=\"stylesheet\" type=\"text/css\">"
                           "</head><body>"
                           "<div class=\"dialog\">"
-                          "<img src=\"file://%s\"/>"
+                          //"<img src=\"file://%s\"/>"  CHB
                           "<h1 id=\"about-title\">%s</h1>"
                           "<h2 id=\"about-subtitle\">%s</h2>"
                           "<p id=\"about-tagline\">“%s”</p>"
                           "<table class=\"properties\">"
-                          "<tr><td class=\"prop-label\">%s</td><td class=\"prop-value\">%d.%d.%d</td></tr>"
+                          "<tr><td class=\"prop-label\">%s</td><td class=\"prop-value\">%s</td></tr>"
+                          //"<tr><td class=\"prop-label\">%s</td><td class=\"prop-value\">%d.%d.%d</td></tr>"  CHB
                           "</table>"
                           "</div></body></html>",
                           _("About Web"),
-                          icon_info ? gtk_icon_info_get_filename (icon_info) : "",
-                          _("Web"),
-                          version,
+                          //icon_info ? gtk_icon_info_get_filename (icon_info) : "",  CHB
+                          _("Web/augtention.com"),  // CHB  /augtention.com added
+                          //version,  CHB
+						  _(""), //CHB
                           _("A simple, clean, beautiful view of the web"),
-                          "WebKit", webkit_get_major_version (), webkit_get_minor_version (), webkit_get_micro_version ());
+                          "WebKit",
+						  _("") //CHB						  
+						  //webkit_get_major_version (), webkit_get_minor_version (), webkit_get_micro_version () //CHB
+						  );
+/*CHB
   g_free (version);
   if (icon_info)
     g_object_unref (icon_info);
-
+*/
   ephy_about_handler_finish_request (request, data, -1);
 
   return TRUE;

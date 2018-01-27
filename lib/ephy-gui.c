@@ -304,8 +304,19 @@ ephy_gui_help (GtkWidget *parent,
 						 GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
 						 GTK_MESSAGE_ERROR,
 						 GTK_BUTTONS_OK,
-						 _("Could not display help: %s"),
-						 error->message);
+						 //_("Could not display help: %s"),  CHB
+						 _("A few hints on the usage of Web/augtention.com\n\
+\n\
+\u2192 Stuttering video? Lower the video quality settings\n\
+\n\
+\u2192 Image effects? Wait, or move your mouse back and forth\n\
+\n\
+\u2192 Windows can't be moved or resized, they're fix\n\
+\n\
+\u2192 Special characters with  Shift-Ctrl-u <character unicode> Space\n\
+    Example: Shift-Ctrl-u 40 Space  gives @\n\
+")); //CHB				 
+						 //error->message); //CHB
 		g_error_free (error);
 
 		g_signal_connect (dialog, "response",
