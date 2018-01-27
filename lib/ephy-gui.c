@@ -298,7 +298,7 @@ ephy_gui_help (GtkWidget *parent,
 
 	if (error != NULL)
 	{
-		GtkWidget *dialog;
+		GtkWidget *dialog; 	
 
 		dialog = gtk_message_dialog_new (GTK_WINDOW (parent),
 						 GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
@@ -309,12 +309,19 @@ ephy_gui_help (GtkWidget *parent,
 \n\
 \u2192 Stuttering video? Lower the video quality settings\n\
 \n\
-\u2192 Image effects? Wait, or move your mouse back and forth\n\
+\u2192 Image effects? Wait, or move the mouse device to and fro\n\
 \n\
-\u2192 Windows can't be moved or resized, they're fix\n\
+\u2192 Still image effects? Get more CPU power and/or bandwidth ;-)\n\
+\n\
+\u2192 Limited support of Copy between Web/augtention.com and outside\n\
 \n\
 \u2192 Special characters with  Shift-Ctrl-u <character unicode> Space\n\
     Example: Shift-Ctrl-u 40 Space  gives @\n\
+\n\
+\u2192 Known Bugs: \n\
+    Bookmark Editor doesn't react on mouse clicks - use nav keys instead\n\
+    No Copy-Paste between window content and address field possible\n\
+    Windows can't be moved or resized, they're fix\
 ")); //CHB				 
 						 //error->message); //CHB
 		g_error_free (error);
