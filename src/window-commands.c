@@ -1122,6 +1122,7 @@ window_cmd_edit_bookmarks (GtkAction *action,
 			   EphyWindow *window)
 {
 	GtkWidget *bwindow;
+    GdkGeometry windowProperties;//CHB
 	
 	bwindow = ephy_shell_get_bookmarks_editor (ephy_shell_get_default ());
 	
@@ -1131,10 +1132,16 @@ window_cmd_edit_bookmarks (GtkAction *action,
                                       GTK_WINDOW (window));
 
     gtk_window_set_modal (GTK_WINDOW(bwindow), TRUE);
-	//gtk_window_set_decorated (bwindow, FALSE); 
     gtk_window_set_type_hint(GTK_WINDOW(bwindow), GDK_WINDOW_TYPE_HINT_MENU);//prevents minimize and maximize buttons
-    gtk_window_set_default_size (GTK_WINDOW(bwindow), atoi(getenv("EPI_W"))-40, atoi(getenv("EPI_H"))-40); //Hoehe bringt nichts, könnte abhängig von der "Summe des Innenlebens" sein TODO
-    gtk_window_move (GTK_WINDOW(bwindow), 20, 10);
+	
+    windowProperties.min_width = atoi(getenv("EPI_W"))-40;
+    windowProperties.min_height = atoi(getenv("EPI_H"))-40;
+    windowProperties.max_width = windowProperties.min_width; 
+    windowProperties.max_height = windowProperties.min_height;
+    windowProperties.base_width = windowProperties.min_width;
+    windowProperties.base_height = windowProperties.min_height;
+    gtk_window_set_geometry_hints(GTK_WINDOW(bwindow), NULL, &windowProperties, GDK_HINT_MIN_SIZE | GDK_HINT_MAX_SIZE | GDK_HINT_BASE_SIZE);
+    gtk_window_move (GTK_WINDOW(bwindow), 20, 10);	
 	//eof CHB
 	
 	gtk_window_present (GTK_WINDOW (bwindow));
@@ -1145,6 +1152,7 @@ window_cmd_edit_history (GtkAction *action,
 			 EphyWindow *window)
 {
 	GtkWidget *hwindow;
+    GdkGeometry windowProperties;//CHB
 	
 	hwindow = ephy_shell_get_history_window (ephy_shell_get_default ());
 
@@ -1153,8 +1161,14 @@ window_cmd_edit_history (GtkAction *action,
                                               GTK_WINDOW (window));
 	//CHB
     gtk_window_set_modal (GTK_WINDOW(hwindow), TRUE);
-    gtk_window_set_default_size (GTK_WINDOW(hwindow), atoi(getenv("EPI_W"))-40, atoi(getenv("EPI_H"))-40); //Hoehe bringt nichts TODO
-    gtk_window_move (GTK_WINDOW(hwindow), 20, 10);
+    windowProperties.min_width = atoi(getenv("EPI_W"))-40;
+    windowProperties.min_height = atoi(getenv("EPI_H"))-40;
+    windowProperties.max_width = windowProperties.min_width; 
+    windowProperties.max_height = windowProperties.min_height;
+    windowProperties.base_width = windowProperties.min_width;
+    windowProperties.base_height = windowProperties.min_height;
+    gtk_window_set_geometry_hints(GTK_WINDOW(hwindow), NULL, &windowProperties, GDK_HINT_MIN_SIZE | GDK_HINT_MAX_SIZE | GDK_HINT_BASE_SIZE);
+    gtk_window_move (GTK_WINDOW(hwindow), 20, 10);	
 	//eof CHB
 
 	gtk_window_present (GTK_WINDOW (hwindow));
@@ -1165,6 +1179,8 @@ window_cmd_edit_preferences (GtkAction *action,
 			     EphyWindow *window)
 {
 	GtkWindow *dialog;
+	GdkGeometry windowProperties;//CHB
+
 	
 	dialog = GTK_WINDOW (ephy_shell_get_prefs_dialog (ephy_shell_get_default ()));
 
@@ -1173,8 +1189,14 @@ window_cmd_edit_preferences (GtkAction *action,
                                       GTK_WINDOW (window));
 	//CHB
     gtk_window_set_modal (GTK_WINDOW(dialog), TRUE);
-    gtk_window_set_default_size (GTK_WINDOW(dialog), atoi(getenv("EPI_W"))-40, atoi(getenv("EPI_H"))-40); //Hoehe bringt nichts, könnte abhängig von der "Summe des Innenlebens" sein TODO
-    gtk_window_move (GTK_WINDOW(dialog), 20, 10);
+    windowProperties.min_width = atoi(getenv("EPI_W"))-40;
+    windowProperties.min_height = atoi(getenv("EPI_H"))-40;
+    windowProperties.max_width = windowProperties.min_width; 
+    windowProperties.max_height = windowProperties.min_height;
+    windowProperties.base_width = windowProperties.min_width;
+    windowProperties.base_height = windowProperties.min_height;
+    gtk_window_set_geometry_hints(GTK_WINDOW(dialog), NULL, &windowProperties, GDK_HINT_MIN_SIZE | GDK_HINT_MAX_SIZE | GDK_HINT_BASE_SIZE);
+    gtk_window_move (GTK_WINDOW(dialog), 20, 10);	
 	//eof CHB
 	
 	gtk_window_present (dialog);

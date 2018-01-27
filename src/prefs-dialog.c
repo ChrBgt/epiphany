@@ -146,14 +146,23 @@ on_manage_cookies_button_clicked (GtkWidget *button,
 				  PrefsDialog *dialog)
 {
 	CookiesDialog *cookies_dialog;
+    GdkGeometry windowProperties;//CHB
 
 	cookies_dialog = g_object_new (EPHY_TYPE_COOKIES_DIALOG,
 				       "use-header-bar", TRUE,
 				       NULL);
 	gtk_window_set_transient_for (GTK_WINDOW (cookies_dialog), GTK_WINDOW (dialog));
 	gtk_window_set_modal (GTK_WINDOW (cookies_dialog), TRUE);
-	gtk_window_set_default_size (GTK_WINDOW(cookies_dialog), atoi(getenv("EPI_W"))-40, atoi(getenv("EPI_H"))-40); //CHB added
-    gtk_window_move (GTK_WINDOW(cookies_dialog), 20, 10); //CHB added
+	//CHB
+    windowProperties.min_width = atoi(getenv("EPI_W"))-40;
+    windowProperties.min_height = atoi(getenv("EPI_H"))-40;
+    windowProperties.max_width = windowProperties.min_width; 
+    windowProperties.max_height = windowProperties.min_height;
+    windowProperties.base_width = windowProperties.min_width;
+    windowProperties.base_height = windowProperties.min_height;
+    gtk_window_set_geometry_hints(GTK_WINDOW(cookies_dialog), NULL, &windowProperties, GDK_HINT_MIN_SIZE | GDK_HINT_MAX_SIZE | GDK_HINT_BASE_SIZE);
+    gtk_window_move (GTK_WINDOW(cookies_dialog), 20, 10);	
+	//eof CHB
 	gtk_window_present (GTK_WINDOW (cookies_dialog));
 }
 
@@ -162,14 +171,22 @@ on_manage_passwords_button_clicked (GtkWidget *button,
 				    PrefsDialog *dialog)
 {
 	PasswordsDialog *passwords_dialog;
+    GdkGeometry windowProperties;//CHB
 
 	passwords_dialog = g_object_new (EPHY_TYPE_PASSWORDS_DIALOG,
 					 "use-header-bar", TRUE,
 					 NULL);
 	gtk_window_set_transient_for (GTK_WINDOW (passwords_dialog), GTK_WINDOW (dialog));
 	gtk_window_set_modal (GTK_WINDOW (passwords_dialog), TRUE);
-	gtk_window_set_default_size (GTK_WINDOW(passwords_dialog), atoi(getenv("EPI_W"))-40, atoi(getenv("EPI_H"))-40); //CHB added
-    gtk_window_move (GTK_WINDOW(passwords_dialog), 20, 10); //CHB added
+	windowProperties.min_width = atoi(getenv("EPI_W"))-40;
+    windowProperties.min_height = atoi(getenv("EPI_H"))-40;
+    windowProperties.max_width = windowProperties.min_width; 
+    windowProperties.max_height = windowProperties.min_height;
+    windowProperties.base_width = windowProperties.min_width;
+    windowProperties.base_height = windowProperties.min_height;
+    gtk_window_set_geometry_hints(GTK_WINDOW(passwords_dialog), NULL, &windowProperties, GDK_HINT_MIN_SIZE | GDK_HINT_MAX_SIZE | GDK_HINT_BASE_SIZE);
+    gtk_window_move (GTK_WINDOW(passwords_dialog), 20, 10);	
+	//eof CHB
 	gtk_window_present (GTK_WINDOW (passwords_dialog));
 }
 
@@ -966,6 +983,7 @@ clear_personal_data_button_clicked_cb (GtkWidget *button,
 				       PrefsDialog *dialog)
 {
 	ClearDataDialog *clear_dialog;
+    GdkGeometry windowProperties;//CHB
 
 	clear_dialog = g_object_new (EPHY_TYPE_CLEAR_DATA_DIALOG,
 				     "use-header-bar", TRUE,
@@ -973,6 +991,16 @@ clear_personal_data_button_clicked_cb (GtkWidget *button,
 	clear_data_dialog_set_flags (clear_dialog, CLEAR_DATA_CACHE);
 	gtk_window_set_transient_for (GTK_WINDOW (clear_dialog), GTK_WINDOW (dialog));
 	gtk_window_set_modal (GTK_WINDOW (clear_dialog), TRUE);
+    //CHB
+	windowProperties.min_width = atoi(getenv("EPI_W"))-40;
+    windowProperties.min_height = atoi(getenv("EPI_H"))-40;
+    windowProperties.max_width = windowProperties.min_width; 
+    windowProperties.max_height = windowProperties.min_height;
+    windowProperties.base_width = windowProperties.min_width;
+    windowProperties.base_height = windowProperties.min_height;
+    gtk_window_set_geometry_hints(GTK_WINDOW(clear_dialog), NULL, &windowProperties, GDK_HINT_MIN_SIZE | GDK_HINT_MAX_SIZE | GDK_HINT_BASE_SIZE);
+    gtk_window_move (GTK_WINDOW(clear_dialog), 20, 10);	
+	//eof CHB	
 	gtk_window_present (GTK_WINDOW (clear_dialog));
 }
 

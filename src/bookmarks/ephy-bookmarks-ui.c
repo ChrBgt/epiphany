@@ -297,6 +297,7 @@ ephy_bookmarks_ui_add_bookmark (GtkWindow *parent,
 	EphyBookmarks *bookmarks;
 	EphyNode *bookmark;
 	GtkWidget *dialog;
+    GdkGeometry windowProperties;//CHB
 
 	if (g_settings_get_boolean (EPHY_SETTINGS_LOCKDOWN,
 				    EPHY_PREFS_LOCKDOWN_BOOKMARK_EDITING))
@@ -324,9 +325,15 @@ ephy_bookmarks_ui_add_bookmark (GtkWindow *parent,
 			     bookmark, dialog);
 
     //CHB added
-	gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
-	gtk_window_set_default_size (GTK_WINDOW(dialog), atoi(getenv("EPI_W"))-40, atoi(getenv("EPI_H"))-40);
-    gtk_window_move (GTK_WINDOW(dialog), 20, 10);
+	gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);	
+    windowProperties.min_width = atoi(getenv("EPI_W"))-40;
+    windowProperties.min_height = atoi(getenv("EPI_H"))-40;
+    windowProperties.max_width = windowProperties.min_width; 
+    windowProperties.max_height = windowProperties.min_height;
+    windowProperties.base_width = windowProperties.min_width;
+    windowProperties.base_height = windowProperties.min_height;
+    gtk_window_set_geometry_hints(GTK_WINDOW(dialog), NULL, &windowProperties, GDK_HINT_MIN_SIZE | GDK_HINT_MAX_SIZE | GDK_HINT_BASE_SIZE);
+    gtk_window_move (GTK_WINDOW(dialog), 20, 10);	
 	//eof CHB
 	
 	gtk_window_present_with_time (GTK_WINDOW (dialog),
@@ -338,6 +345,7 @@ ephy_bookmarks_ui_show_bookmark (EphyNode *bookmark)
 {
 	EphyBookmarks *bookmarks;
 	GtkWidget *dialog;
+    GdkGeometry windowProperties;//CHB
 
 	bookmarks = ephy_shell_get_bookmarks (ephy_shell_get_default ());
 
@@ -362,8 +370,14 @@ ephy_bookmarks_ui_show_bookmark (EphyNode *bookmark)
 	}
 	//CHB added
 	gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
-	gtk_window_set_default_size (GTK_WINDOW(dialog), atoi(getenv("EPI_W"))-40, atoi(getenv("EPI_H"))-40);
-    gtk_window_move (GTK_WINDOW(dialog), 20, 10);
+    windowProperties.min_width = atoi(getenv("EPI_W"))-40;
+    windowProperties.min_height = atoi(getenv("EPI_H"))-40;
+    windowProperties.max_width = windowProperties.min_width; 
+    windowProperties.max_height = windowProperties.min_height;
+    windowProperties.base_width = windowProperties.min_width;
+    windowProperties.base_height = windowProperties.min_height;
+    gtk_window_set_geometry_hints(GTK_WINDOW(dialog), NULL, &windowProperties, GDK_HINT_MIN_SIZE | GDK_HINT_MAX_SIZE | GDK_HINT_BASE_SIZE);
+    gtk_window_move (GTK_WINDOW(dialog), 20, 10);	
 	//eof CHB
 	
 	gtk_window_present_with_time (GTK_WINDOW (dialog),
