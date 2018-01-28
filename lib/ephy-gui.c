@@ -309,7 +309,7 @@ ephy_gui_help (GtkWidget *parent,
 \n\
 \u2192 Stuttering video? Lower the video quality settings\n\
 \n\
-\u2192 Image effects? Wait, or move the mouse device to and fro\n\
+\u2192 Image effects? Wait, and avoid fast scrolling\n\
 \n\
 \u2192 Still image effects? Get more CPU power and/or bandwidth ;-)\n\
 \n\
