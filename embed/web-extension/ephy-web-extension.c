@@ -1356,12 +1356,11 @@ ephy_web_extension_initialize (EphyWebExtension *extension,
   extension->priv->initialized = TRUE;
 
   extension->priv->extension = g_object_ref (wk_extension);
-g_printerr("ephy_web_extension_initialize: going to call uri_tester_new\n");
   extension->priv->uri_tester = uri_tester_new (dot_dir);
-g_printerr("ephy_web_extension_initialize: going to call ephy_form_auth_data_cache_new if not private profile\n");
+
   if (!is_private_profile)
     extension->priv->form_auth_data_cache = ephy_form_auth_data_cache_new ();
-g_printerr("ephy_web_extension_initialize: going to call g_signal_connect_swapped\n");
+
   g_signal_connect_swapped (extension->priv->extension, "page-created",
                             G_CALLBACK (ephy_web_extension_page_created_cb),
                             extension);

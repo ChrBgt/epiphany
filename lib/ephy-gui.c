@@ -308,20 +308,18 @@ ephy_gui_help (GtkWidget *parent,
 						 _("A few hints on the usage of Web/augtention.com\n\
 \n\
 \u2192 Stuttering video? Lower the video quality settings\n\
-\n\
 \u2192 Image effects? Wait, and avoid fast scrolling\n\
-\n\
 \u2192 Still image effects? Get more CPU power and/or bandwidth ;-)\n\
-\n\
 \u2192 Limited support of Copy between Web/augtention.com and outside\n\
-\n\
+\u2192 Ftp, mailto, gopher etc. are not supported\n\
 \u2192 Special characters with  Shift-Ctrl-u <character unicode> Space\n\
     Example: Shift-Ctrl-u 40 Space  gives @\n\
 \n\
 \u2192 Known Bugs: \n\
     Bookmark Editor doesn't react on mouse clicks - use nav keys instead\n\
     No Copy-Paste between window content and address field possible\n\
-    Windows can't be moved or resized, they're fix\
+    Windows can't be moved or resized, they're fixed\n\
+    In case Back/Forward is blocking switch to a new tab\
 ")); //CHB				 
 						 //error->message); //CHB
 		g_error_free (error);

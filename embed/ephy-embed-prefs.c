@@ -44,6 +44,8 @@ typedef struct
 #define DEFAULT_ENCODING_SETTING "default-charset"
 static WebKitSettings *webkit_settings = NULL;
 
+static const char* const wl[] = {"file://*/*", "file://*"}; //CHB
+
 static void
 user_style_sheet_output_stream_splice_cb (GOutputStream *output_stream,
                                           GAsyncResult *result,
@@ -54,11 +56,10 @@ user_style_sheet_output_stream_splice_cb (GOutputStream *output_stream,
   bytes = g_output_stream_splice_finish (output_stream, result, NULL);
   if (bytes > 0) {
     WebKitUserStyleSheet *style_sheet;
-const char* const wl[2] = {"http://*/*", "https://*/*"};
-const char* const bl[1] = {"file://*/*"};
+
     style_sheet = webkit_user_style_sheet_new (g_memory_output_stream_get_data (G_MEMORY_OUTPUT_STREAM (output_stream)),
                                                WEBKIT_USER_CONTENT_INJECT_ALL_FRAMES, WEBKIT_USER_STYLE_LEVEL_USER,
-											   wl,bl);
+											   wl, NULL); //CHB NULL, NULL);
     webkit_user_content_manager_add_style_sheet (WEBKIT_USER_CONTENT_MANAGER (ephy_embed_shell_get_user_content_manager (ephy_embed_shell_get_default ())),
                                                  style_sheet);
     webkit_user_style_sheet_unref (style_sheet);
