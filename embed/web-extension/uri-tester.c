@@ -69,7 +69,43 @@ enum
   PROP_BASE_DATA_DIR,
 };
 
-G_DEFINE_TYPE (UriTester, uri_tester, G_TYPE_OBJECT)
+//G_DEFINE_TYPE (UriTester, uri_tester, G_TYPE_OBJECT)  CHB test
+
+
+static void     uri_tester_init       (UriTester      *self);
+static void     uri_tester_class_init (UriTesterClass *klass);
+static gpointer uri_tester_parent_class = NULL;
+static void     uri_tester_class_intern_init (gpointer klass)
+{
+  uri_tester_parent_class = g_type_class_peek_parent (klass);
+  uri_tester_class_init ((UriTesterClass*) klass);
+}
+
+GType
+uri_tester_get_type (void)
+{
+  static volatile gsize g_define_type_id__volatile = 0;
+g_printerr("uri_tester_get_type 1 %lu\n", g_define_type_id__volatile);
+  if (g_once_init_enter (&g_define_type_id__volatile))
+    {
+	  GType g_define_type_id; 
+g_printerr("uri_tester_get_type 2 %lu\n", g_define_type_id__volatile);
+      g_define_type_id =
+        g_type_register_static_simple (G_TYPE_OBJECT,
+                                       g_intern_static_string ("UriTester"),
+                                       sizeof (UriTesterClass),
+                                       (GClassInitFunc) uri_tester_class_intern_init,
+                                       sizeof (UriTester),
+                                       (GInstanceInitFunc) uri_tester_init,
+                                       0);
+g_printerr("uri_tester_get_type 3 %lu %lu\n", g_define_type_id__volatile, g_define_type_id);
+      g_once_init_leave (&g_define_type_id__volatile, g_define_type_id);
+    }
+g_printerr("uri_tester_get_type 4 %lu\n", g_define_type_id__volatile);
+  return g_define_type_id__volatile;
+}
+//eof CHB test
+
 
 /* Private functions. */
 
@@ -938,9 +974,12 @@ uri_tester_class_init (UriTesterClass *klass)
 UriTester *
 uri_tester_new (const char *base_data_dir)
 {
+gpointer ret; //CHB
   g_return_val_if_fail (base_data_dir != NULL, NULL);
-
-  return g_object_new (TYPE_URI_TESTER, "base-data-dir", base_data_dir, NULL);
+g_printerr("uri_tester_new %s\n", base_data_dir);
+  ret= g_object_new (TYPE_URI_TESTER, "base-data-dir", base_data_dir, NULL);
+g_printerr("eof uri_tester_new %s\n", base_data_dir); 
+  return ret;
 }
 
 gboolean

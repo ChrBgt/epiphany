@@ -60,8 +60,9 @@ webkit_web_extension_initialize_with_user_data (WebKitWebExtension *extension,
   const char *dot_dir;
   gboolean private_profile;
   GError *error = NULL;
-g_printerr("webkit_web_extension_initialize_with_user_data\n");//CHB
+g_printerr(">>> webkit_web_extension_initialize_with_user_data\n");//CHB
   g_variant_get (user_data, "(&s&sb)", &extension_id, &dot_dir, &private_profile);
+g_printerr("> webkit_web_extension_initialize_with_user_data %s %s %d\n", extension_id, dot_dir, private_profile);//CHB
 
   if (!ephy_file_helpers_init (dot_dir, 0, &error)) {
     g_printerr ("Failed to initialize file helpers: %s\n", error->message);
@@ -71,10 +72,11 @@ g_printerr("webkit_web_extension_initialize_with_user_data\n");//CHB
   ephy_debug_init ();
 
   web_extension = ephy_web_extension_get ();
-
+g_printerr("going to ephy_web_extension_initialize\n");
   ephy_web_extension_initialize (web_extension, extension, dot_dir, private_profile);
 
   service_name = g_strdup_printf ("%s-%s", EPHY_WEB_EXTENSION_SERVICE_NAME, extension_id);
+g_printerr("going to call g_bus_own_name\n");
   g_bus_own_name (G_BUS_TYPE_SESSION,
                   service_name,
                   G_BUS_NAME_OWNER_FLAGS_NONE,
