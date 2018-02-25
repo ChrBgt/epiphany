@@ -1527,6 +1527,7 @@ window_cmd_help_about (GtkAction *action,
 	APPEND_STRV_AND_FREE (authors, list);
 	APPEND (authors, "");
 	APPEND (authors, _("Contact us at:"));
+	APPEND (authors, "<feedback@augtention.com>"); //CHB	
 	APPEND (authors, "<epiphany-list@gnome.org>");
 	APPEND (authors, "");
 	APPEND (authors, _("Contributors:"));

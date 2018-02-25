@@ -307,7 +307,7 @@ ephy_gui_help (GtkWidget *parent,
 						 //_("Could not display help: %s"),  CHB
 						 _("A few hints on the usage of Web/augtention.com\n\
 \n\
-\u2192 Stuttering video? Lower the video quality settings\n\
+\u2192 Stuttering video? Lower video quality settings, use full screen option\n\
 \u2192 Image effects? Wait, and avoid fast scrolling\n\
 \u2192 Still image effects? Get more CPU power and/or bandwidth ;-)\n\
 \u2192 Limited support of Copy between Web/augtention.com and outside\n\

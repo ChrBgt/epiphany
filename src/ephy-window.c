@@ -1231,6 +1231,14 @@ setup_ui_manager (EphyWindow *window)
 					     G_N_ELEMENTS (ephy_menu_toggle_entries),
 					     window);
 	gtk_action_group_set_accel_group (action_group, accel_group);
+//CHB
+    if(atoi(getenv("EPI_W")) < 600 || atoi(getenv("EPI_H")) < 400){	
+	  action = gtk_action_group_get_action (action_group, "HelpContents");
+	  gtk_action_set_sensitive (action, FALSE);
+	  action = gtk_action_group_get_action (action_group, "HelpAbout");
+	  gtk_action_set_sensitive (action, FALSE);
+	}
+//eof CHB	
 	gtk_ui_manager_insert_action_group (manager, action_group, 0);
 	window->priv->action_group = action_group;
 	g_object_unref (action_group);

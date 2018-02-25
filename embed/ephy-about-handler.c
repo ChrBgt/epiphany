@@ -276,6 +276,7 @@ ephy_about_handler_handle_about (EphyAboutHandler *handler,
                                           256,
                                           GTK_ICON_LOOKUP_GENERIC_FALLBACK);
   */
+  
   data = g_strdup_printf ("<html><head><title>%s</title>"
                           "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />"
                           "<link href=\""EPHY_PAGE_TEMPLATE_ABOUT_CSS"\" rel=\"stylesheet\" type=\"text/css\">"
