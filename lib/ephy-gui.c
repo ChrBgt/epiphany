@@ -311,9 +311,9 @@ ephy_gui_help (GtkWidget *parent,
 \u2192 Image effects? Wait, and avoid fast scrolling\n\
 \u2192 Still image effects? Get more CPU power and/or bandwidth ;-)\n\
 \u2192 Limited support of Copy between Web/augtention.com and outside\n\
-\u2192 Ftp, mailto, gopher etc. are not supported\n\
-\u2192 Special characters with  Shift-Ctrl-u <character unicode> Space\n\
-    Example: Shift-Ctrl-u 40 Space  gives @\n\
+\u2192 File uploading as well as ftp, mailto, gopher etc. are not supported\n\
+\u2192 Special characters with   Shift+Ctrl+u <character unicode> Space\n\
+    Example: Shift+Ctrl+u 40 Space  gives @\n\
 \n\
 \u2192 Known Bugs: \n\
     Bookmark Editor doesn't react on mouse clicks - use nav keys instead\n\
