@@ -38,6 +38,11 @@ G_DEFINE_TYPE (EphyDownloadWidget, ephy_download_widget, GTK_TYPE_BOX)
 #define DOWNLOAD_WIDGET_PRIVATE(o) \
   (G_TYPE_INSTANCE_GET_PRIVATE ((o), EPHY_TYPE_DOWNLOAD_WIDGET, EphyDownloadWidgetPrivate))
 
+//CHB
+#define MAX_NOF_WIDGETS_ACTIVE 4
+static gint nof_widgets_active= 0;
+//eof CHB
+  
 struct _EphyDownloadWidgetPrivate
 {
   EphyDownload *download;
@@ -50,7 +55,7 @@ struct _EphyDownloadWidgetPrivate
   GtkWidget *open_menuitem;
   GtkWidget *cancel_menuitem;
   GtkWidget *show_folder_menuitem;
-
+  gint     timeout_id;//CHB
   gboolean finished;
 };
 
@@ -162,11 +167,27 @@ get_remaining_time (WebKitDownload *download)
   return remaining_time;
 }
 
+//CHB
+static gboolean
+delayed_widget_removal(EphyDownloadWidget *widget)
+{
+  nof_widgets_active--;
+  gtk_widget_destroy (GTK_WIDGET (widget));
+
+  return G_SOURCE_REMOVE;
+}
+//eof CHB
+
 static void
 download_clicked_cb (GtkButton *button,
                      EphyDownloadWidget *widget)
 {
-  gtk_label_set_text (widget->priv->text, "See download area ...  "); //CHB
+  //CHB
+  if(widget->priv->timeout_id) g_source_remove(widget->priv->timeout_id);
+  gtk_label_set_text (widget->priv->text, "Check download area!");
+  widget->priv->timeout_id = g_timeout_add(3000, (GSourceFunc)delayed_widget_removal, widget);
+  //eof CHB
+  
 /*CHB
   EphyDownload *download;
 
@@ -305,7 +326,12 @@ widget_finished_cb (WebKitDownload *download,
 {
   widget->priv->finished = TRUE;
   update_popup_menu (widget);
-  update_download_label_and_tooltip (widget, _("Download Finished")); //CHB "Download" in string added
+  
+  //CHB
+  if(nof_widgets_active > MAX_NOF_WIDGETS_ACTIVE)
+    update_download_label_and_tooltip (widget, _("Download finished - click to close!"));
+  else //eof CHB
+    update_download_label_and_tooltip (widget, _("Download finished")); //CHB "Download" in string added
   widget_attention_needed (widget);
 }
 
@@ -577,7 +603,7 @@ create_widget (EphyDownloadWidget *widget)
   GtkWidget *button;
   GtkWidget *menu_button;
   GtkWidget *remain;
-
+  
   grid = gtk_grid_new ();
   gtk_grid_set_column_spacing (GTK_GRID (grid), 6);
 
@@ -607,7 +633,9 @@ create_widget (EphyDownloadWidget *widget)
   widget->priv->button = button;
   widget->priv->remaining = remain;
   widget->priv->menu_button = menu_button;
-
+  widget->priv->finished = TRUE;//CHB assume success in any case
+  widget->priv->timeout_id = 0;//CHB
+  
   gtk_button_set_relief (GTK_BUTTON (button), GTK_RELIEF_HALF);
 
   gtk_container_add (GTK_CONTAINER (button), grid);
@@ -622,7 +650,6 @@ create_widget (EphyDownloadWidget *widget)
 
   gtk_widget_show_all (button);
   // gtk_widget_show_all (menu_button); CHB
-
 }
 
 static void
@@ -670,6 +697,7 @@ ephy_download_widget_get_download (EphyDownloadWidget *widget)
 gboolean
 ephy_download_widget_download_is_finished (EphyDownloadWidget *widget)
 {
+  nof_widgets_active = 0; //CHB
   g_return_val_if_fail (EPHY_IS_DOWNLOAD_WIDGET (widget), FALSE);
   return widget->priv->finished;
 }
@@ -688,6 +716,11 @@ ephy_download_widget_new (EphyDownload *ephy_download)
 {
   EphyDownloadWidget *widget;
 
+  //CHB
+  if(nof_widgets_active > MAX_NOF_WIDGETS_ACTIVE) return NULL;
+  nof_widgets_active++;
+  //eof CHB
+  
   g_return_val_if_fail (EPHY_IS_DOWNLOAD (ephy_download), NULL);
 
   widget = g_object_new (EPHY_TYPE_DOWNLOAD_WIDGET,
