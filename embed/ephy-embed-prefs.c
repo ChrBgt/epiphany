@@ -556,7 +556,8 @@ ephy_embed_prefs_init (gpointer user_data)
                                                        "enable-dns-prefetching", TRUE,
                                                        "javascript-can-open-windows-automatically", TRUE,
                                                        NULL);
-
+  //webkit_settings_set_enable_page_cache (webkit_settings, FALSE); //CHB added, but seems to block from time to time, therefore disabled
+									   
   for (i = 0; i < G_N_ELEMENTS (webkit_pref_entries); i++) {
     GSettings *settings;
     char *key;

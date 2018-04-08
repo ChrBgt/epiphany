@@ -119,19 +119,19 @@ web_page_send_request (WebKitWebPage *web_page,
   request_uri = webkit_uri_request_get_uri (request);
   original_request_uri = request_uri;
 
-  if (g_settings_get_boolean (EPHY_SETTINGS_WEB, EPHY_PREFS_WEB_DO_NOT_TRACK)) {
+  if (g_settings_get_boolean (EPHY_SETTINGS_WEB, EPHY_PREFS_WEB_DO_NOT_TRACK)) {//malloc CHB
     SoupMessageHeaders *headers;
     char *new_uri;
 
-    headers = webkit_uri_request_get_http_headers (request);
+    headers = webkit_uri_request_get_http_headers (request);//malloc CHB
     if (headers) {
       /* Do Not Track header. '1' means 'opt-out'. See:
        * http://tools.ietf.org/id/draft-mayer-do-not-track-00.txt */
-      soup_message_headers_append (headers, "DNT", "1");
+      soup_message_headers_append (headers, "DNT", "1");//malloc CHB
     }
 
     /* Remove analytics from URL before loading */
-    new_uri = ephy_remove_tracking_from_uri (request_uri);
+    new_uri = ephy_remove_tracking_from_uri (request_uri);//malloc CHB
     if (new_uri) {
       webkit_uri_request_set_uri (request, new_uri);
       request_uri = webkit_uri_request_get_uri (request);
@@ -139,7 +139,7 @@ web_page_send_request (WebKitWebPage *web_page,
     g_free (new_uri);
   }
 
-  if (!g_settings_get_boolean (EPHY_SETTINGS_WEB, EPHY_PREFS_WEB_ENABLE_ADBLOCK))
+  if (!g_settings_get_boolean (EPHY_SETTINGS_WEB, EPHY_PREFS_WEB_ENABLE_ADBLOCK))//malloc CHB
       return FALSE;
 
   page_uri = webkit_web_page_get_uri (web_page);

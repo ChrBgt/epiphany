@@ -66,6 +66,11 @@
 
 #define EPHY_PAGE_TEMPLATE_ERROR         "/org/gnome/epiphany/page-templates/error.html"
 
+//CHB
+static WebKitSettings *tmp_wk_settings = NULL;
+static char tmp_ua_buffer[1000];
+//eof CHB
+
 struct _EphyWebViewPrivate {
   EphySecurityLevel security_level;
   EphyWebViewDocumentType document_type;
@@ -1630,6 +1635,19 @@ load_changed_cb (WebKitWebView *web_view,
   case WEBKIT_LOAD_STARTED: {
     const char *loading_uri = NULL;
 
+    /*CHB
+	loading_uri = webkit_web_view_get_uri (web_view);
+
+	if(strstr(loading_uri, "srf.ch") ||
+	   strstr(loading_uri, "youtube") ||
+	   0){  //further exceptions to be added here, should be read through configuration, TODO
+      tmp_wk_settings = webkit_web_view_get_settings (WEBKIT_WEB_VIEW (view));
+	  sprintf(tmp_ua_buffer, "%s", webkit_settings_get_user_agent (tmp_wk_settings));
+      webkit_settings_set_user_agent (tmp_wk_settings, "Mozilla/5.0 (Unknown; Linux x86_64) AppleWebKit/602.1 (KHTML, like Gecko) Version/8.0 Safari/602.1");
+      webkit_web_view_set_settings (WEBKIT_WEB_VIEW (view), tmp_wk_settings);
+	}
+	//eof CHB*/
+	
     priv->load_failed = FALSE;
 
     if (priv->snapshot_timeout_id) {
@@ -1638,6 +1656,7 @@ load_changed_cb (WebKitWebView *web_view,
     }
 
     loading_uri = webkit_web_view_get_uri (web_view);
+	
     g_signal_emit_by_name (view, "new-document-now", loading_uri);
 
     if (ephy_embed_utils_is_no_show_address (loading_uri))
@@ -1650,7 +1669,7 @@ load_changed_cb (WebKitWebView *web_view,
 
     /* Zoom level. */
     restore_zoom_level (view, loading_uri);
-
+	
     break;
   }
   case WEBKIT_LOAD_REDIRECTED:
@@ -1724,6 +1743,11 @@ load_changed_cb (WebKitWebView *web_view,
 
     ephy_web_view_thaw_history (view);
 
+	/*CHB
+	webkit_settings_set_user_agent (tmp_wk_settings, tmp_ua_buffer);
+    webkit_web_view_set_settings (WEBKIT_WEB_VIEW (view), tmp_wk_settings);	
+	//eof CHB*/
+	
     break;
   }
 
@@ -1950,10 +1974,13 @@ ephy_web_view_load_error_page (EphyWebView *view,
       custom_class = "page-crash";
       break;
     case EPHY_WEB_VIEW_ERROR_PROCESS_CRASH:
-      page_title = g_strdup_printf (_("Problem displaying “%s”"), hostname);
+      //page_title = g_strdup_printf (_("Problem displaying “%s”"), hostname); CHB
+      page_title = g_strdup_printf (_("Issue displaying “%s”"), hostname); //CHB
       msg_title = g_strdup (_("Oops!"));
-      msg = g_strdup (_("Something went wrong while displaying this page. Please reload or visit a different page to continue."));
-      button_label = g_strdup (_("Reload Anyway"));
+      //msg = g_strdup (_("Something went wrong while displaying this page. Please reload or visit a different page to continue.")); CHB
+      //button_label = g_strdup (_("Reload Anyway")); CHB
+      msg = g_strdup (_("Your browser session took up too much memory space on our server and had to be reset."));
+      button_label = g_strdup (_("Continue")); //CHB
       custom_class = "process-crash";
       break;
     case EPHY_WEB_VIEW_ERROR_INVALID_TLS_CERTIFICATE:
