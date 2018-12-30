@@ -1573,7 +1573,7 @@ window_cmd_help_about (GtkAction *action,
 				   "", //CHB
 				   //VERSION, CHB
 			       "copyright", "Copyright © 2002–2004 Marco Pesenti Gritti\n"
-			                    "Copyright © 2003–2014 The Web Developers",
+			                    "Copyright © 2003–now The Web Developers", //CHB 2014 replaced by now
 			       "artists", artists,
 			       "authors", authors,
 			       "comments", comments,

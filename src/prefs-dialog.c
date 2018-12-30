@@ -203,9 +203,9 @@ prefs_dialog_class_init (PrefsDialogClass *klass)
 	/* general */
 	//gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, automatic_downloads_checkbutton); CHB
 	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, search_engine_combo);
-	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, popups_allow_checkbutton);
+	//gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, popups_allow_checkbutton);CHB
 	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, adblock_allow_checkbutton);
-	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, enable_plugins_checkbutton);
+	//gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, enable_plugins_checkbutton);CHB
 	//gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, download_button_hbox);  CHB
 	//gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, download_button_label); CHB
 
