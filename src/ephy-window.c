@@ -2981,17 +2981,6 @@ notebook_create_window_cb (GtkNotebook *notebook,
                            int y,
                            EphyWindow *window)
 {
-  /*CHB avoids opening of new window, when tab is dropped somewhere into the window
-  EphyWindow *new_window;
-  EphyWindowPrivate *new_priv;
-
-  new_window = ephy_window_new ();
-  new_priv = new_window->priv;
-
-  new_priv->present_on_insert = TRUE;
-
-  return ephy_window_get_notebook (new_window);
-  */
   return NULL; //CHB
 }
 
