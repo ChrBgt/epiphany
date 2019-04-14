@@ -229,6 +229,7 @@ ephy_title_box_constructed (GObject *object)
   gtk_widget_add_events (GTK_WIDGET (title_box),
                          GDK_BUTTON_PRESS_MASK |
                          GDK_POINTER_MOTION_MASK |
+						 GDK_TOUCH_MASK |  //CHB touch (?)
                          GDK_BUTTON_RELEASE_MASK);
 
   ephy_title_box_add_address_bar (title_box);
