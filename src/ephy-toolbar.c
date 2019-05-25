@@ -110,7 +110,7 @@ ephy_toolbar_constructed (GObject *object)
 
   g_signal_connect_swapped (priv->window, "notify::chrome",
                             G_CALLBACK (sync_chromes_visibility), toolbar);
-
+					
   /* Back and Forward */
   box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
   priv->navigation_box = box;

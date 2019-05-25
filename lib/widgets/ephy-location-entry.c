@@ -1186,6 +1186,10 @@ ephy_location_entry_set_completion (EphyLocationEntry *entry,
 	g_signal_connect_after (completion, "action-activated",
 				G_CALLBACK (action_activated_after_cb), entry);
 
+/*	gtk_entry_completion_set_inline_completion(completion, TRUE); //CHB test
+	gtk_entry_completion_set_inline_selection(completion, TRUE); //CHB test
+	gtk_entry_completion_set_popup_completion(completion, TRUE); //CHB test*/
+
 	cell = gtk_cell_renderer_pixbuf_new ();
 	gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (completion),
 				    cell, FALSE);
