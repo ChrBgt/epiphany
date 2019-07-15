@@ -184,7 +184,7 @@ download_clicked_cb (GtkButton *button,
 {
   //CHB
   if(widget->priv->timeout_id) g_source_remove(widget->priv->timeout_id);
-  gtk_label_set_text (widget->priv->text, "Check download area!");
+  gtk_label_set_text (widget->priv->text, "Click download button to the right!");
   widget->priv->timeout_id = g_timeout_add(3000, (GSourceFunc)delayed_widget_removal, widget);
   //eof CHB
   
