@@ -63,6 +63,7 @@ ephy_gui_help (GtkWidget  *parent,
 
   gtk_show_uri_on_window (GTK_WINDOW (parent), url, gtk_get_current_event_time (), &error);
 
+/*CHB TODO toberemoved  HEAD
   if (error != NULL) {
     GtkWidget *dialog;
 
@@ -73,6 +74,30 @@ ephy_gui_help (GtkWidget  *parent,
                                      _("Could not display help: %s"),
                                      error->message);
     g_error_free (error);
+*/
+	if (error != NULL)
+	{
+		GtkWidget *dialog; 	
+
+		dialog = gtk_message_dialog_new (GTK_WINDOW (parent),
+						 GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
+						 GTK_MESSAGE_ERROR,
+						 GTK_BUTTONS_OK,
+						 //_("Could not display help: %s"),  CHB
+						 _("A few hints on the usage of Web/augtention.com\n\
+\n\
+\u2192 Stuttering video? Lower video quality settings, use full screen option\n\
+\u2192 Image effects? Wait, and avoid fast scrolling\n\
+\u2192 Still image effects? Get more CPU power and/or bandwidth ;-)\n\
+\u2192 Limited support of Copy between Web/augtention.com and outside\n\
+\u2192 File uploading as well as ftp, mailto, gopher etc. are not supported\n\
+\u2192 Special characters with   Shift+Ctrl+u <character unicode> Space\n\
+    Example: Shift+Ctrl+u 40 Space  gives @\n\
+\u2192 Note that windows can't be moved or resized, they're fixed\n\
+    by intention\
+")); //CHB				 
+						 //error->message); //CHB
+	g_error_free (error);
 
     g_signal_connect (dialog, "response",
                       G_CALLBACK (gtk_widget_destroy), NULL);

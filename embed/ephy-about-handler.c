@@ -268,39 +268,48 @@ ephy_about_handler_handle_about (EphyAboutHandler       *handler,
                                  WebKitURISchemeRequest *request)
 {
   char *data;
+  /*CHB
   char *version;
   GtkIconInfo *icon_info;
 
   version = g_strdup_printf (_("Version %s"), VCSVERSION);
 
+
   icon_info = gtk_icon_theme_lookup_icon (gtk_icon_theme_get_default (),
                                           "org.gnome.Epiphany",
                                           512,
                                           GTK_ICON_LOOKUP_GENERIC_FALLBACK);
-
+  */
+  
   data = g_strdup_printf ("<html><head><title>%s</title>"
                           "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />"
                           "<link href=\""EPHY_PAGE_TEMPLATE_ABOUT_CSS "\" rel=\"stylesheet\" type=\"text/css\">"
                           "</head><body>"
                           "<div class=\"dialog\">"
-                          "<img src=\"file://%s\"/>"
+                          //"<img src=\"file://%s\"/>"  CHB
                           "<h1 id=\"about-title\">%s</h1>"
                           "<h2 id=\"about-subtitle\">%s</h2>"
                           "<p id=\"about-tagline\">%s</p>"
                           "<table class=\"properties\">"
-                          "<tr><td class=\"prop-label\">%s</td><td class=\"prop-value\">%d.%d.%d</td></tr>"
+                          "<tr><td class=\"prop-label\">%s</td><td class=\"prop-value\">%s</td></tr>"
+                          //"<tr><td class=\"prop-label\">%s</td><td class=\"prop-value\">%d.%d.%d</td></tr>"  CHB
                           "</table>"
                           "</div></body></html>",
                           _("About Web"),
-                          icon_info ? gtk_icon_info_get_filename (icon_info) : "",
-                          _("Web"),
-                          version,
+                          //icon_info ? gtk_icon_info_get_filename (icon_info) : "",  CHB
+                          _("Web/augtention.com"),  // CHB  /augtention.com added
+                          //version,  CHB
+						  _(""), //CHB
                           _("A simple, clean, beautiful view of the web"),
-                          "WebKit", webkit_get_major_version (), webkit_get_minor_version (), webkit_get_micro_version ());
+                          "WebKit",
+						  _("") //CHB						  
+						  //webkit_get_major_version (), webkit_get_minor_version (), webkit_get_micro_version () //CHB
+						  );
+/*CHB
   g_free (version);
   if (icon_info)
     g_object_unref (icon_info);
-
+*/
   ephy_about_handler_finish_request (request, data, -1);
 
   return TRUE;
@@ -469,14 +478,14 @@ history_service_query_urls_cb (EphyHistoryService     *history,
                                             0);
     g_string_append_printf (data_str,
                             "  <div class=\"overview-empty\">\n"
-                            "    <img src=\"file://%s\"/>\n"
+                            //"    <img src=\"file://%s\"/>\n" CHB
                             "    <div><h1>%s</h1></div>\n"
                             "    <div><p>%s</p></div>\n"
                             "  </div>\n"
                             "</body></html>\n",
-                            icon_info ? gtk_icon_info_get_filename (icon_info) : "",
+                            //icon_info ? gtk_icon_info_get_filename (icon_info) : "", CHB
                             /* Displayed when opening the browser for the first time. */
-                            _("Welcome to Web"), _("Start browsing and your most-visited sites will appear here."));
+                            _("Welcome to Web/augtention.com"), _("Start browsing and your most-visited sites will appear here."));//CHB /augtention.com added
     if (icon_info)
       g_object_unref (icon_info);
     goto out;
@@ -540,9 +549,11 @@ ephy_about_handler_handle_html_overview (EphyAboutHandler       *handler,
 
   history = ephy_embed_shell_get_global_history_service (ephy_embed_shell_get_default ());
   query = ephy_history_query_new_for_overview ();
+
   ephy_history_service_query_urls (history, query, NULL,
                                    (EphyHistoryJobCallback)history_service_query_urls_cb,
                                    g_object_ref (request));
+  sleep(1);//CHB to avoid blocking write
   ephy_history_query_free (query);
 
   return TRUE;
@@ -619,7 +630,7 @@ ephy_about_handler_handle_request (EphyAboutHandler       *handler,
   if (!g_strcmp0 (path, "plugins"))
     handled = ephy_about_handler_handle_plugins (handler, request);
   else if (!g_strcmp0 (path, "memory"))
-    handled = ephy_about_handler_handle_memory (handler, request);
+    sleep(0); //handled = ephy_about_handler_handle_memory (handler, request); CHB
   else if (!g_strcmp0 (path, "epiphany"))
     handled = ephy_about_handler_handle_epiphany (handler, request);
   else if (!g_strcmp0 (path, "applications") && !ephy_is_running_inside_flatpak ())
@@ -627,8 +638,10 @@ ephy_about_handler_handle_request (EphyAboutHandler       *handler,
   else if (!g_strcmp0 (path, "overview"))
     handled = ephy_about_handler_handle_html_overview (handler, request);
   else if (!g_strcmp0 (path, "incognito"))
-    handled = ephy_about_handler_handle_incognito (handler, request);
-  else if (path == NULL || path[0] == '\0' || !g_strcmp0 (path, "Web") || !g_strcmp0 (path, "web"))
+    sleep(0); //handled = ephy_about_handler_handle_incognito (handler, request); CHB
+  else if (path == NULL || path[0] == '\0' || !g_strcmp0 (path, "Web") || !g_strcmp0 (path, "web")
+	  || !g_strcmp0 (path, "augtention") || !g_strcmp0 (path, "Augtention") //CHB added
+  )
     handled = ephy_about_handler_handle_about (handler, request);
 
   if (!handled)

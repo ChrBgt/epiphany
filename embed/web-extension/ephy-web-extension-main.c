@@ -30,6 +30,19 @@
 
 static EphyWebExtension *extension = NULL;
 
+/*CHB TODO toberemoved
+static void
+name_lost_cb (GDBusConnection *connection,
+                         const gchar *name,
+                         gpointer user_data)
+{
+  if (!connection) 
+	  g_printerr("ephy-web-extension_main: name lost ... dbus connection is NULL\n"); 
+  else f
+	  g_printerr("ephy-web-extension_main: name lost ... dbus connection not NULL, %s\n", name);
+}
+*/
+
 G_MODULE_EXPORT void
 webkit_web_extension_initialize_with_user_data (WebKitWebExtension *webkit_extension,
                                                 GVariant           *user_data)
@@ -63,6 +76,23 @@ webkit_web_extension_initialize_with_user_data (WebKitWebExtension *webkit_exten
                                  adblock_data_dir,
                                  private_profile,
                                  browser_mode);
+  /*CHB TODO toberemoved / checked
+  web_extension = ephy_web_extension_get ();
+
+  ephy_web_extension_initialize (web_extension, extension, dot_dir, private_profile);
+
+  service_name = g_strdup_printf ("%s-%s", EPHY_WEB_EXTENSION_SERVICE_NAME, extension_id);
+
+  g_bus_own_name (G_BUS_TYPE_SESSION,
+                  service_name,
+                  G_BUS_NAME_OWNER_FLAGS_NONE,
+                  NULL,
+                  (GBusNameAcquiredCallback)name_acquired_cb,
+                  (GBusNameLostCallback)name_lost_cb, //CHB NULL,
+                  web_extension, NULL);
+
+  g_free (service_name);
+  */
 }
 
 static void __attribute__((destructor))

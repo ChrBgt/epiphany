@@ -1105,10 +1105,14 @@ session_parse_window (SessionParserContext *context,
       geometry.y = int_value;
     } else if (strcmp (names[i], "width") == 0) {
       ephy_string_to_int (values[i], &int_value);
-      geometry.width = int_value;
+	  if(!atoi(getenv("EPI_GTK")))//CHB
+        geometry.width = int_value;
+	  else geometry.width = atoi(getenv("EPI_W")); //CHB
     } else if (strcmp (names[i], "height") == 0) {
       ephy_string_to_int (values[i], &int_value);
-      geometry.height = int_value;
+  	  if(!atoi(getenv("EPI_GTK")))//CHB
+        geometry.height = int_value;
+	  else geometry.height = atoi(getenv("EPI_H")); //CHB
     } else if (strcmp (names[i], "role") == 0) {
       gtk_window_set_role (GTK_WINDOW (context->window), values[i]);
     } else if (strcmp (names[i], "active-tab") == 0) {
@@ -1610,7 +1614,6 @@ session_state_file_exists (EphySession *session)
   g_object_unref (saved_session_file);
   retval = g_file_test (saved_session_file_path, G_FILE_TEST_EXISTS);
   g_free (saved_session_file_path);
-
   return retval;
 }
 

@@ -40,7 +40,6 @@ typedef enum {
 
 struct _EphyPasswordsDialog {
   GtkDialog parent_instance;
-
   EphyPasswordManager *manager;
   GList *records;
   GtkWidget *passwords_treeview;
@@ -48,7 +47,7 @@ struct _EphyPasswordsDialog {
   GtkWidget *liststore;
   GtkWidget *treemodelfilter;
   GtkWidget *treemodelsort;
-  GtkWidget *show_passwords_button;
+  // GtkWidget *show_passwords_button; CHB
   GtkWidget *password_column;
   GtkWidget *password_renderer;
   GMenuModel *treeview_popup_menu_model;
@@ -211,7 +210,7 @@ forget (GSimpleAction *action,
     gtk_tree_row_reference_free (row_ref);
   }
 }
-
+/* CHB
 static void
 show_passwords (GSimpleAction *action,
                 GVariant      *parameter,
@@ -228,7 +227,7 @@ show_passwords (GSimpleAction *action,
                                        NULL);
   gtk_widget_queue_draw (dialog->passwords_treeview);
 }
-
+*/
 static void
 update_selection_actions (GActionMap *action_map,
                           gboolean    has_selection)
@@ -277,7 +276,7 @@ get_selected_item (EphyPasswordsDialog  *dialog,
 
   return value;
 }
-
+/* CHB
 static void
 copy_password (GSimpleAction *action,
                GVariant      *parameter,
@@ -294,7 +293,7 @@ copy_password (GSimpleAction *action,
   }
   g_free (password);
 }
-
+*/
 static void
 copy_username (GSimpleAction *action,
                GVariant      *parameter,
@@ -316,13 +315,13 @@ static void
 update_popup_menu_actions (GActionGroup *action_group,
                            gboolean      only_one_selected_item)
 {
-  GAction *copy_password_action;
+  //GAction *copy_password_action; CHB
   GAction *copy_username_action;
 
-  copy_password_action = g_action_map_lookup_action (G_ACTION_MAP (action_group), "copy-password");
+  //copy_password_action = g_action_map_lookup_action (G_ACTION_MAP (action_group), "copy-password");//CHB
   copy_username_action = g_action_map_lookup_action (G_ACTION_MAP (action_group), "copy-username");
 
-  g_simple_action_set_enabled (G_SIMPLE_ACTION (copy_password_action), only_one_selected_item);
+  //g_simple_action_set_enabled (G_SIMPLE_ACTION (copy_password_action), only_one_selected_item); CHB
   g_simple_action_set_enabled (G_SIMPLE_ACTION (copy_username_action), only_one_selected_item);
 }
 
@@ -377,7 +376,7 @@ ephy_passwords_dialog_class_init (EphyPasswordsDialogClass *klass)
   gtk_widget_class_bind_template_child (widget_class, EphyPasswordsDialog, treemodelsort);
   gtk_widget_class_bind_template_child (widget_class, EphyPasswordsDialog, passwords_treeview);
   gtk_widget_class_bind_template_child (widget_class, EphyPasswordsDialog, tree_selection);
-  gtk_widget_class_bind_template_child (widget_class, EphyPasswordsDialog, show_passwords_button);
+  //gtk_widget_class_bind_template_child (widget_class, EphyPasswordsDialog, show_passwords_button); CHB
   gtk_widget_class_bind_template_child (widget_class, EphyPasswordsDialog, password_column);
   gtk_widget_class_bind_template_child (widget_class, EphyPasswordsDialog, password_renderer);
   gtk_widget_class_bind_template_child (widget_class, EphyPasswordsDialog, treeview_popup_menu_model);
@@ -471,11 +470,11 @@ static GActionGroup *
 create_action_group (EphyPasswordsDialog *dialog)
 {
   const GActionEntry entries[] = {
-    { "copy-password", copy_password },
+    //{ "copy-password", copy_password }, CHB TODO check
     { "copy-username", copy_username },
     { "forget", forget },
-    { "forget-all", forget_all },
-    { "show-passwords", show_passwords }
+    { "forget-all", forget_all } //, CHB TODO check
+    //{ "show-passwords", show_passwords } CHB TODO check
   };
 
   GSimpleActionGroup *group;

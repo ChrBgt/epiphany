@@ -54,12 +54,13 @@
 #include "window-commands.h"
 
 #include <gdk/gdkkeysyms.h>
-#include <gdk/gdkx.h>
+//#include <gdk/gdkx.h>  CHB
 #include <gio/gio.h>
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 #include <libsoup/soup.h>
 #include <stdlib.h>
+
 
 #include <webkit2/webkit2.h>
 
@@ -81,36 +82,36 @@ const struct {
   /* Page Menu accels */
   { "win.page-menu", { "F10", NULL } },
   { "win.new-tab", { "<Primary>T", NULL } },
-  { "win.open", { "<Primary>O", NULL } },
-  { "win.save-as", { "<shift><Primary>S", "<Primary>S", NULL } },
-  { "win.save-as-application", { "<shift><Primary>A", NULL } },
+  //{ "win.open", { "<Primary>O", NULL } }, CHB
+  //{ "win.save-as", { "<shift><Primary>S", "<Primary>S", NULL } }, CHB
+  //{ "win.save-as-application", { "<shift><Primary>A", NULL } }, CHB
   { "win.undo", { "<Primary>Z", NULL } },
   { "win.redo", { "<shift><Primary>Z", NULL } },
   { "win.copy", { "<Primary>C", NULL } },
   { "win.cut", { "<Primary>X", NULL } },
   { "win.paste", { "<Primary>V", NULL } },
-  { "win.zoom-in", { "<Primary>plus", "<Primary>KP_Add", "<Primary>equal", "ZoomIn", NULL } },
-  { "win.zoom-out", { "<Primary>minus", "<Primary>KP_Subtract", "ZoomOut", NULL } },
+  { "win.zoom-in", { "<Primary>plus", "<Primary>KP_Add", "<Primary>I", NULL } },//CHB "<Primary>equal", "ZoomIn"
+  { "win.zoom-out", { "<Primary>minus", "<Primary>KP_Subtract", "<Primary>O", NULL } }, //CHB "ZoomOut"
   { "win.zoom-normal", { "<Primary>0", "<Primary>KP_0", NULL } },
-  { "win.print", { "<Primary>P", NULL } },
+  //{ "win.print", { "<Primary>P", NULL } }, CHB
   { "win.find", { "<Primary>F", NULL } },
   { "win.find-prev", { "<shift><Primary>G", NULL } },
   { "win.find-next", { "<Primary>G", NULL } },
   { "win.bookmark-page", { "<Primary>D", "AddFavorite", NULL } },
-  { "win.encoding", { NULL } },
-  { "win.page-source", { "<Primary>U", NULL } },
-  { "win.toggle-inspector", { "<shift><Primary>I", "F12", NULL } },
+  //{ "win.encoding", { NULL } }, CHB
+  //{ "win.page-source", { "<Primary>U", NULL } }, CHB
+  //{ "win.toggle-inspector", { "<shift><Primary>I", "F12", NULL } }, CHB
 
   { "win.select-all", { "<Primary>A", NULL } },
 
-  { "win.send-to", { "Send", NULL } },
+  //{ "win.send-to", { "Send", NULL } }, CHB
   { "win.location", { "<Primary>L", "<alt>D", "F6", "Go", "OpenURL", NULL } },
   { "win.home", { "<alt>Home", NULL } },
 
   /* Toggle actions */
-  { "win.browse-with-caret", { "F7", NULL } },
-  { "win.fullscreen", { "F11", NULL } },
-  { "win.allow-popup-windows", { NULL } },
+  //{ "win.browse-with-caret", { "F7", NULL } }, CHB
+  //{ "win.fullscreen", { "F11", NULL } }, CHB
+  //{ "win.allow-popup-windows", { NULL } }, CHB
 
   /* Navigation */
   { "toolbar.stop", { "Escape", "Stop", NULL } },
@@ -118,7 +119,7 @@ const struct {
   { "toolbar.combined-stop-reload", { NULL } },
 
   /* Application mode */
-  { "toolbar.open-in-browser", { NULL } },
+  //{ "toolbar.open-in-browser", { NULL } },
 
   /* Tabs */
   { "tab.previous", { "<Primary>Page_Up", "<Primary>KP_9", "<shift><Primary>Tab", NULL } },
@@ -173,6 +174,377 @@ enum {
   PROP_ACTIVE_CHILD,
   PROP_CHROME,
   PROP_SINGLE_TAB_MODE
+/* CHB TODO toberemoved
+static void ephy_window_view_popup_windows_cb	(GtkAction *action,
+						 EphyWindow *window);
+
+static const GtkActionEntry ephy_menu_entries [] = {
+
+        /* Toplevel * /
+
+        { "Bookmarks", NULL, N_("_Bookmarks") },
+        { "PopupAction", NULL, "" },
+        { "PagePopupAction", NULL, "" },
+        { "NotebookPopupAction", NULL, "" },
+
+        // File actions.
+
+        { "FileNewWindow", NULL, N_("_New Window"), NULL, // CHB "<control>N",
+        NULL,
+          G_CALLBACK (window_cmd_file_new_window) },
+        { "FileNewWindowIncognito", NULL, N_("New _Incognito Window"), NULL, // CHB "<control><shift>N",
+        NULL,
+          G_CALLBACK (window_cmd_file_new_incognito_window) },
+        { "FileOpen", NULL, N_("_Open…"), NULL, // CHB "<control>O",
+        NULL,
+          G_CALLBACK (window_cmd_file_open) },
+        { "FileSaveAs", NULL, N_("Save _As…"), NULL, // CHB "<shift><control>S",
+        NULL,
+          G_CALLBACK (window_cmd_file_save_as) },
+        { "FileSaveAsApplication", NULL, N_("Save As _Web Application…"), NULL, // CHB "<shift><control>A",
+        NULL,
+          G_CALLBACK (window_cmd_file_save_as_application) },
+        { "FilePrint", NULL, N_("_Print…"), NULL, // CHB "<control>P",
+        NULL,
+          G_CALLBACK (window_cmd_file_print) },
+        { "FileSendTo", NULL, N_("S_end Link by Email…"), NULL, NULL,
+          G_CALLBACK (window_cmd_file_send_to) },
+        { "FileCloseTab", NULL, N_("_Close"), NULL, // CHB "<control>W",
+        NULL,
+          G_CALLBACK (window_cmd_file_close_window) },
+        { "FileQuit", NULL, N_("_Quit"), NULL, // CHB "<control>Q",
+        NULL,
+          G_CALLBACK (window_cmd_file_quit) },
+
+        // Edit actions.
+
+        { "EditUndo", NULL, N_("_Undo"), NULL, // CHB "<control>Z",
+        NULL,
+          G_CALLBACK (window_cmd_edit_undo) },
+        { "EditRedo", NULL, N_("Re_do"), NULL, // CHB "<shift><control>Z",
+        NULL,
+          G_CALLBACK (window_cmd_edit_redo) },
+        { "EditCut", NULL, N_("Cu_t"), NULL, // CHB "<control>X",
+        NULL,
+          G_CALLBACK (window_cmd_edit_cut) },
+        { "EditCopy", NULL, N_("_Copy"), NULL, // CHB "<control>C",
+        NULL,
+          G_CALLBACK (window_cmd_edit_copy) },
+        { "EditPaste", NULL, N_("_Paste"), NULL, // CHB "<control>V",
+        NULL,
+          G_CALLBACK (window_cmd_edit_paste) },
+        { "EditDelete", NULL, NULL, NULL, NULL,
+          G_CALLBACK (window_cmd_edit_delete) },
+        { "EditSelectAll", NULL, N_("Select _All"), NULL, // CHB "<control>A",
+        NULL,
+          G_CALLBACK (window_cmd_edit_select_all) },
+        { "EditFind", NULL, N_("_Find…"), "<control>F", NULL,
+          G_CALLBACK (window_cmd_edit_find) },
+        { "EditFindNext", NULL, N_("Find Ne_xt"), NULL, // CHB "<control>G",
+        NULL,
+          G_CALLBACK (window_cmd_edit_find_next) },
+        { "EditFindPrev", NULL, N_("Find Pre_vious"), NULL, // CHB "<shift><control>G",
+        NULL,
+          G_CALLBACK (window_cmd_edit_find_prev) },
+        { "EditBookmarks", NULL, N_("Edit _Bookmarks"), "<control>B", NULL,
+          G_CALLBACK (window_cmd_edit_bookmarks) },
+        { "EditHistory", NULL, N_("_History"), "<control>H", NULL,
+          G_CALLBACK (window_cmd_edit_history) },
+        { "EditPreferences", NULL, N_("Pr_eferences"), "<control>e", NULL,
+          G_CALLBACK (window_cmd_edit_preferences) },
+
+        // View actions.
+
+        { "ViewStop", NULL, N_("_Stop"), "Escape", NULL,
+          G_CALLBACK (window_cmd_view_stop) },
+        { "ViewAlwaysStop", NULL, N_("_Stop"), "Escape",
+          NULL, G_CALLBACK (window_cmd_view_stop) },
+        { "ViewReload", NULL, N_("_Reload"), "<control>R", NULL,
+          G_CALLBACK (window_cmd_view_reload) },
+        { "ViewZoomIn", NULL, N_("Zoom _In"), "<control>I", // CHB "<control>plus",
+        NULL,
+          G_CALLBACK (window_cmd_view_zoom_in) },
+        { "ViewZoomOut", NULL, N_("Zoom O_ut"), "<control>O", // CHB "<control>minus",
+        NULL,
+          G_CALLBACK (window_cmd_view_zoom_out) },
+        { "ViewZoomNormal", NULL, N_("_Normal Size"), NULL, // CHB "<control>0",
+        NULL,
+          G_CALLBACK (window_cmd_view_zoom_normal) },
+        { "ViewEncoding", NULL, N_("Text _Encoding"), NULL, NULL, NULL },
+        { "ViewPageSource", NULL, N_("_Page Source"), NULL, // CHB "<control>U",
+        NULL,
+          G_CALLBACK (window_cmd_view_page_source) },
+
+        // Bookmarks actions.
+
+        { "FileBookmarkPage", NULL, N_("_Add Bookmark…"), "<control>D", NULL,
+          G_CALLBACK (window_cmd_file_bookmark_page) },
+
+        // Go actions.
+
+        { "GoLocation", NULL, N_("_Location…"), NULL, // CHB "<control>L",
+        NULL,
+          G_CALLBACK (window_cmd_go_location) },
+
+        // Tabs actions.
+
+        { "TabsPrevious", NULL, N_("_Previous Tab"), NULL, // CHB "<control>Page_Up",
+        NULL,
+          G_CALLBACK (window_cmd_tabs_previous) },
+        { "TabsNext", NULL, N_("_Next Tab"), NULL, // CHB "<control>Page_Down",
+        NULL,
+          G_CALLBACK (window_cmd_tabs_next) },
+        { "TabsMoveLeft", NULL, N_("Move Tab _Left"), NULL, // CHB "<shift><control>Page_Up",
+        NULL,
+          G_CALLBACK (window_cmd_tabs_move_left) },
+        { "TabsMoveRight", NULL, N_("Move Tab _Right"), NULL, // CHB "<shift><control>Page_Down",
+        NULL,
+          G_CALLBACK (window_cmd_tabs_move_right) },
+        { "TabsDetach", NULL, N_("_Detach Tab"), NULL, NULL,
+          G_CALLBACK (window_cmd_tabs_detach) },
+
+        // Help.
+
+        { "HelpContents", NULL, N_("_Help"), NULL, NULL,
+          G_CALLBACK (window_cmd_help_contents) },
+        { "HelpAbout", NULL, N_("_About"), NULL, NULL,
+          G_CALLBACK (window_cmd_help_about) }
+
+};
+
+static const GtkToggleActionEntry ephy_menu_toggle_entries [] =
+{
+
+        /* View actions. * /
+
+        { "ViewDownloadsBar", NULL, N_("_Downloads Bar"), NULL, NULL,
+          NULL, FALSE },
+
+        { "ViewFullscreen", NULL, N_("_Fullscreen"), NULL, //CHB "F11",
+        NULL,
+          G_CALLBACK (window_cmd_view_fullscreen), FALSE },
+        { "ViewPopupWindows", NULL, N_("Popup _Windows"), NULL, NULL,
+          G_CALLBACK (ephy_window_view_popup_windows_cb), FALSE },
+        { "BrowseWithCaret", NULL, N_("Selection Caret"), NULL, //CHB "F7",
+        NULL,
+          G_CALLBACK (window_cmd_browse_with_caret), FALSE }
+
+};
+
+static const GtkActionEntry ephy_popups_entries [] = {
+        /* Document. * /
+
+        { "ContextBookmarkPage", NULL, N_("Add Boo_kmark…"), "<control>D", NULL,
+          G_CALLBACK (window_cmd_file_bookmark_page) },
+
+        /* Links. * /
+
+        { "OpenLinkInNewWindow", NULL, N_("Open Link in New _Window"), NULL, NULL,
+          G_CALLBACK (popup_cmd_link_in_new_window) },
+        { "OpenLinkInNewTab", NULL, N_("Open Link in New _Tab"), NULL, NULL,
+          G_CALLBACK (popup_cmd_link_in_new_tab) },
+        { "OpenLinkInIncognitoWindow", NULL, N_("Open Link in I_ncognito Window"), NULL, NULL,
+          G_CALLBACK (popup_cmd_link_in_incognito_window) },
+        { "DownloadLinkAs", NULL, N_("_Save Link As…"), NULL, NULL,
+          G_CALLBACK (popup_cmd_download_link_as) },
+        { "CopyLinkAddress", NULL, N_("_Copy Link Address"), NULL,
+          NULL, G_CALLBACK (popup_cmd_copy_link_address) },
+        { "CopyEmailAddress", NULL, N_("_Copy E-mail Address"), NULL,
+          NULL, G_CALLBACK (popup_cmd_copy_link_address) },
+
+        /* Images. * /
+
+        { "ViewImage", NULL, N_("View _Image in New Tab"), NULL,
+          NULL, G_CALLBACK (popup_cmd_view_image_in_new_tab) },
+        { "CopyImageLocation", NULL, N_("Copy I_mage Address"), NULL,
+          NULL, G_CALLBACK (popup_cmd_copy_image_location) },
+        { "SaveImageAs", NULL, N_("_Save Image As…"), NULL,
+          NULL, G_CALLBACK (popup_cmd_save_image_as) },
+        { "SetImageAsBackground", NULL, N_("Set as _Wallpaper"), NULL,
+          NULL, G_CALLBACK (popup_cmd_set_image_as_background) },
+
+        /* Video. * /
+
+        { "OpenVideoInNewWindow", NULL, N_("Open Video in New _Window"), NULL, NULL,
+          G_CALLBACK (popup_cmd_media_in_new_window) },
+        { "OpenVideoInNewTab", NULL, N_("Open Video in New _Tab"), NULL, NULL,
+          G_CALLBACK (popup_cmd_media_in_new_tab) },
+        { "SaveVideoAs", NULL, N_("_Save Video As…"), NULL,
+          NULL, G_CALLBACK (popup_cmd_save_media_as) },
+        { "CopyVideoLocation", NULL, N_("_Copy Video Address"), NULL,
+          NULL, G_CALLBACK (popup_cmd_copy_media_location) },
+
+        /* Audio. * /
+
+        { "OpenAudioInNewWindow", NULL, N_("Open Audio in New _Window"), NULL, NULL,
+          G_CALLBACK (popup_cmd_media_in_new_window) },
+        { "OpenAudioInNewTab", NULL, N_("Open Audio in New _Tab"), NULL, NULL,
+          G_CALLBACK (popup_cmd_media_in_new_tab) },
+        { "SaveAudioAs", NULL, N_("_Save Audio As…"), NULL,
+          NULL, G_CALLBACK (popup_cmd_save_media_as) },
+        { "CopyAudioLocation", NULL, N_("_Copy Audio Address"), NULL,
+          NULL, G_CALLBACK (popup_cmd_copy_media_location) },
+
+        /* Selection * /
+        { "SearchSelection", NULL, "_Search Selection", NULL, NULL,
+          G_CALLBACK (popup_cmd_search_selection) }
+};
+
+static const struct
+{
+	guint keyval;
+	GdkModifierType modifier;
+	const gchar *action;
+	gboolean fromToolbar;
+} extra_keybindings [] = {
+        /* FIXME: PageMenu should have its accel without being in the
+         * extra keybindings, but does not seem to work for some
+         * reason. * /
+        { 0, //CHB GDK_KEY_F10,
+        0,                      "PageMenu",              TRUE },
+        { 0, //CHB GDK_KEY_Home,
+        GDK_MOD1_MASK,          "FileHome",              TRUE },
+        /* FIXME: these are not in any menu for now, so add them here. * /
+        { 0, //CHB GDK_KEY_F11,
+        0,                      "ViewFullscreen",        FALSE },
+        { GDK_KEY_i, //CHB GDK_KEY_plus,
+        GDK_CONTROL_MASK,       "ViewZoomIn",            FALSE },
+        { GDK_KEY_o, //CHB GDK_KEY_minus,
+        GDK_CONTROL_MASK,       "ViewZoomOut",           FALSE },
+        { 0, //CHB GDK_KEY_0,
+        GDK_CONTROL_MASK,       "ViewZoomNormal",        FALSE },
+        { 0, //CHB GDK_KEY_g,
+        GDK_CONTROL_MASK,       "EditFindNext",          FALSE },
+        { 0, //CHB GDK_KEY_G,
+        GDK_CONTROL_MASK |
+                                GDK_SHIFT_MASK,         "EditFindPrev",          FALSE },
+
+        { 0, //CHB GDK_KEY_s,
+        GDK_CONTROL_MASK,       "FileSaveAs",            FALSE },
+        { GDK_KEY_r,    GDK_CONTROL_MASK,       "ViewReload",            FALSE },
+        { GDK_KEY_R,    GDK_CONTROL_MASK,       "ViewReload",            FALSE },
+        { GDK_KEY_R,    GDK_CONTROL_MASK |
+                                GDK_SHIFT_MASK,         "ViewReload",            FALSE },
+        /* Tab navigation * /
+        { 0, //CHB GDK_KEY_Page_Up,
+        GDK_CONTROL_MASK,       "TabsPrevious",          FALSE },
+        { 0, //CHB GDK_KEY_Page_Down,
+    GDK_CONTROL_MASK,       "TabsNext",              FALSE },
+        { 0, //CHB GDK_KEY_Page_Up,
+        GDK_CONTROL_MASK |
+                                GDK_SHIFT_MASK,         "TabsMoveLeft",          FALSE },
+        { 0, //CHB GDK_KEY_Page_Down,
+    GDK_CONTROL_MASK |
+                                GDK_SHIFT_MASK,         "TabsMoveRight",         FALSE },
+        /* Go * /
+        { 0, //CHB GDK_KEY_l,
+        GDK_CONTROL_MASK,       "GoLocation",            FALSE },
+        { 0, //CHB GDK_KEY_F6,
+        0,                      "GoLocation",            FALSE },
+        /* Support all the MSIE tricks as well ;) * /
+        { 0, //CHB GDK_KEY_F5,
+        0,                      "ViewReload",            FALSE },
+        { 0, //CHB GDK_KEY_F5,
+        GDK_CONTROL_MASK,       "ViewReload",            FALSE },
+        { 0, //CHB GDK_KEY_F5,
+        GDK_SHIFT_MASK,         "ViewReload",            FALSE },
+        { 0, //CHB GDK_KEY_F5,
+        GDK_CONTROL_MASK |
+                                GDK_SHIFT_MASK,         "ViewReload",            FALSE },
+        { GDK_KEY_i, //CHB GDK_KEY_KP_Add,
+        GDK_CONTROL_MASK,       "ViewZoomIn",            FALSE },
+        { GDK_KEY_o, //CHB GDK_KEY_KP_Subtract,
+        GDK_CONTROL_MASK,       "ViewZoomOut",           FALSE },
+        { 0, //CHB GDK_KEY_equal,
+        GDK_CONTROL_MASK,       "ViewZoomIn",            FALSE },
+        { 0, //CHB GDK_KEY_KP_0,
+        GDK_CONTROL_MASK,       "ViewZoomNormal",        FALSE },
+	/* These keys are a bit strange: when pressed with no modifiers, they emit
+	 * KP_PageUp/Down Control; when pressed with Control+Shift they are KP_9/3,
+	 * when NumLock is on they are KP_9/3 and with NumLock and Control+Shift
+	 * They're KP_PageUp/Down again!
+	 * /
+	{ GDK_KEY_KP_4,		GDK_MOD1_MASK /*Alt* /            ,	"NavigationBack",	TRUE },
+	{ GDK_KEY_KP_6,		GDK_MOD1_MASK /*Alt* /            ,	"NavigationForward",	TRUE },
+	{ GDK_KEY_KP_Page_Up,	GDK_CONTROL_MASK,	"TabsPrevious",		FALSE },
+	{ GDK_KEY_KP_9,		GDK_CONTROL_MASK,	"TabsPrevious",		FALSE },
+	{ GDK_KEY_KP_Page_Down,	GDK_CONTROL_MASK,	"TabsNext",		FALSE },
+	{ GDK_KEY_KP_3,		GDK_CONTROL_MASK,	"TabsNext",		FALSE },
+	{ GDK_KEY_KP_Page_Up,	GDK_SHIFT_MASK | GDK_CONTROL_MASK,	"TabsMoveLeft",		FALSE },
+	{ GDK_KEY_KP_9,		GDK_SHIFT_MASK | GDK_CONTROL_MASK,	"TabsMoveLeft",		FALSE },
+	{ GDK_KEY_KP_Page_Down,	GDK_SHIFT_MASK | GDK_CONTROL_MASK,	"TabsMoveRight",	FALSE },
+	{ GDK_KEY_KP_3,		GDK_SHIFT_MASK | GDK_CONTROL_MASK,	"TabsMoveRight",	FALSE },
+#ifdef HAVE_X11_XF86KEYSYM_H
+	{ XF86XK_Back,		0,			"NavigationBack",	TRUE  },
+	{ XF86XK_Forward,	0,			"NavigationForward",	TRUE  },
+	{ XF86XK_Go,	 	0,			"GoLocation",		FALSE },
+	{ XF86XK_OpenURL, 	0,			"GoLocation",		FALSE },
+	{ XF86XK_AddFavorite, 	0,			"FileBookmarkPage",	FALSE },
+	{ XF86XK_Refresh, 	0,			"ViewReload",		FALSE },
+	{ XF86XK_Reload,	0, 			"ViewReload",		FALSE },
+	{ XF86XK_Search,	0,			"EditFind",		FALSE },
+	{ XF86XK_Send,	 	0,			"FileSendTo",		FALSE },
+	{ XF86XK_Stop,		0,			"ViewStop",		FALSE },
+	{ XF86XK_ZoomIn,	0, 			"ViewZoomIn",		FALSE },
+	{ XF86XK_ZoomOut,	0, 			"ViewZoomOut",		FALSE }
+	/* FIXME: what about ScrollUp, ScrollDown, Menu*, Option, LogOff, Save,.. any others? * /
+#endif /* HAVE_X11_XF86KEYSYM_H * /
+}, navigation_keybindings_ltr [] = {
+	{ GDK_KEY_Left,		GDK_MOD1_MASK /*Alt* /        ,	"NavigationBack",	TRUE },
+	{ GDK_KEY_KP_Left,	GDK_MOD1_MASK /*Alt* /        ,	"NavigationBack",	TRUE },
+	{ GDK_KEY_Right,	GDK_MOD1_MASK /*Alt* /        ,	"NavigationForward",	TRUE },
+	{ GDK_KEY_KP_Right,	GDK_MOD1_MASK /*Alt* /        ,	"NavigationForward",	TRUE }
+}, navigation_keybindings_rtl [] = {
+	{ GDK_KEY_Left,		GDK_MOD1_MASK /*Alt* /        ,	"NavigationForward",	TRUE },
+	{ GDK_KEY_KP_Left,	GDK_MOD1_MASK /*Alt* /        ,	"NavigationForward",	TRUE },
+	{ GDK_KEY_Right,	GDK_MOD1_MASK /*Alt* /        ,	"NavigationBack",	TRUE },
+	{ GDK_KEY_KP_Right,	GDK_MOD1_MASK /*Alt* /        ,	"NavigationBack",	TRUE }
+}, *navigation_keybindings_rtl_ltr;
+
+#define SETTINGS_CONNECTION_DATA_KEY	"EphyWindowSettings"
+
+#define EPHY_WINDOW_GET_PRIVATE(object)(G_TYPE_INSTANCE_GET_PRIVATE ((object), EPHY_TYPE_WINDOW, EphyWindowPrivate))
+
+struct _EphyWindowPrivate
+{
+	GtkWidget *main_vbox;
+	GtkWidget *toolbar;
+	GtkUIManager *manager;
+	GtkActionGroup *action_group;
+	GtkActionGroup *popups_action_group;
+	GtkActionGroup *toolbar_action_group;
+	GtkActionGroup *tab_accels_action_group;
+	EphyEncodingMenu *enc_menu;
+	GtkNotebook *notebook;
+	EphyEmbed *active_embed;
+	EphyWindowChrome chrome;
+	EphyEmbedEvent *context_event;
+	WebKitHitTestResult *hit_test_result;
+	guint idle_worker;
+	GtkWidget *downloads_box;
+
+	EphyLocationController *location_controller;
+
+	gulong app_menu_visibility_handler;
+
+	guint closing : 1;
+	guint has_size : 1;
+	guint fullscreen_mode : 1;
+	guint is_popup : 1;
+	guint present_on_insert : 1;
+	guint key_theme_is_emacs : 1;
+	guint updating_address : 1;
+	guint force_close : 1;
+	guint checking_modified_forms : 1;
+};
+
+enum
+{
+	PROP_0,
+	PROP_ACTIVE_CHILD,
+	PROP_CHROME,
+	PROP_SINGLE_TAB_MODE
+*/
 };
 
 /* Make sure not to overlap with those in ephy-lockdown.c */
@@ -560,6 +932,136 @@ ephy_window_should_view_receive_key_press_event (EphyWindow  *window,
            keyval != GDK_KEY_Home;        /* Homepage */
 
   return TRUE;
+/*CHB TODO toberemoved
+ephy_window_bound_accels (GtkWidget *widget,
+			  GdkEventKey *event)
+{
+	EphyWindow *window = EPHY_WINDOW (widget);
+	EphyWindowPrivate *priv = window->priv;
+	guint modifier = event->state & gtk_accelerator_get_default_mod_mask ();
+	guint i;
+
+	navigation_keybindings_rtl_ltr = gtk_widget_get_default_direction () == GTK_TEXT_DIR_RTL ?
+					 navigation_keybindings_rtl : navigation_keybindings_ltr;
+
+	for (i = 0; i < G_N_ELEMENTS (extra_keybindings); i++)
+	{
+		if (event->keyval == extra_keybindings[i].keyval &&
+		    modifier == extra_keybindings[i].modifier)
+		{
+			GtkAction * action = gtk_action_group_get_action
+				(extra_keybindings[i].fromToolbar ? 
+					priv->toolbar_action_group :
+					priv->action_group,
+				extra_keybindings[i].action);
+			if (gtk_action_is_sensitive (action))
+			{
+				gtk_action_activate (action);
+				return TRUE;
+			}
+			break;
+		}
+	}
+
+	for (i = 0; i < G_N_ELEMENTS (navigation_keybindings_rtl); i++)
+	{
+		if (event->keyval == navigation_keybindings_rtl_ltr[i].keyval &&
+		    modifier == navigation_keybindings_rtl_ltr[i].modifier)
+		{
+			GtkAction * action = gtk_action_group_get_action
+				(navigation_keybindings_rtl_ltr[i].fromToolbar ?
+					priv->toolbar_action_group :
+					priv->action_group,
+				navigation_keybindings_rtl_ltr[i].action);
+			if (gtk_action_is_sensitive (action))
+			{
+				gtk_action_activate (action);
+				return TRUE;
+			}
+			break;
+		}
+	}
+
+	return FALSE;
+}
+
+static gboolean
+ephy_window_should_view_receive_key_press_event (EphyWindow  *window,
+                                                 GdkEventKey *event)
+{
+	GdkDisplay *display;
+	GdkKeymap *keymap;
+	guint keyval;
+	GdkModifierType consumed;
+	GdkModifierType state_mask = GDK_CONTROL_MASK | GDK_SHIFT_MASK | GDK_MOD1_MASK;
+
+	display = gtk_widget_get_display (GTK_WIDGET (window));
+	keymap = gdk_keymap_get_for_display (display);
+
+	gdk_keymap_translate_keyboard_state (keymap,
+					     event->hardware_keycode,
+					     event->state,
+					     event->group,
+					     &keyval,
+					     NULL,
+					     NULL,
+					     &consumed);
+	state_mask &= ~consumed;
+
+	/* Websites are allowed to override most Epiphany accelerators, but not
+	 * window or tab management accelerators. * /
+	if ((event->state & state_mask) == GDK_CONTROL_MASK)
+		return keyval != GDK_KEY_n &&         /* New Window * /
+		       keyval != GDK_KEY_q &&         /* Quit * /
+		       keyval != GDK_KEY_T &&         /* Reopen Closed Tab * /
+		       keyval != GDK_KEY_t &&         /* New Tab * /
+		       keyval != GDK_KEY_w &&         /* Close Tab * /
+		       keyval != GDK_KEY_Page_Up &&   /* Previous Tab * /
+		       keyval != GDK_KEY_KP_9 &&      /* Previous Tab * /
+		       keyval != GDK_KEY_Page_Down && /* Next Tab * /
+		       keyval != GDK_KEY_KP_3;        /* Next Tab * /
+
+	if ((event->state & state_mask) == (GDK_SHIFT_MASK | GDK_CONTROL_MASK))
+		return keyval != GDK_KEY_Page_Up &&   /* Move Tab Left * /
+		       keyval != GDK_KEY_KP_9 &&      /* Move Tab Left * /
+		       keyval != GDK_KEY_Page_Down && /* Move Tab Right * /
+		       keyval != GDK_KEY_KP_3;        /* Move Tab Right * /
+
+	if ((event->state & state_mask) == GDK_MOD1_MASK)
+		return keyval != GDK_KEY_Left &&      /* Back * /
+		       keyval != GDK_KEY_Right;       /* Forward * /
+
+	return TRUE;
+}
+
+static gboolean
+ephy_window_key_press_event (GtkWidget *widget,
+			     GdkEventKey *event)
+{
+	EphyWebView *view;
+
+	view = ephy_embed_get_web_view (EPHY_WINDOW (widget)->priv->active_embed);
+	if (gtk_window_get_focus (GTK_WINDOW (widget)) != GTK_WIDGET (view)) {
+		if (ephy_window_bound_accels (widget, event))
+			return GDK_EVENT_STOP;
+		return GTK_WIDGET_CLASS (ephy_window_parent_class)->key_press_event (widget, event);
+	}
+
+	/* GtkWindow's key press handler first calls gtk_window_activate_key,
+	 * then gtk_window_propagate_key_event. We want to do the opposite,
+	 * because we want to give webpages the chance to override most
+	 * Epiphany shortcuts. For example, Ctrl+I in Google Docs should
+	 * italicize your text and not open a new incognito window. So:
+	 * first propagate the event to the web view. Next, try
+	 * accelerators only if the web view did not handle the event.
+	 * /
+	if (!ephy_window_should_view_receive_key_press_event (EPHY_WINDOW (widget), event) ||
+	    !gtk_window_propagate_key_event (GTK_WINDOW (widget), event)) {
+		if (!gtk_window_activate_key (GTK_WINDOW (widget), event))
+			ephy_window_bound_accels (widget, event);
+	}
+	return GDK_EVENT_STOP;
+*/
 }
 
 static gboolean
@@ -784,7 +1286,17 @@ static const GActionEntry popup_entries [] = {
   { "copy-link-address", popup_cmd_copy_link_address },
   { "copy-email-address", popup_cmd_copy_link_address },
 
+
   /* Images. */
+/*CHB TODO toberemoved
+static void
+edit_menu_hide_cb (GtkWidget *menu,
+                  EphyWindow *window)
+{
+       enable_edit_actions_sensitivity (window);
+       gtk_toggle_button_set_active_simple (GTK_TOGGLE_BUTTON (gtk_menu_get_attach_widget (GTK_MENU(menu))), FALSE); //CHB added
+}
+*/
 
   { "view-image", popup_cmd_view_image_in_new_tab },
   { "copy-image-location", popup_cmd_copy_image_location },
@@ -868,6 +1380,155 @@ const struct {
   { "save-as", N_("Save Pa_ge As…") },
   { "page-source", N_("_Page Source") }
 };
+/*CHB TODO toberemoved
+static void
+setup_ui_manager (EphyWindow *window)
+{
+	GtkActionGroup *action_group;
+	GtkAccelGroup *accel_group;
+	GtkAction *action;
+	GtkUIManager *manager;
+
+	window->priv->main_vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
+	gtk_widget_show (window->priv->main_vbox);
+	gtk_container_add (GTK_CONTAINER (window),
+			   window->priv->main_vbox);
+
+	manager = gtk_ui_manager_new ();
+	accel_group = gtk_ui_manager_get_accel_group (manager);
+
+	action_group = gtk_action_group_new ("WindowActions");
+	gtk_action_group_set_translation_domain (action_group, NULL);
+	gtk_action_group_add_actions (action_group, ephy_menu_entries,
+				      G_N_ELEMENTS (ephy_menu_entries), window);
+	gtk_action_group_add_toggle_actions (action_group,
+					     ephy_menu_toggle_entries,
+					     G_N_ELEMENTS (ephy_menu_toggle_entries),
+					     window);
+	gtk_action_group_set_accel_group (action_group, accel_group);
+//CHB
+    if(atoi(getenv("EPI_W")) < 600 || atoi(getenv("EPI_H")) < 400){	
+	  action = gtk_action_group_get_action (action_group, "HelpContents");
+	  gtk_action_set_sensitive (action, FALSE);
+	  action = gtk_action_group_get_action (action_group, "HelpAbout");
+	  gtk_action_set_sensitive (action, FALSE);
+	}
+//eof CHB	
+	gtk_ui_manager_insert_action_group (manager, action_group, 0);
+	window->priv->action_group = action_group;
+	g_object_unref (action_group);
+
+	action = gtk_action_group_get_action (action_group, "FileOpen");
+	g_object_set (action, "short_label", _("Open"), NULL);
+	action = gtk_action_group_get_action (action_group, "FileSaveAs");
+	g_object_set (action, "short_label", _("Save As"), NULL);
+	action = gtk_action_group_get_action (action_group, "FileSaveAsApplication");
+	g_object_set (action, "short_label", _("Save As Application"), NULL);
+	action = gtk_action_group_get_action (action_group, "FilePrint");
+	g_object_set (action, "short_label", _("Print"), NULL);
+	action = gtk_action_group_get_action (action_group, "FileBookmarkPage");
+	g_object_set (action, "short_label", _("Bookmark"), NULL);
+	action = gtk_action_group_get_action (action_group, "EditFind");
+	g_object_set (action, "short_label", _("Find"), NULL);
+
+	action = gtk_action_group_get_action (action_group, "EditFind");
+	g_object_set (action, "is_important", TRUE, NULL);
+
+	action = gtk_action_group_get_action (action_group, "ViewEncoding");
+	g_object_set (action, "hide_if_empty", FALSE, NULL);
+	action = gtk_action_group_get_action (action_group, "ViewZoomIn");
+	/* Translators: This refers to text size * /
+	g_object_set (action, "short-label", _("Larger"), NULL);
+	action = gtk_action_group_get_action (action_group, "ViewZoomOut");
+	/* Translators: This refers to text size * /
+	g_object_set (action, "short-label", _("Smaller"), NULL);
+
+	action_group = gtk_action_group_new ("PopupsActions");
+	gtk_action_group_set_translation_domain (action_group, NULL);
+	gtk_action_group_add_actions (action_group, ephy_popups_entries,
+				      G_N_ELEMENTS (ephy_popups_entries), window);
+	gtk_action_group_set_accel_group (action_group, accel_group);
+	gtk_ui_manager_insert_action_group (manager, action_group, 0);
+	window->priv->popups_action_group = action_group;
+	g_object_unref (action_group);
+
+	/* Tab accels * /
+	action_group = gtk_action_group_new ("TabAccelsActions");
+	gtk_action_group_set_accel_group (action_group, accel_group);
+	gtk_ui_manager_insert_action_group (manager, action_group, 0);
+	window->priv->tab_accels_action_group = action_group;
+	g_object_unref (action_group);
+
+	action_group = gtk_action_group_new ("SpecialToolbarActions");
+	action =
+		g_object_new (EPHY_TYPE_NAVIGATION_HISTORY_ACTION,
+			      "name", "NavigationBack",
+			      "label", _("Back"),
+			      "icon-name", "go-previous-symbolic",
+			      "window", window,
+			      "direction", EPHY_NAVIGATION_HISTORY_DIRECTION_BACK,
+			      NULL);
+	gtk_action_group_add_action_with_accel (action_group, action,
+						"<alt>Left");
+	g_object_unref (action);
+
+	action =
+		g_object_new (EPHY_TYPE_NAVIGATION_HISTORY_ACTION,
+			      "name", "NavigationForward",
+			      "label", _("Forward"),
+			      "icon-name", "go-next-symbolic",
+			      "window", window,
+			      "direction", EPHY_NAVIGATION_HISTORY_DIRECTION_FORWARD,
+			      NULL);
+	gtk_action_group_add_action_with_accel (action_group, action,
+						"<alt>Right");
+	g_object_unref (action);
+
+	action =
+		g_object_new (EPHY_TYPE_ZOOM_ACTION,
+			      "name", "Zoom",
+			      "label", _("Zoom"),
+			      "zoom", 1.0,
+			      NULL);
+	gtk_action_group_add_action (action_group, action);
+	g_object_unref (action);
+
+	action = g_object_new (EPHY_TYPE_HOME_ACTION,
+			       "name", "FileNewTab",
+			       "icon-name", "tab-new-symbolic",
+			       "label", _("New _Tab"),
+			       NULL);
+        gtk_action_group_add_action (action_group, action); //CHB
+	// gtk_action_group_add_action_with_accel (action_group, action, "<control>T"); CHB
+	g_object_unref (action);
+
+	action =
+		g_object_new (EPHY_TYPE_HOME_ACTION,
+			      "name", "FileHome",
+			      "label", _("Go to most visited"),
+			      NULL);
+	gtk_action_group_add_action_with_accel (action_group, action, "<alt>Home");
+	g_signal_connect_swapped (action, "open-link",
+				  G_CALLBACK (ephy_link_open), window);
+	g_object_unref (action);
+
+	action = g_object_new (EPHY_TYPE_COMBINED_STOP_RELOAD_ACTION,
+			       "name", "ViewCombinedStopReload",
+			       "loading", FALSE,
+			       "window", window,
+			       NULL);
+	gtk_action_group_add_action (action_group, action);
+	g_object_unref (action);
+
+	gtk_action_group_set_accel_group (action_group, accel_group);
+	gtk_ui_manager_insert_action_group (manager, action_group, 0);
+	window->priv->toolbar_action_group = action_group;
+	g_object_unref (action_group);
+
+	window->priv->manager = manager;
+	gtk_window_add_accel_group (GTK_WINDOW (window), accel_group);
+}
+*/
 
 static char *
 calculate_location (const char *typed_address, const char *address)
@@ -1362,6 +2023,7 @@ parse_context_menu_user_data (WebKitContextMenu *context_menu,
 }
 
 static gboolean
+
 populate_context_menu (WebKitWebView       *web_view,
                        WebKitContextMenu   *context_menu,
                        GdkEvent            *event,
@@ -1369,7 +2031,7 @@ populate_context_menu (WebKitWebView       *web_view,
                        EphyWindow          *window)
 {
   WebKitContextMenuItem *input_methods_item = NULL;
-  WebKitContextMenuItem *unicode_item = NULL;
+  //WebKitContextMenuItem *unicode_item = NULL; CHB
   WebKitContextMenuItem *copy_image_item = NULL;
   WebKitContextMenuItem *play_pause_item = NULL;
   WebKitContextMenuItem *mute_item = NULL;
@@ -1381,8 +2043,8 @@ populate_context_menu (WebKitWebView       *web_view,
   GActionGroup *popup_action_group;
   GList *spelling_guess_items = NULL;
   EphyEmbedEvent *embed_event;
-  gboolean app_mode, incognito_mode;
-  gboolean is_document = FALSE;
+  gboolean app_mode; //, incognito_mode; CHB
+  //gboolean is_document = FALSE;//CHB
   gboolean is_image = FALSE;
   gboolean is_media = FALSE;
   gboolean is_video = FALSE;
@@ -1405,7 +2067,7 @@ populate_context_menu (WebKitWebView       *web_view,
 
   if (webkit_hit_test_result_context_is_editable (hit_test_result)) {
     input_methods_item = find_item_in_context_menu (context_menu, WEBKIT_CONTEXT_MENU_ACTION_INPUT_METHODS);
-    unicode_item = find_item_in_context_menu (context_menu, WEBKIT_CONTEXT_MENU_ACTION_UNICODE);
+    //unicode_item = find_item_in_context_menu (context_menu, WEBKIT_CONTEXT_MENU_ACTION_UNICODE); CHB
     spelling_guess_items = find_spelling_guess_context_menu_items (context_menu);
   }
 
@@ -1452,7 +2114,7 @@ populate_context_menu (WebKitWebView       *web_view,
   g_object_unref (embed_event);
 
   app_mode = ephy_embed_shell_get_mode (ephy_embed_shell_get_default ()) == EPHY_EMBED_SHELL_MODE_APPLICATION;
-  incognito_mode = ephy_embed_shell_get_mode (ephy_embed_shell_get_default ()) == EPHY_EMBED_SHELL_MODE_INCOGNITO;
+  //incognito_mode = ephy_embed_shell_get_mode (ephy_embed_shell_get_default ()) == EPHY_EMBED_SHELL_MODE_INCOGNITO;  CHB
 
   update_edit_actions_sensitivity (window, FALSE);
 
@@ -1469,11 +2131,13 @@ populate_context_menu (WebKitWebView       *web_view,
     add_action_to_context_menu (context_menu, popup_action_group,
                                 "open-link-in-new-tab", window);
     if (!app_mode) {
+      /*
       add_action_to_context_menu (context_menu, popup_action_group,
                                   "open-link-in-new-window", window);
       if (!incognito_mode)
         add_action_to_context_menu (context_menu, popup_action_group,
                                     "open-link-in-incognito-window", window);
+	  */
       webkit_context_menu_append (context_menu,
                                   webkit_context_menu_item_new_separator ());
     }
@@ -1486,16 +2150,20 @@ populate_context_menu (WebKitWebView       *web_view,
                                   search_selection_action_name, window);
     webkit_context_menu_append (context_menu,
                                 webkit_context_menu_item_new_separator ());
+	/*CHB
     add_action_to_context_menu (context_menu, popup_action_group,
                                 "download-link-as", window);
-
+	*/
     if (g_str_has_prefix (uri, "mailto:")) {
       add_action_to_context_menu (context_menu, popup_action_group,
                                   "copy-email-address", window);
-    } else {
+    }
+	/*CHB
+	else {
       add_action_to_context_menu (context_menu, popup_action_group,
                                   "copy-link-address", window);
     }
+	*/
   } else if (webkit_hit_test_result_context_is_editable (hit_test_result)) {
     GList *l;
     gboolean has_guesses = FALSE;
@@ -1536,13 +2204,13 @@ populate_context_menu (WebKitWebView       *web_view,
                                 webkit_context_menu_item_new_separator ());
     add_action_to_context_menu (context_menu, window_action_group,
                                 "select-all", window);
-    if (input_methods_item || unicode_item)
+    if (input_methods_item) //  || unicode_item)  CHB
       webkit_context_menu_append (context_menu,
                                   webkit_context_menu_item_new_separator ());
     add_item_to_context_menu (context_menu, input_methods_item);
-    add_item_to_context_menu (context_menu, unicode_item);
+    //add_item_to_context_menu (context_menu, unicode_item); CHB
   } else {
-    is_document = TRUE;
+    //is_document = TRUE; //CHB
 
     update_edit_actions_sensitivity (window, TRUE);
 
@@ -1575,42 +2243,56 @@ populate_context_menu (WebKitWebView       *web_view,
   if (is_image) {
     webkit_context_menu_append (context_menu,
                                 webkit_context_menu_item_new_separator ());
+	/*CHB
     add_action_to_context_menu (context_menu, popup_action_group,
                                 "save-image-as", window);
+	*/
     add_item_to_context_menu (context_menu, copy_image_item);
+	/*CHB
     add_action_to_context_menu (context_menu, popup_action_group,
                                 "copy-image-location", window);
+	*/
     add_action_to_context_menu (context_menu, popup_action_group,
                                 "view-image", window);
+	/* CHB
     add_action_to_context_menu (context_menu, popup_action_group,
                                 "set-image-as-background", window);
+	*/
   }
-
+  
   if (is_media) {
     add_item_to_context_menu (context_menu, play_pause_item);
     add_item_to_context_menu (context_menu, mute_item);
     add_item_to_context_menu (context_menu, toggle_controls_item);
     add_item_to_context_menu (context_menu, toggle_loop_item);
-    add_item_to_context_menu (context_menu, fullscreen_item);
+    //add_item_to_context_menu (context_menu, fullscreen_item); CHB
     webkit_context_menu_append (context_menu,
                                 webkit_context_menu_item_new_separator ());
-    if (is_video) {
+	if (is_video) {
+	  /*CHB	
       add_action_to_context_menu (context_menu, popup_action_group,
                                   "open-video-in-new-window", window);
+	  */
       add_action_to_context_menu (context_menu, popup_action_group,
                                   "open-video-in-new-tab", window);
-      add_action_to_context_menu (context_menu, popup_action_group,
+      /* CHB
+	  add_action_to_context_menu (context_menu, popup_action_group,
                                   "save-video-as", window);
-      add_action_to_context_menu (context_menu, popup_action_group,
+      */
+	  add_action_to_context_menu (context_menu, popup_action_group,
                                   "copy-video-location", window);
     } else if (is_audio) {
+	  /*CHB
       add_action_to_context_menu (context_menu, popup_action_group,
                                   "open-audio-in-new-window", window);
-      add_action_to_context_menu (context_menu, popup_action_group,
+      */
+	  add_action_to_context_menu (context_menu, popup_action_group,
                                   "open-audio-in-new-tab", window);
-      add_action_to_context_menu (context_menu, popup_action_group,
+      /*CHB
+	  add_action_to_context_menu (context_menu, popup_action_group,
                                   "save-audios-as", window);
-      add_action_to_context_menu (context_menu, popup_action_group,
+      */
+	  add_action_to_context_menu (context_menu, popup_action_group,
                                   "copy-audio-location", window);
     }
   }
@@ -1621,6 +2303,7 @@ populate_context_menu (WebKitWebView       *web_view,
 
   g_free (search_selection_action_name);
 
+  /*CHB
   if (is_document && !is_image && !is_media) {
     webkit_context_menu_append (context_menu,
                                 webkit_context_menu_item_new_separator ());
@@ -1639,7 +2322,7 @@ populate_context_menu (WebKitWebView       *web_view,
                               "page-source", window);
   webkit_context_menu_append (context_menu,
                               webkit_context_menu_item_new_from_stock_action (WEBKIT_CONTEXT_MENU_ACTION_INSPECT_ELEMENT));
-
+  */
   return FALSE;
 }
 
@@ -1721,6 +2404,7 @@ window_properties_geometry_changed (WebKitWindowProperties *properties,
 
   if (geometry.width > 0 && geometry.height > 0)
     gtk_window_resize (GTK_WINDOW (window), geometry.width, geometry.height);
+
 }
 
 static void
@@ -2563,6 +3247,7 @@ notebook_create_window_cb (GtkNotebook *notebook,
                            int          y,
                            EphyWindow  *window)
 {
+  /*CHB TODO check
   EphyWindow *new_window;
 
   new_window = ephy_window_new ();
@@ -2570,6 +3255,8 @@ notebook_create_window_cb (GtkNotebook *notebook,
   new_window->present_on_insert = TRUE;
 
   return ephy_window_get_notebook (new_window);
+  */
+  return NULL; //CHB
 }
 
 static EphyEmbed *
@@ -2734,6 +3421,7 @@ ephy_window_configure_event (GtkWidget *widget,
     gtk_window_get_size (GTK_WINDOW (widget),
                          &window->current_width,
                          &window->current_height);
+
   }
 
   return result;
@@ -2817,7 +3505,6 @@ ephy_window_show (GtkWidget *widget)
                          window->current_x,
                          window->current_y);
       }
-
       window->has_default_position = TRUE;
     }
 
@@ -3038,7 +3725,7 @@ ephy_window_constructed (GObject *object)
   G_OBJECT_CLASS (ephy_window_parent_class)->constructed (object);
 
   window = EPHY_WINDOW (object);
-
+  
   /* Add actions */
   simple_action_group = g_simple_action_group_new ();
   g_action_map_add_action_entries (G_ACTION_MAP (simple_action_group),
@@ -3108,6 +3795,11 @@ ephy_window_constructed (GObject *object)
   setup_tab_accels (window);
 
   window->notebook = setup_notebook (window);
+
+  {//CHB
+	GtkSettings *settings = gtk_settings_get_default();
+	g_object_set(G_OBJECT (settings), "gtk-titlebar-double-click", "none", NULL);
+  }
 
   /* Setup the toolbar. */
   window->header_bar = setup_header_bar (window);
@@ -3189,6 +3881,184 @@ ephy_window_constructed (GObject *object)
   }
 
   ephy_window_set_chrome (window, chrome);
+/*CHB TODO toberemoved
+static GObject *
+ephy_window_constructor (GType type,
+			 guint n_construct_properties,
+			 GObjectConstructParam *construct_params)
+{
+	GObject *object;
+	EphyWindow *window;
+	EphyWindowPrivate *priv;
+	GtkSettings *settings;
+	GtkAction *action;
+	GtkActionGroup *toolbar_action_group;
+	GError *error = NULL;
+	guint settings_connection;
+	GtkCssProvider *css_provider;
+	int i;
+	EphyEmbedShellMode mode;
+	EphyWindowChrome chrome = EPHY_WINDOW_CHROME_DEFAULT;
+
+	object = G_OBJECT_CLASS (ephy_window_parent_class)->constructor
+		(type, n_construct_properties, construct_params);
+
+	window = EPHY_WINDOW (object);
+
+	priv = window->priv;
+
+	ephy_gui_ensure_window_group (GTK_WINDOW (window));
+
+	/* initialize the listener for the key theme
+	 * FIXME: Need to handle multi-head and migration.
+	 * /
+	settings = gtk_settings_get_default ();
+	settings_connection = GPOINTER_TO_UINT (g_object_get_data (G_OBJECT (settings),
+								   SETTINGS_CONNECTION_DATA_KEY));
+	if (settings_connection == 0)
+	{
+		settings_connection =
+			g_signal_connect (settings, "notify::gtk-key-theme-name",
+					  G_CALLBACK (settings_changed_cb), NULL);
+		g_object_set_data (G_OBJECT (settings), SETTINGS_CONNECTION_DATA_KEY,
+				   GUINT_TO_POINTER (settings_connection));
+
+	}
+
+	g_object_set(G_OBJECT (settings), "gtk-titlebar-double-click", "none", NULL);//CHB
+
+	settings_change_notify (settings, window);
+
+	/* Setup the UI manager and connect verbs * /
+	setup_ui_manager (window);
+	setup_tab_accels (window);
+
+	priv->notebook = setup_notebook (window);
+
+	/* Now load the UI definition (needed by EphyToolbar). * /
+	gtk_ui_manager_add_ui_from_resource (priv->manager,
+					     "/org/gnome/epiphany/epiphany-ui.xml",
+					     &error);
+	if (error != NULL)
+	{
+		g_warning ("Could not merge epiphany-ui.xml: %s", error->message);
+		g_error_free (error);
+		error = NULL;
+	}
+
+	/* Setup the toolbar. * /
+	priv->toolbar = setup_toolbar (window);
+	priv->location_controller = setup_location_controller (window, EPHY_TOOLBAR (priv->toolbar));
+	gtk_box_pack_start (GTK_BOX (priv->main_vbox),
+			    GTK_WIDGET (priv->notebook),
+			    TRUE, TRUE, 0);
+	gtk_widget_show (GTK_WIDGET (priv->notebook));
+
+	priv->downloads_box = setup_downloads_box (window);
+	gtk_box_pack_start (GTK_BOX (priv->main_vbox),
+			    GTK_WIDGET (priv->downloads_box), FALSE, FALSE, 0);
+	action = gtk_action_group_get_action (window->priv->action_group,
+					      "ViewDownloadsBar");
+
+	g_object_bind_property (action, "active",
+				priv->downloads_box, "visible",
+				G_BINDING_SYNC_CREATE | G_BINDING_BIDIRECTIONAL);
+
+	/* Attach the CSS provider to the window. * /
+	css_provider = gtk_css_provider_new ();
+	_gtk_css_provider_load_from_resource (css_provider,
+					      "/org/gnome/epiphany/epiphany.css",
+					      &error);
+	if (error == NULL)
+	{
+		gtk_style_context_add_provider_for_screen (gtk_widget_get_screen (GTK_WIDGET (window)),
+		                                           GTK_STYLE_PROVIDER (css_provider),
+		                                           GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+	}
+	else
+	{
+		g_warning ("Could not attach css style: %s", error->message);
+		g_error_free (error);
+	}
+
+	g_object_unref (css_provider);
+
+	/* Initialize the menus * /
+	priv->enc_menu = ephy_encoding_menu_new (window);
+
+	ephy_bookmarks_ui_attach_window (window);
+
+	/* other notifiers * /
+	action = gtk_action_group_get_action (window->priv->action_group,
+					      "BrowseWithCaret");
+
+	g_settings_bind (EPHY_SETTINGS_MAIN,
+			 EPHY_PREFS_ENABLE_CARET_BROWSING,
+			 action, "active",
+			 G_SETTINGS_BIND_GET);
+
+	g_signal_connect (EPHY_SETTINGS_WEB,
+			  "changed::" EPHY_PREFS_WEB_ENABLE_POPUPS,
+			  G_CALLBACK (allow_popups_notifier), window);
+
+	/* Disable actions not needed for popup mode. * /
+	toolbar_action_group = priv->toolbar_action_group;
+	action = gtk_action_group_get_action (toolbar_action_group, "FileNewTab");
+	ephy_action_change_sensitivity_flags (action, SENS_FLAG_CHROME,
+					      priv->is_popup);
+
+	action = gtk_action_group_get_action (priv->popups_action_group, "OpenLinkInNewTab");
+	ephy_action_change_sensitivity_flags (action, SENS_FLAG_CHROME,
+					      priv->is_popup);
+
+	/* Disabled actions not needed for application mode. * /
+	mode = ephy_embed_shell_get_mode (ephy_embed_shell_get_default ());
+	if (mode == EPHY_EMBED_SHELL_MODE_APPLICATION)
+	{
+		g_object_set(priv->location_controller, "editable", FALSE, NULL);
+
+		/* We don't need to show the page menu in web application mode. * /
+		action = gtk_action_group_get_action (toolbar_action_group, "PageMenu");
+		ephy_action_change_sensitivity_flags (action, SENS_FLAG_CHROME, TRUE);
+		gtk_action_set_visible (action, FALSE);
+
+		action = gtk_action_group_get_action (toolbar_action_group, "FileNewTab");
+		ephy_action_change_sensitivity_flags (action, SENS_FLAG_CHROME,
+						      TRUE);
+		gtk_action_set_visible (action, FALSE);
+
+		action = gtk_action_group_get_action (priv->popups_action_group, "ContextBookmarkPage");
+		ephy_action_change_sensitivity_flags (action, SENS_FLAG_CHROME, TRUE);
+		gtk_action_set_visible (action, FALSE);
+
+		for (i = 0; i < G_N_ELEMENTS (disabled_actions_for_app_mode); i++)
+		{
+			action = gtk_action_group_get_action (priv->action_group,
+							      disabled_actions_for_app_mode[i]);
+			ephy_action_change_sensitivity_flags (action, SENS_FLAG_CHROME, TRUE);
+			gtk_action_set_visible (action, FALSE);
+		}
+		chrome &= ~(EPHY_WINDOW_CHROME_MENU | EPHY_WINDOW_CHROME_TABSBAR);
+	}
+
+	/* We never want the menubar shown, we merge the app menu into
+	 * our super menu manually when running outside the Shell. * /
+	gtk_application_window_set_show_menubar (GTK_APPLICATION_WINDOW (window), FALSE);
+
+	ephy_window_toggle_visibility_for_app_menu (window);
+	priv->app_menu_visibility_handler =  g_signal_connect_swapped (gtk_settings_get_for_screen (gtk_widget_get_screen (GTK_WIDGET (window))),
+								       "notify::gtk-shell-shows-app-menu",
+								       G_CALLBACK (ephy_window_toggle_visibility_for_app_menu), window);
+
+	/* ensure the UI is updated * /
+	gtk_ui_manager_ensure_update (priv->manager);
+
+	init_menu_updaters (window);
+
+	ephy_window_set_chrome (window, chrome);
+
+	return object;
+*/
 }
 
 static void
@@ -3217,6 +4087,13 @@ ephy_window_class_init (EphyWindowClass *klass)
   g_object_class_override_property (object_class,
                                     PROP_SINGLE_TAB_MODE,
                                     "is-popup");
+/*CHB toberemoved, unten eingebaut ...
+		ephy_initial_state_add_window (widget, "main_window", 
+                           atoi(getenv("EPI_W")), atoi(getenv("EPI_H")), FALSE,  //600, 500, TRUE,      CHB
+					       flags);
+		priv->has_size = TRUE;
+	}
+*/
 
   g_object_class_install_property (object_class,
                                    PROP_CHROME,
@@ -3248,8 +4125,8 @@ ephy_window_new (void)
 {
   return g_object_new (EPHY_TYPE_WINDOW,
                        "application", GTK_APPLICATION (ephy_shell_get_default ()),
-                       "default-height", 768,
-                       "default-width", 1024,
+                       "default-height", atoi(getenv("EPI_H")), //CHB 768,
+                       "default-width", atoi(getenv("EPI_W")), //CHB 1024,
                        "icon-name", "org.gnome.Epiphany",
                        NULL);
 }

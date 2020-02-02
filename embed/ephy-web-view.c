@@ -69,6 +69,12 @@
 struct _EphyWebView {
   WebKitWebView parent_instance;
 
+/*CHB TODO check tobedeleted
+//CHB
+static WebKitSettings *tmp_wk_settings = NULL;
+static char tmp_ua_buffer[1000];
+//eof CHB
+*/
   EphySecurityLevel security_level;
   EphyWebViewDocumentType document_type;
   EphyWebViewNavigationFlags nav_flags;
@@ -509,7 +515,6 @@ track_info_bar (GtkWidget  *new_info_bar,
   g_assert (!*tracked_info_bar || GTK_IS_INFO_BAR (*tracked_info_bar));
 
   untrack_info_bar (tracked_info_bar);
-
   *tracked_info_bar = new_info_bar;
   g_object_add_weak_pointer (G_OBJECT (new_info_bar),
                              (gpointer *)tracked_info_bar);
@@ -1477,6 +1482,13 @@ show_permission_request_info_bar (WebKitWebView           *web_view,
   char *origin;
   char *bold_origin;
 
+  /* Application mode implies being OK with notifications. */
+  if (WEBKIT_IS_NOTIFICATION_PERMISSION_REQUEST (decision) &&
+      ephy_embed_shell_get_mode (ephy_embed_shell_get_default ()) == EPHY_EMBED_SHELL_MODE_APPLICATION) {
+    webkit_permission_request_allow (decision);
+    return TRUE;
+  }
+
   info_bar = gtk_info_bar_new_with_buttons (_("Deny"), GTK_RESPONSE_NO,
                                             _("Allow"), GTK_RESPONSE_YES,
                                             NULL);
@@ -1552,6 +1564,14 @@ show_permission_request_info_bar (WebKitWebView           *web_view,
     g_assert_not_reached ();
   }
 
+  /* CHB comes from 3.18, remove
+  if (WEBKIT_IS_GEOLOCATION_PERMISSION_REQUEST (decision))
+    ephy_web_view_track_info_bar (info_bar, &EPHY_WEB_VIEW (web_view)->priv->geolocation_info_bar);
+  else
+    ephy_web_view_track_info_bar (info_bar, &EPHY_WEB_VIEW (web_view)->priv->notification_info_bar);
+
+  */
+  
   ephy_embed_add_top_widget (EPHY_GET_EMBED_FROM_EPHY_WEB_VIEW (web_view),
                              info_bar,
                              EPHY_EMBED_TOP_WIDGET_POLICY_DESTROY_ON_TRANSITION);
@@ -1799,6 +1819,23 @@ load_changed_cb (WebKitWebView  *web_view,
 
       view->load_failed = FALSE;
 
+    /*CHB TODO check
+    /*CHB
+	loading_uri = webkit_web_view_get_uri (web_view);
+
+	if(strstr(loading_uri, "srf.ch") ||
+	   strstr(loading_uri, "youtube") ||
+	   0){  //further exceptions to be added here, should be read through configuration, TODO
+      tmp_wk_settings = webkit_web_view_get_settings (WEBKIT_WEB_VIEW (view));
+	  sprintf(tmp_ua_buffer, "%s", webkit_settings_get_user_agent (tmp_wk_settings));
+      webkit_settings_set_user_agent (tmp_wk_settings, "Mozilla/5.0 (Unknown; Linux x86_64) AppleWebKit/602.1 (KHTML, like Gecko) Version/8.0 Safari/602.1");
+      webkit_web_view_set_settings (WEBKIT_WEB_VIEW (view), tmp_wk_settings);
+	}
+	//eof CHB* /
+	
+    priv->load_failed = FALSE;
+  */
+
       if (view->snapshot_timeout_id) {
         g_source_remove (view->snapshot_timeout_id);
         view->snapshot_timeout_id = 0;
@@ -1886,6 +1923,15 @@ load_changed_cb (WebKitWebView  *web_view,
 
     default:
       break;
+
+	/* CHB TODO check
+	/*CHB
+	webkit_settings_set_user_agent (tmp_wk_settings, tmp_ua_buffer);
+    webkit_web_view_set_settings (WEBKIT_WEB_VIEW (view), tmp_wk_settings);	
+	//eof CHB* /
+	
+    break;
+	*/
   }
 
   g_object_thaw_notify (object);
@@ -2153,7 +2199,8 @@ format_process_crash_error_page (const char  *uri,
   *message_title = g_strdup (_("Oops!"));
 
   /* Error details when a site cannot be loaded due to a process crash error. */
-  first_paragraph = _("Something went wrong while displaying this page.");
+  //first_paragraph = _("Something went wrong while displaying this page."); CHB
+  first_paragraph = _("Your browser session took up too much memory space on our server and had to be reset. You might want to enable the built-in adblocker, see preferences."); //CHB
   /* Further error details when a site cannot be loaded due to a process crash error. */
   second_paragraph = _("Please reload or visit a different page to continue.");
   *message_body = g_strdup_printf ("<p>%s</p><p>%s</p>",

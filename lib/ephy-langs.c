@@ -225,9 +225,9 @@ load_iso_entries (int      iso,
   if (reader == NULL)
     goto out;
 
-  xmlStrPrintf (iso_entries, sizeof (iso_entries), "iso_%d_entries", iso);
-  xmlStrPrintf (iso_entry, sizeof (iso_entry), "iso_%d_entry", iso);
-
+  xmlStrPrintf (iso_entries, sizeof (iso_entries), (const char *)"iso_%d_entries", iso);//CHB 'const char *' instead of 'const  xmlChar' 
+  xmlStrPrintf (iso_entry, sizeof (iso_entry), (const char *)"iso_%d_entry", iso); //CHB 'const char *' instead of 'const  xmlChar'
+  
   ret = xmlTextReaderRead (reader);
 
   while (ret == 1) {

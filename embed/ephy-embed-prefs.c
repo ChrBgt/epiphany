@@ -39,6 +39,8 @@ typedef struct {
 #define DEFAULT_ENCODING_SETTING "default-charset"
 static WebKitSettings *webkit_settings = NULL;
 
+static const char* const wl[] = {"file://*/*", "file://*"}; //CHB
+
 static void
 user_style_sheet_output_stream_splice_cb (GOutputStream *output_stream,
                                           GAsyncResult  *result,
@@ -52,7 +54,7 @@ user_style_sheet_output_stream_splice_cb (GOutputStream *output_stream,
 
     style_sheet = webkit_user_style_sheet_new (g_memory_output_stream_get_data (G_MEMORY_OUTPUT_STREAM (output_stream)),
                                                WEBKIT_USER_CONTENT_INJECT_ALL_FRAMES, WEBKIT_USER_STYLE_LEVEL_USER,
-                                               NULL, NULL);
+											   wl, NULL); //CHB NULL, NULL);
     webkit_user_content_manager_add_style_sheet (WEBKIT_USER_CONTENT_MANAGER (ephy_embed_shell_get_user_content_manager (ephy_embed_shell_get_default ())),
                                                  style_sheet);
     webkit_user_style_sheet_unref (style_sheet);
@@ -428,12 +430,13 @@ ephy_embed_prefs_init (gpointer user_data)
   guint i;
 
   webkit_settings = webkit_settings_new_with_settings ("enable-developer-extras", TRUE,
-                                                       "enable-fullscreen", TRUE,
+                                                       "enable-fullscreen", TRUE,//if disabled, then video fullscreen isnt working...
                                                        "enable-javascript", TRUE,
                                                        "enable-dns-prefetching", TRUE,
                                                        "javascript-can-open-windows-automatically", TRUE,
                                                        NULL);
-
+  //webkit_settings_set_enable_page_cache (webkit_settings, FALSE); //CHB added, but seems to block from time to time, therefore disabled
+									   
   for (i = 0; i < G_N_ELEMENTS (webkit_pref_entries); i++) {
     GSettings *settings;
     char *key;

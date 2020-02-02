@@ -233,9 +233,11 @@ ephy_downloads_popover_init (EphyDownloadsPopover *popover)
                            G_CALLBACK (download_removed_cb),
                            popover, G_CONNECT_SWAPPED);
 
+  /* CHB ... somehow buggy, so just skip it, as we don't necessarily need it for the user's logic
   gtk_box_pack_start (GTK_BOX (vbox), scrolled_window, FALSE, FALSE, 0);
   gtk_widget_show (scrolled_window);
-
+  */
+  
   hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
   gtk_widget_set_valign (hbox, GTK_ALIGN_CENTER);
   gtk_widget_set_margin_start (hbox, 12);
@@ -243,12 +245,21 @@ ephy_downloads_popover_init (EphyDownloadsPopover *popover)
   gtk_widget_set_margin_top (hbox, 12);
   gtk_widget_set_margin_bottom (hbox, 12);
 
-  popover->clear_button = gtk_button_new_with_mnemonic (_("_Clear All"));
+  //CHB
+  {
+  GtkWidget *label = gtk_label_new ("Access downloads: click download button on the right ...");
+  gtk_box_pack_end (GTK_BOX (hbox), label, FALSE, FALSE, 0);
+  gtk_widget_set_margin_start (label, 12);
+  gtk_widget_show (label);
+  }  
+  //eof CHB
+  
+  popover->clear_button = gtk_button_new_with_mnemonic (_("_Close")); //CHB (_("_Clear All"));
   gtk_widget_set_sensitive (popover->clear_button, !ephy_downloads_manager_has_active_downloads (manager));
   g_signal_connect_swapped (popover->clear_button, "clicked",
                             G_CALLBACK (clear_button_clicked_cb),
                             popover);
-  gtk_box_pack_end (GTK_BOX (hbox), popover->clear_button, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (hbox), popover->clear_button, FALSE, FALSE, 0);//CHB _end
   gtk_widget_show (popover->clear_button);
 
   gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);

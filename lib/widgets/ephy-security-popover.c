@@ -62,6 +62,41 @@ struct _EphySecurityPopover {
 
 G_DEFINE_TYPE (EphySecurityPopover, ephy_security_popover, GTK_TYPE_POPOVER)
 
+//CHB
+static void
+present_centered_window(GtkWindow *window)
+{
+  GdkGeometry windowProperties;
+  gint x, y, width, height, pwidth = atoi(getenv("EPI_W")), pheight = atoi(getenv("EPI_H"));
+
+  gtk_window_set_modal (window, TRUE);
+  gtk_window_set_resizable(window, FALSE);
+  //gtk_window_set_position (window, GTK_WIN_POS_CENTER); //doesnt always seem to work, therefore we need the gtk_window_move
+
+  windowProperties.max_width = pwidth - 40;
+  windowProperties.max_height = pheight - 60;
+  gtk_window_set_geometry_hints(window, NULL, &windowProperties, GDK_HINT_MAX_SIZE);
+
+  gtk_window_get_size (window,
+                       &width,
+                       &height);
+
+  if(width < pwidth)
+    x = (gint)((pwidth - width)/2);
+  else
+	x = 26+1; //40;
+
+  if(height < pheight)
+    y = (gint)((pheight - height)/3);
+  else
+	y = 23+1; //60;
+
+  gtk_window_move (window, x, y);
+  
+  gtk_window_present (window);
+}
+//eof CHB
+
 static void
 ephy_security_popover_set_address (EphySecurityPopover *popover,
                                    const char          *address)
@@ -165,7 +200,9 @@ certificate_button_clicked_cb (GtkButton *button,
                     NULL);
 
   gtk_widget_hide (GTK_WIDGET (popover));
-  gtk_widget_show (dialog);
+  
+  present_centered_window(GTK_WINDOW(dialog)); //CHB
+  //gtk_widget_show (dialog); CHB
 }
 
 static void

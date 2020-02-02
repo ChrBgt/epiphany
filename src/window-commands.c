@@ -60,7 +60,7 @@
 #include <glib.h>
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
-#include <libnotify/notify.h>
+//CHB #include <libnotify/notify.h>
 #include <libsoup/soup.h>
 #include <string.h>
 #include <webkit2/webkit2.h>
@@ -215,6 +215,43 @@ create_tree_model (void)
 
   return GTK_TREE_MODEL (list_store);
 }
+
+//CHB
+static void
+present_centered_window(GtkWindow *window)
+{
+  GdkGeometry windowProperties;
+  gint x, y, width, height, pwidth = atoi(getenv("EPI_W")), pheight = atoi(getenv("EPI_H"));
+
+  gtk_window_set_modal (window, TRUE);
+  gtk_window_set_resizable(window, FALSE);
+  //gtk_window_set_position (window, GTK_WIN_POS_CENTER); //doesnt always seem to work, therefore we need the gtk_window_move
+
+  windowProperties.max_width = pwidth - 40;
+  windowProperties.max_height = pheight - 60;
+  windowProperties.min_width = windowProperties.max_width;
+  windowProperties.min_height = windowProperties.max_height;  
+  gtk_window_set_geometry_hints(window, NULL, &windowProperties, GDK_HINT_MAX_SIZE | GDK_HINT_MIN_SIZE);
+
+  gtk_window_get_size (window,
+                       &width,
+                       &height);
+
+  if(width < pwidth)
+    x = (gint)((pwidth - width)/2);
+  else
+	x = 26+1; //40;
+
+  if(height < pheight)
+    y = (gint)((pheight - height)/3);
+  else
+	y = 23+1; //60;
+
+  gtk_window_move (window, x, y);
+  
+  gtk_window_present (window);
+}
+//eof CHB
 
 static gchar *
 show_profile_selector (GtkWidget *parent, GSList *profiles)
@@ -498,7 +535,9 @@ window_cmd_show_history (GSimpleAction *action,
   if (GTK_WINDOW (user_data) != gtk_window_get_transient_for (GTK_WINDOW (dialog)))
     gtk_window_set_transient_for (GTK_WINDOW (dialog),
                                   GTK_WINDOW (user_data));
-  gtk_window_present (GTK_WINDOW (dialog));
+
+  present_centered_window(GTK_WINDOW(dialog)); //CHB
+  //gtk_window_present (GTK_WINDOW (dialog)); CHB
 }
 
 void
@@ -513,8 +552,9 @@ window_cmd_show_preferences (GSimpleAction *action,
   if (GTK_WINDOW (user_data) != gtk_window_get_transient_for (dialog))
     gtk_window_set_transient_for (dialog,
                                   GTK_WINDOW (user_data));
-
-  gtk_window_present (dialog);
+  
+  present_centered_window(GTK_WINDOW(dialog)); //CHB
+  //gtk_window_present (dialog); CHB
 }
 
 void
@@ -541,7 +581,9 @@ window_cmd_show_shortcuts (GSimpleAction *action,
   if (gtk_window_get_transient_for (GTK_WINDOW (shortcuts_window)) != GTK_WINDOW (user_data))
     gtk_window_set_transient_for (GTK_WINDOW (shortcuts_window), GTK_WINDOW (user_data));
 
-  gtk_window_present (GTK_WINDOW (shortcuts_window));
+ 
+  present_centered_window(GTK_WINDOW(shortcuts_window)); //CHB  
+  //gtk_window_present (GTK_WINDOW (shortcuts_window)); CHB moved above
 }
 
 void
@@ -641,20 +683,22 @@ window_cmd_show_about (GSimpleAction *action,
   g_key_file_free (key_file);
 
   comments = g_strdup_printf (_("A simple, clean, beautiful view of the web.\n"
-                                "Powered by WebKitGTK+ %d.%d.%d"),
-                              webkit_get_major_version (),
-                              webkit_get_minor_version (),
-                              webkit_get_micro_version ());
+                                "Powered by WebKitGTK+")); //CHB  %d.%d.%d"),
+                              //webkit_get_major_version (),  CHB
+                              //webkit_get_minor_version (),  CHB
+                              //webkit_get_micro_version ()); CHB
 
   gtk_show_about_dialog (window ? GTK_WINDOW (window) : NULL,
 #if !TECH_PREVIEW
-                         "program-name", _("Web"),
+                         "program-name", _("Web/augtention.com"),// CHB  /augtention.com added
 #else
                          "program-name", _("Epiphany Technology Preview"),
 #endif
-                         "version", VCSVERSION,
+                         "version",
+                         "", //CHB
+                         //VCSVERSION, CHB
                          "copyright", "Copyright © 2002–2004 Marco Pesenti Gritti\n"
-                         "Copyright © 2003–2018 The Web Developers",
+                         "Copyright © 2003–now The Web Developers (adapted by augtention.com)",//CHB 2018 replaced by now, (adapted by augtention.com) added
                          "artists", artists,
                          "authors", authors,
                          "comments", comments,
@@ -668,7 +712,7 @@ window_cmd_show_about (GSimpleAction *action,
                           * line seperated by newlines (\n).
                           */
                          "translator-credits", _("translator-credits"),
-                         "logo-icon-name", "org.gnome.Epiphany",
+                         "logo-icon-name", "gtk-yes", //"org.gnome.Epiphany", CHB
                          "website", "https://wiki.gnome.org/Apps/Web",
 #if !TECH_PREVIEW
                          "website-label", _("Web Website"),
@@ -1287,6 +1331,7 @@ fill_default_application_title (EphyApplicationDialogData *data)
   ephy_web_view_get_web_app_title (data->view, NULL, fill_default_application_title_cb, data);
 }
 
+/*CHB removed
 static void
 notify_launch_cb (NotifyNotification *notification,
                   char               *action,
@@ -1297,6 +1342,7 @@ notify_launch_cb (NotifyNotification *notification,
   ephy_file_launch_desktop_file (desktop_file, NULL, 0, NULL);
   g_free (desktop_file);
 }
+*/
 
 static gboolean
 confirm_web_application_overwrite (GtkWindow *parent, const char *title)
@@ -1335,7 +1381,7 @@ dialog_save_as_application_response_cb (GtkDialog                 *dialog,
   const char *app_name;
   char *desktop_file;
   char *message;
-  NotifyNotification *notification;
+  //NotifyNotification *notification; CHB
 
   if (response == GTK_RESPONSE_OK) {
     app_name = gtk_entry_get_text (GTK_ENTRY (data->entry));
@@ -1358,24 +1404,27 @@ dialog_save_as_application_response_cb (GtkDialog                 *dialog,
       message = g_strdup_printf (_("The application “%s” could not be created"),
                                  app_name);
 
-    notification = notify_notification_new (message,
-                                            NULL, NULL);
+    //notification = notify_notification_new (message,           CHB
+    //                                        NULL, NULL);       CHB
     g_free (message);
 
     if (desktop_file) {
+	  /* CHB
       notify_notification_add_action (notification, "launch", _("Launch"),
                                       (NotifyActionCallback)notify_launch_cb,
                                       g_path_get_basename (desktop_file),
                                       NULL);
       notify_notification_set_icon_from_pixbuf (notification, gtk_image_get_pixbuf (GTK_IMAGE (data->image)));
-      g_free (desktop_file);
+      */
+	  g_free (desktop_file);
     }
-
+	/*CHB
     notify_notification_set_timeout (notification, NOTIFY_EXPIRES_DEFAULT);
     notify_notification_set_urgency (notification, NOTIFY_URGENCY_LOW);
     notify_notification_set_hint (notification, "desktop-entry", g_variant_new_string ("epiphany"));
     notify_notification_set_hint (notification, "transient", g_variant_new_boolean (TRUE));
     notify_notification_show (notification, NULL);
+	*/
   }
 
   ephy_application_dialog_data_free (data);
@@ -1754,6 +1803,59 @@ window_cmd_open_bookmark (GSimpleAction *action,
   flags = ephy_link_flags_from_current_event () | EPHY_LINK_BOOKMARK;
 
   ephy_link_open (EPHY_LINK (user_data), address, NULL, flags);
+  /*CHB TODO toberemoved
+	GtkWidget *bwindow;
+    GdkGeometry windowProperties;//CHB
+	
+	bwindow = ephy_shell_get_bookmarks_editor (ephy_shell_get_default ());
+	
+	//CHB
+	if (GTK_WINDOW (window) != gtk_window_get_transient_for (GTK_WINDOW (bwindow)))
+		gtk_window_set_transient_for (GTK_WINDOW (bwindow),
+                                      GTK_WINDOW (window));
+
+    gtk_window_set_modal (GTK_WINDOW(bwindow), TRUE);
+    gtk_window_set_type_hint(GTK_WINDOW(bwindow), GDK_WINDOW_TYPE_HINT_MENU);//prevents minimize and maximize buttons
+	
+    windowProperties.min_width = atoi(getenv("EPI_W"))-40;
+    windowProperties.min_height = atoi(getenv("EPI_H"))-40;
+    windowProperties.max_width = windowProperties.min_width; 
+    windowProperties.max_height = windowProperties.min_height;
+    windowProperties.base_width = windowProperties.min_width;
+    windowProperties.base_height = windowProperties.min_height;
+    gtk_window_set_geometry_hints(GTK_WINDOW(bwindow), NULL, &windowProperties, GDK_HINT_MIN_SIZE | GDK_HINT_MAX_SIZE | GDK_HINT_BASE_SIZE);
+    gtk_window_move (GTK_WINDOW(bwindow), 20, 10);	
+	//eof CHB
+	
+	gtk_window_present (GTK_WINDOW (bwindow));
+}
+
+void
+window_cmd_edit_history (GtkAction *action,
+			 EphyWindow *window)
+{
+	GtkWidget *hwindow;
+    GdkGeometry windowProperties;//CHB
+	
+	hwindow = ephy_shell_get_history_window (ephy_shell_get_default ());
+
+	if (GTK_WINDOW (window) != gtk_window_get_transient_for (GTK_WINDOW (hwindow)))
+		gtk_window_set_transient_for (GTK_WINDOW (hwindow),
+                                              GTK_WINDOW (window));
+	//CHB
+    gtk_window_set_modal (GTK_WINDOW(hwindow), TRUE);
+    windowProperties.min_width = atoi(getenv("EPI_W"))-40;
+    windowProperties.min_height = atoi(getenv("EPI_H"))-40;
+    windowProperties.max_width = windowProperties.min_width; 
+    windowProperties.max_height = windowProperties.min_height;
+    windowProperties.base_width = windowProperties.min_width;
+    windowProperties.base_height = windowProperties.min_height;
+    gtk_window_set_geometry_hints(GTK_WINDOW(hwindow), NULL, &windowProperties, GDK_HINT_MIN_SIZE | GDK_HINT_MAX_SIZE | GDK_HINT_BASE_SIZE);
+    gtk_window_move (GTK_WINDOW(hwindow), 20, 10);	
+	//eof CHB
+
+	gtk_window_present (GTK_WINDOW (hwindow));
+*/
 }
 
 void
@@ -1772,6 +1874,30 @@ window_cmd_bookmark_page (GSimpleAction *action,
   popover = ephy_location_entry_get_add_bookmark_popover (EPHY_LOCATION_ENTRY (title_widget));
 
   ephy_add_bookmark_popover_show (EPHY_ADD_BOOKMARK_POPOVER (popover));
+  /*CHB TODO toberemoved
+	GtkWindow *dialog;
+	GdkGeometry windowProperties;//CHB
+
+	
+	dialog = GTK_WINDOW (ephy_shell_get_prefs_dialog (ephy_shell_get_default ()));
+
+	if (GTK_WINDOW (window) != gtk_window_get_transient_for (dialog))
+		gtk_window_set_transient_for (dialog,
+                                      GTK_WINDOW (window));
+	//CHB
+    gtk_window_set_modal (GTK_WINDOW(dialog), TRUE);
+    windowProperties.min_width = atoi(getenv("EPI_W"))-40;
+    windowProperties.min_height = atoi(getenv("EPI_H"))-40;
+    windowProperties.max_width = windowProperties.min_width; 
+    windowProperties.max_height = windowProperties.min_height;
+    windowProperties.base_width = windowProperties.min_width;
+    windowProperties.base_height = windowProperties.min_height;
+    gtk_window_set_geometry_hints(GTK_WINDOW(dialog), NULL, &windowProperties, GDK_HINT_MIN_SIZE | GDK_HINT_MAX_SIZE | GDK_HINT_BASE_SIZE);
+    gtk_window_move (GTK_WINDOW(dialog), 20, 10);	
+	//eof CHB
+	
+	gtk_window_present (dialog);
+  */
 }
 
 void
@@ -2252,6 +2378,124 @@ window_cmd_change_browse_with_caret_state (GSimpleAction *action,
   g_simple_action_set_state (action, g_variant_new_boolean (active));
   g_settings_set_boolean (EPHY_SETTINGS_MAIN,
                           EPHY_PREFS_ENABLE_CARET_BROWSING, active);
+/*CHB TODO toberemoved
+window_cmd_help_about (GtkAction *action,
+		       GtkWidget *window)
+{
+	char *comments = NULL;
+	GKeyFile *key_file;
+	GError *error = NULL;
+	char **list, **authors, **contributors, **past_authors, **artists, **documenters;
+	gsize n_authors, n_contributors, n_past_authors, n_artists, n_documenters, i, j;
+
+	key_file = g_key_file_new ();
+	if (!g_key_file_load_from_file (key_file, DATADIR G_DIR_SEPARATOR_S "about.ini",
+				        0, &error))
+	{
+		g_warning ("Couldn't load about data: %s\n", error->message);
+		g_error_free (error);
+		return;
+	}
+
+	list = g_key_file_get_string_list (key_file, ABOUT_GROUP, "Authors",
+					   &n_authors, NULL);
+	contributors = g_key_file_get_string_list (key_file, ABOUT_GROUP, "Contributors",
+						   &n_contributors, NULL);
+	past_authors = g_key_file_get_string_list (key_file, ABOUT_GROUP, "PastAuthors",
+						   &n_past_authors, NULL);
+
+#define APPEND(_to,_from) \
+	_to[i++] = g_strdup (_from);
+
+#define APPEND_STRV_AND_FREE(_to,_from) \
+	if (_from)\
+	{\
+		for (j = 0; _from[j] != NULL; ++j)\
+		{\
+			_to[i++] = _from[j];\
+		}\
+		g_free (_from);\
+	}
+
+	authors = g_new (char *, (list ? n_authors : 0) +
+			 	 (contributors ? n_contributors : 0) +
+				 (past_authors ? n_past_authors : 0) + 7 + 1);
+	i = 0;
+	APPEND_STRV_AND_FREE (authors, list);
+	APPEND (authors, "");
+	APPEND (authors, _("Contact us at:"));
+	APPEND (authors, "<augtention@gmail.com>"); //CHB	
+	APPEND (authors, "<epiphany-list@gnome.org>");
+	APPEND (authors, "");
+	APPEND (authors, _("Contributors:"));
+	APPEND_STRV_AND_FREE (authors, contributors);
+	APPEND (authors, "");
+	APPEND (authors, _("Past developers:"));
+	APPEND_STRV_AND_FREE (authors, past_authors);
+	authors[i++] = NULL;
+
+	list = g_key_file_get_string_list (key_file, ABOUT_GROUP, "Artists", &n_artists, NULL);
+
+	artists = g_new (char *, (list ? n_artists : 0) + 4 + 1);
+	i = 0;
+	APPEND_STRV_AND_FREE (artists, list);
+	artists[i++] = NULL;
+	
+	list = g_key_file_get_string_list (key_file, ABOUT_GROUP, "Documenters", &n_documenters, NULL);
+
+	documenters = g_new (char *, (list ? n_documenters : 0) + 3 + 1);
+	i = 0;
+	APPEND_STRV_AND_FREE (documenters, list);
+	APPEND (documenters, "");
+	APPEND (documenters, _("Contact us at:"));
+	APPEND (documenters, "<gnome-doc-list@gnome.org>");
+	documenters[i++] = NULL;
+	
+#undef APPEND
+#undef APPEND_STRV_AND_FREE
+
+	g_key_file_free (key_file);
+
+	comments = g_strdup_printf (_("A simple, clean, beautiful view of the web.\n"
+				      "Powered by WebKit"));
+					/* CHB
+					 %d.%d.%d"),
+				    webkit_get_major_version (),
+				    webkit_get_minor_version (),
+				    webkit_get_micro_version ());
+					* /
+	gtk_show_about_dialog (window ? GTK_WINDOW (window) : NULL,
+			       "program-name", _("Web/augtention.com"), // CHB  /augtention.com added
+			       "version",
+				   "", //CHB
+				   //VERSION, CHB
+			       "copyright", "Copyright © 2002–2004 Marco Pesenti Gritti\n"
+			                    "Copyright © 2003–now The Web Developers", //CHB 2014 replaced by now
+			       "artists", artists,
+			       "authors", authors,
+			       "comments", comments,
+			       "documenters", documenters,
+			       /* Translators: This is a special message that shouldn't be translated
+			        * literally. It is used in the about box to give credits to
+			        * the translators.
+			        * Thus, you should translate it to your name and email address.
+			        * You should also include other translators who have contributed to
+			        * this translation; in that case, please write each of them on a separate
+			        * line seperated by newlines (\n).
+			        * /
+			       "translator-credits", _("translator-credits"),
+			       "logo-icon-name", "web-browser",
+			       "website", "https://wiki.gnome.org/Apps/Web",
+			       "website-label", _("Web Website"),
+			       "license-type", GTK_LICENSE_GPL_2_0,
+			       "wrap-license", TRUE,
+			       NULL);
+
+	g_free (comments);
+	g_strfreev (artists);
+	g_strfreev (authors);
+	g_strfreev (documenters);
+*/
 }
 
 void

@@ -46,7 +46,7 @@
 #include "window-commands.h"
 
 #include <glib/gi18n.h>
-#include <gdk/gdkx.h>
+//#include <gdk/gdkx.h> CHB
 #include <gtk/gtk.h>
 
 struct _EphyShell {
@@ -421,14 +421,14 @@ ephy_shell_startup (GApplication *application)
       }
     }
 
-    gtk_application_set_app_menu (GTK_APPLICATION (application),
-                                  G_MENU_MODEL (gtk_builder_get_object (builder, "app-menu")));
+    //gtk_application_set_app_menu (GTK_APPLICATION (application), CHB
+    //                              G_MENU_MODEL (gtk_builder_get_object (builder, "app-menu"))); CHB
   } else {
     g_action_map_add_action_entries (G_ACTION_MAP (application),
                                      app_mode_app_entries, G_N_ELEMENTS (app_mode_app_entries),
                                      application);
-    gtk_application_set_app_menu (GTK_APPLICATION (application),
-                                  G_MENU_MODEL (gtk_builder_get_object (builder, "app-mode-app-menu")));
+    //gtk_application_set_app_menu (GTK_APPLICATION (application), CHB
+    //                              G_MENU_MODEL (gtk_builder_get_object (builder, "app-mode-app-menu"))); CHB
   }
 
   g_object_unref (builder);
@@ -995,7 +995,7 @@ ephy_shell_get_prefs_dialog (EphyShell *shell)
 {
   if (shell->prefs_dialog == NULL) {
     shell->prefs_dialog = g_object_new (EPHY_TYPE_PREFS_DIALOG,
-                                        "use-header-bar", TRUE,
+                                        //"use-header-bar", TRUE, CHB
                                         NULL);
     g_signal_connect (shell->prefs_dialog,
                       "destroy",

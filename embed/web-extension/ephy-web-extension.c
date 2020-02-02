@@ -154,6 +154,7 @@ web_page_send_request (WebKitWebPage     *web_page,
                        WebKitURIResponse *redirected_response,
                        EphyWebExtension  *extension)
 {
+  //const char *original_request_uri; CHB TODO toberemoved
   const char *request_uri;
   const char *redirected_response_uri;
   const char *page_uri;
@@ -165,16 +166,40 @@ web_page_send_request (WebKitWebPage     *web_page,
 
   if (g_settings_get_boolean (EPHY_SETTINGS_WEB, EPHY_PREFS_WEB_DO_NOT_TRACK)) {
     SoupMessageHeaders *headers = webkit_uri_request_get_http_headers (request);
+  /*CHB TODO toberemoved -- scheint jetzt gleich
+  original_request_uri = request_uri;
+
+  if (g_settings_get_boolean (EPHY_SETTINGS_WEB, EPHY_PREFS_WEB_DO_NOT_TRACK)) {//malloc CHB
+    SoupMessageHeaders *headers;
+    char *new_uri;
+
+    headers = webkit_uri_request_get_http_headers (request);//malloc CHB
+  */
     if (headers) {
       /* Do Not Track header. '1' means 'opt-out'. See:
        * http://tools.ietf.org/id/draft-mayer-do-not-track-00.txt */
-      soup_message_headers_append (headers, "DNT", "1");
+      soup_message_headers_append (headers, "DNT", "1");//malloc CHB
     }
+
     modified_uri = ephy_remove_tracking_from_uri (request_uri);
   }
 
   if (should_use_adblocker (request_uri, page_uri, redirected_response_uri)) {
     char *result;
+  /*CHB TODO toberemoved
+
+    /* Remove analytics from URL before loading * /
+    new_uri = ephy_remove_tracking_from_uri (request_uri);//malloc CHB
+    if (new_uri) {
+      webkit_uri_request_set_uri (request, new_uri);
+      request_uri = webkit_uri_request_get_uri (request);
+    }
+    g_free (new_uri);
+  }
+
+  if (!g_settings_get_boolean (EPHY_SETTINGS_WEB, EPHY_PREFS_WEB_ENABLE_ADBLOCK))//malloc CHB
+      return FALSE;
+  */
 
     ephy_uri_tester_load (extension->uri_tester);
     result = ephy_uri_tester_rewrite_uri (extension->uri_tester,
@@ -189,6 +214,7 @@ web_page_send_request (WebKitWebPage     *web_page,
 
     modified_uri = result;
   } else if (!modified_uri) {
+
     return FALSE;
   }
 
@@ -247,6 +273,7 @@ store_password (EphyEmbedFormAuth *form_auth)
   g_object_get (ephy_embed_form_auth_get_password_node (form_auth),
                 "name", &password_field_name,
                 NULL);
+
   password = ephy_embed_form_auth_get_password (form_auth);
 
   password_updated = ephy_embed_form_auth_get_password_updated (form_auth);
@@ -259,6 +286,7 @@ store_password (EphyEmbedFormAuth *form_auth)
                               password_field_name,
                               !password_updated);
 
+  //g_free (uri_str); CHB comes from 3.18?
   g_free (username_field_name);
   g_free (password_field_name);
 }
@@ -510,6 +538,7 @@ pre_fill_form (EphyEmbedFormAuth *form_auth)
   extension = ephy_web_extension_get ();
   if (!extension->password_manager)
     return;
+  //}  CHB from 3.18??
 
   username_node = ephy_embed_form_auth_get_username_node (form_auth);
   if (username_node) {

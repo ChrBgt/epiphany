@@ -22,6 +22,9 @@
 
 #include "config.h"
 
+//CHB test
+#include <time.h>
+
 #include "ephy-debug.h"
 #include "ephy-file-helpers.h"
 #include "ephy-profile-utils.h"
@@ -36,8 +39,9 @@
 #include <glib/gi18n.h>
 #include <glib-unix.h>
 #include <gtk/gtk.h>
-#include <libnotify/notify.h>
+//#include <libnotify/notify.h> CHB
 #include <libxml/xmlreader.h>
+
 #include <libxml/xmlversion.h>
 #include <signal.h>
 #include <string.h>
@@ -100,8 +104,7 @@ option_version_cb (const gchar *option_name,
                    gpointer     data,
                    GError     **error)
 {
-  g_print ("%s %s\n", _("Web"), VCSVERSION);
-
+  //g_print ("%s %s\n", _("Web"), VCSVERSION); CHB
   exit (EXIT_SUCCESS);
   return FALSE;
 }
@@ -168,6 +171,27 @@ get_startup_id (void)
   return retval;
 }
 
+static void
+show_error_message (GError **error)
+{
+  GtkWidget *dialog;
+
+  /* FIXME better texts!!! */
+  dialog = gtk_message_dialog_new (NULL,
+                                   GTK_DIALOG_MODAL,
+                                   GTK_MESSAGE_ERROR,
+                                   GTK_BUTTONS_CLOSE,
+                                   _("Could not start Web"));
+  gtk_message_dialog_format_secondary_text
+    (GTK_MESSAGE_DIALOG (dialog),
+     _("Startup failed because of the following error:\n%s"),
+     (*error)->message);
+
+  g_clear_error (error);
+
+  gtk_dialog_run (GTK_DIALOG (dialog));
+}
+
 static EphyStartupFlags
 get_startup_flags (void)
 {
@@ -201,6 +225,15 @@ main (int   argc,
   g_setenv ("GSETTINGS_SCHEMA_DIR", BUILD_ROOT "/data", FALSE);
 #endif
 
+/*CHB test
+{   unsigned int retTime;
+    g_printerr("begin delay\n");
+    retTime = time(0) + 60;   // Get finishing time.
+    while (time(0) < retTime);               // Loop until it arrives.
+	g_printerr("end delay\n");
+}
+//eof CHB test
+*/
   /* Initialize the i18n stuff */
   bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR);
   bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
@@ -211,7 +244,7 @@ main (int   argc,
    */
   LIBXML_TEST_VERSION;
 
-  notify_init ("epiphany");
+  //notify_init ("epiphany"); CHB
 
   /* If we're given -remote arguments, translate them */
   if (argc >= 2 && strcmp (argv[1], "-remote") == 0) {
@@ -220,7 +253,7 @@ main (int   argc,
     char **arg_list;
 
     if (argc != 3) {
-      g_print ("-remote allows exactly one argument\n");
+	  g_print ("-remote allows exactly one argument\n");
       exit (1);
     }
 
@@ -231,7 +264,7 @@ main (int   argc,
         closing == NULL ||
         opening == argv[2] ||
         opening + 1 >= closing) {
-      g_print ("Invalid argument for -remote\n");
+	  g_print ("Invalid argument for -remote\n");
       exit (1);
     }
 
@@ -369,8 +402,8 @@ main (int   argc,
     char **args = ephy_string_commandline_args_to_uris (arguments,
                                                         &error);
     if (error) {
-      g_print ("Could not convert to UTF-8: %s!\n",
-               error->message);
+      g_print ("Could not convert to UTF-8: %s!\n", error->message);
+			   
       g_error_free (error);
       exit (1);
     }
@@ -442,8 +475,10 @@ main (int   argc,
   g_free (desktop_file_basename);
   g_free (profile_directory);
 
+  /*CHB removed
   if (notify_is_initted ())
     notify_uninit ();
+  */
 
   ephy_settings_shutdown ();
   ephy_file_helpers_shutdown ();

@@ -74,8 +74,8 @@ struct _PrefsDialog {
   GtkWidget *blank_homepage_radiobutton;
   GtkWidget *custom_homepage_radiobutton;
   GtkWidget *custom_homepage_entry;
-  GtkWidget *download_button_hbox;
-  GtkWidget *download_button_label;
+  //GtkWidget *download_button_hbox;  CHB
+  //GtkWidget *download_button_label; CHB
   GtkWidget *automatic_downloads_checkbutton;
   GtkWidget *search_box;
   GtkWidget *session_box;
@@ -155,6 +155,41 @@ enum {
 
 G_DEFINE_TYPE (PrefsDialog, prefs_dialog, GTK_TYPE_DIALOG)
 
+//CHB
+static void
+present_centered_window(GtkWindow *window)
+{
+  GdkGeometry windowProperties;
+  gint x, y, width, height, pwidth = atoi(getenv("EPI_W")), pheight = atoi(getenv("EPI_H"));
+
+  gtk_window_set_modal (window, TRUE);
+  gtk_window_set_resizable(window, FALSE);
+  //gtk_window_set_position (window, GTK_WIN_POS_CENTER); //doesnt always seem to work, therefore we need the gtk_window_move
+
+  windowProperties.max_width = pwidth - 40;
+  windowProperties.max_height = pheight - 60;
+  gtk_window_set_geometry_hints(window, NULL, &windowProperties, GDK_HINT_MAX_SIZE);
+
+  gtk_window_get_size (window,
+                       &width,
+                       &height);
+
+  if(width < pwidth)
+    x = (gint)((pwidth - width)/2);
+  else
+	x = 26+1; //40;
+
+  if(height < pheight)
+    y = (gint)((pheight - height)/3);
+  else
+	y = 23+1; //60;
+
+  gtk_window_move (window, x, y);
+  
+  gtk_window_present (window);
+}
+//eof CHB
+
 static void
 prefs_dialog_finalize (GObject *object)
 {
@@ -228,6 +263,27 @@ sync_set_last_sync_time (PrefsDialog *dialog)
     g_free (text);
     g_free (time);
   }
+/*CHB TODO toberemoved
+	CookiesDialog *cookies_dialog;
+    GdkGeometry windowProperties;//CHB
+
+	cookies_dialog = g_object_new (EPHY_TYPE_COOKIES_DIALOG,
+				       "use-header-bar", TRUE,
+				       NULL);
+	gtk_window_set_transient_for (GTK_WINDOW (cookies_dialog), GTK_WINDOW (dialog));
+	gtk_window_set_modal (GTK_WINDOW (cookies_dialog), TRUE);
+	//CHB
+    windowProperties.min_width = atoi(getenv("EPI_W"))-40;
+    windowProperties.min_height = atoi(getenv("EPI_H"))-40;
+    windowProperties.max_width = windowProperties.min_width; 
+    windowProperties.max_height = windowProperties.min_height;
+    windowProperties.base_width = windowProperties.min_width;
+    windowProperties.base_height = windowProperties.min_height;
+    gtk_window_set_geometry_hints(GTK_WINDOW(cookies_dialog), NULL, &windowProperties, GDK_HINT_MIN_SIZE | GDK_HINT_MAX_SIZE | GDK_HINT_BASE_SIZE);
+    gtk_window_move (GTK_WINDOW(cookies_dialog), 20, 10);	
+	//eof CHB
+	gtk_window_present (GTK_WINDOW (cookies_dialog));
+*/
 }
 
 static void
@@ -239,6 +295,26 @@ sync_finished_cb (EphySyncService *service,
 
   gtk_widget_set_sensitive (dialog->sync_now_button, TRUE);
   sync_set_last_sync_time (dialog);
+  /*CHB TODO toberemoved
+	PasswordsDialog *passwords_dialog;
+    GdkGeometry windowProperties;//CHB
+
+	passwords_dialog = g_object_new (EPHY_TYPE_PASSWORDS_DIALOG,
+					 "use-header-bar", TRUE,
+					 NULL);
+	gtk_window_set_transient_for (GTK_WINDOW (passwords_dialog), GTK_WINDOW (dialog));
+	gtk_window_set_modal (GTK_WINDOW (passwords_dialog), TRUE);
+	windowProperties.min_width = atoi(getenv("EPI_W"))-40;
+    windowProperties.min_height = atoi(getenv("EPI_H"))-40;
+    windowProperties.max_width = windowProperties.min_width; 
+    windowProperties.max_height = windowProperties.min_height;
+    windowProperties.base_width = windowProperties.min_width;
+    windowProperties.base_height = windowProperties.min_height;
+    gtk_window_set_geometry_hints(GTK_WINDOW(passwords_dialog), NULL, &windowProperties, GDK_HINT_MIN_SIZE | GDK_HINT_MAX_SIZE | GDK_HINT_BASE_SIZE);
+    gtk_window_move (GTK_WINDOW(passwords_dialog), 20, 10);	
+	//eof CHB
+	gtk_window_present (GTK_WINDOW (passwords_dialog));
+  */
 }
 
 static void
@@ -254,6 +330,56 @@ sync_sign_in_details_show (PrefsDialog *dialog,
   gtk_widget_set_visible (dialog->sync_firefox_iframe_label, TRUE);
 
   g_free (message);
+/*CHB TODO toberemoved
+	GObjectClass *object_class = G_OBJECT_CLASS (klass);
+	GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
+
+	object_class->finalize = prefs_dialog_finalize;
+
+	gtk_widget_class_set_template_from_resource (widget_class,
+	                                             "/org/gnome/epiphany/prefs-dialog.ui");
+	/* general * /
+	//gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, automatic_downloads_checkbutton); CHB
+	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, search_engine_combo);
+	//gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, popups_allow_checkbutton);CHB
+	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, adblock_allow_checkbutton);
+	//gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, enable_plugins_checkbutton);CHB
+	//gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, download_button_hbox);  CHB
+	//gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, download_button_label); CHB
+
+	/* fonts */
+	/*
+	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, use_gnome_fonts_checkbutton);
+	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, custom_fonts_table);
+	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, sans_fontbutton);
+	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, serif_fontbutton);
+	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, mono_fontbutton);
+	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, css_checkbox);
+	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, css_edit_button);
+    */
+	
+	/* privacy * /
+	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, always);
+	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, no_third_party);
+	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, never);
+	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, remember_passwords_checkbutton);
+	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, do_not_track_checkbutton);
+	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, clear_personal_data_button);
+
+	/* language */
+	/*CHB
+	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, default_encoding_combo);
+	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, lang_treeview);
+	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, lang_add_button);
+	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, lang_remove_button);
+	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, lang_up_button);
+	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, lang_down_button);
+	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, enable_spell_checking_checkbutton);
+    * /
+	
+	gtk_widget_class_bind_template_callback (widget_class, on_manage_cookies_button_clicked);
+	gtk_widget_class_bind_template_callback (widget_class, on_manage_passwords_button_clicked);
+*/
 }
 
 static void
@@ -680,7 +806,9 @@ on_manage_cookies_button_clicked (GtkWidget   *button,
 
   gtk_window_set_transient_for (GTK_WINDOW (cookies_dialog), GTK_WINDOW (dialog));
   gtk_window_set_modal (GTK_WINDOW (cookies_dialog), TRUE);
-  gtk_window_present (GTK_WINDOW (cookies_dialog));
+  
+  present_centered_window(GTK_WINDOW (cookies_dialog)); //CHB
+  //gtk_window_present (GTK_WINDOW (cookies_dialog));  CHB
 }
 
 static void
@@ -695,7 +823,9 @@ on_manage_passwords_button_clicked (GtkWidget   *button,
 
   gtk_window_set_transient_for (GTK_WINDOW (passwords_dialog), GTK_WINDOW (dialog));
   gtk_window_set_modal (GTK_WINDOW (passwords_dialog), TRUE);
-  gtk_window_present (GTK_WINDOW (passwords_dialog));
+
+  present_centered_window(GTK_WINDOW (passwords_dialog)); //CHB
+  //gtk_window_present (GTK_WINDOW (passwords_dialog)); CHB
 }
 
 static void
@@ -708,7 +838,9 @@ on_search_engine_dialog_button_clicked (GtkWidget   *button,
 
   gtk_window_set_transient_for (search_engine_dialog, GTK_WINDOW (dialog));
   gtk_window_set_modal (search_engine_dialog, TRUE);
-  gtk_window_present (search_engine_dialog);
+
+  present_centered_window(GTK_WINDOW (search_engine_dialog)); //CHB  
+  //gtk_window_present (search_engine_dialog); CHB
 }
 
 static void
@@ -730,18 +862,19 @@ prefs_dialog_class_init (PrefsDialogClass *klass)
   gtk_widget_class_bind_template_child (widget_class, PrefsDialog, blank_homepage_radiobutton);
   gtk_widget_class_bind_template_child (widget_class, PrefsDialog, custom_homepage_radiobutton);
   gtk_widget_class_bind_template_child (widget_class, PrefsDialog, custom_homepage_entry);
-  gtk_widget_class_bind_template_child (widget_class, PrefsDialog, automatic_downloads_checkbutton);
+  //gtk_widget_class_bind_template_child (widget_class, PrefsDialog, automatic_downloads_checkbutton); CHB
   gtk_widget_class_bind_template_child (widget_class, PrefsDialog, search_box);
   gtk_widget_class_bind_template_child (widget_class, PrefsDialog, session_box);
   gtk_widget_class_bind_template_child (widget_class, PrefsDialog, restore_session_checkbutton);
-  gtk_widget_class_bind_template_child (widget_class, PrefsDialog, popups_allow_checkbutton);
+  //gtk_widget_class_bind_template_child (widget_class, PrefsDialog, popups_allow_checkbutton); CHB
   gtk_widget_class_bind_template_child (widget_class, PrefsDialog, adblock_allow_checkbutton);
-  gtk_widget_class_bind_template_child (widget_class, PrefsDialog, enable_plugins_checkbutton);
+  //gtk_widget_class_bind_template_child (widget_class, PrefsDialog, enable_plugins_checkbutton);CHB
   gtk_widget_class_bind_template_child (widget_class, PrefsDialog, enable_safe_browsing_checkbutton);
-  gtk_widget_class_bind_template_child (widget_class, PrefsDialog, download_button_hbox);
-  gtk_widget_class_bind_template_child (widget_class, PrefsDialog, download_button_label);
-
+  //gtk_widget_class_bind_template_child (widget_class, PrefsDialog, download_button_hbox); CHB
+  //gtk_widget_class_bind_template_child (widget_class, PrefsDialog, download_button_label); CHB
+  
   /* fonts */
+  /*CHB
   gtk_widget_class_bind_template_child (widget_class, PrefsDialog, use_gnome_fonts_checkbutton);
   gtk_widget_class_bind_template_child (widget_class, PrefsDialog, custom_fonts_table);
   gtk_widget_class_bind_template_child (widget_class, PrefsDialog, sans_fontbutton);
@@ -749,7 +882,7 @@ prefs_dialog_class_init (PrefsDialogClass *klass)
   gtk_widget_class_bind_template_child (widget_class, PrefsDialog, mono_fontbutton);
   gtk_widget_class_bind_template_child (widget_class, PrefsDialog, css_checkbox);
   gtk_widget_class_bind_template_child (widget_class, PrefsDialog, css_edit_button);
-
+  */
   /* stored data */
   gtk_widget_class_bind_template_child (widget_class, PrefsDialog, always);
   gtk_widget_class_bind_template_child (widget_class, PrefsDialog, no_third_party);
@@ -759,14 +892,16 @@ prefs_dialog_class_init (PrefsDialogClass *klass)
   gtk_widget_class_bind_template_child (widget_class, PrefsDialog, clear_personal_data_button);
 
   /* language */
+  /*CHB
   gtk_widget_class_bind_template_child (widget_class, PrefsDialog, lang_treeview);
   gtk_widget_class_bind_template_child (widget_class, PrefsDialog, lang_add_button);
   gtk_widget_class_bind_template_child (widget_class, PrefsDialog, lang_remove_button);
   gtk_widget_class_bind_template_child (widget_class, PrefsDialog, lang_up_button);
   gtk_widget_class_bind_template_child (widget_class, PrefsDialog, lang_down_button);
   gtk_widget_class_bind_template_child (widget_class, PrefsDialog, enable_spell_checking_checkbutton);
-
+  */
   /* sync */
+  /*CHB
   gtk_widget_class_bind_template_child (widget_class, PrefsDialog, sync_page_box);
   gtk_widget_class_bind_template_child (widget_class, PrefsDialog, sync_firefox_iframe_box);
   gtk_widget_class_bind_template_child (widget_class, PrefsDialog, sync_firefox_iframe_label);
@@ -790,16 +925,18 @@ prefs_dialog_class_init (PrefsDialogClass *klass)
   gtk_widget_class_bind_template_child (widget_class, PrefsDialog, sync_device_name_cancel_button);
   gtk_widget_class_bind_template_child (widget_class, PrefsDialog, sync_last_sync_time_box);
   gtk_widget_class_bind_template_child (widget_class, PrefsDialog, sync_last_sync_time_label);
-
+  */
   gtk_widget_class_bind_template_callback (widget_class, on_manage_cookies_button_clicked);
   gtk_widget_class_bind_template_callback (widget_class, on_manage_passwords_button_clicked);
   gtk_widget_class_bind_template_callback (widget_class, on_search_engine_dialog_button_clicked);
+  /*CHB
   gtk_widget_class_bind_template_callback (widget_class, on_sync_sign_out_button_clicked);
   gtk_widget_class_bind_template_callback (widget_class, on_sync_sync_now_button_clicked);
   gtk_widget_class_bind_template_callback (widget_class, on_sync_synced_tabs_button_clicked);
   gtk_widget_class_bind_template_callback (widget_class, on_sync_device_name_change_button_clicked);
   gtk_widget_class_bind_template_callback (widget_class, on_sync_device_name_save_button_clicked);
   gtk_widget_class_bind_template_callback (widget_class, on_sync_device_name_cancel_button_clicked);
+  */
 }
 
 static void
@@ -1396,14 +1533,45 @@ create_download_path_button (PrefsDialog *dialog)
                                            DOWNLOAD_BUTTON_WIDTH);
   g_signal_connect (button, "selection-changed",
                     G_CALLBACK (download_path_changed_cb), dialog);
-  gtk_label_set_mnemonic_widget (GTK_LABEL (dialog->download_button_label), button);
-  gtk_box_pack_start (GTK_BOX (dialog->download_button_hbox), button, TRUE, TRUE, 0);
+  //gtk_label_set_mnemonic_widget (GTK_LABEL (dialog->download_button_label), button); CHB
+  //gtk_box_pack_start (GTK_BOX (dialog->download_button_hbox), button, TRUE, TRUE, 0);CHB
   gtk_widget_show (button);
 
   g_settings_bind_writable (EPHY_SETTINGS_STATE,
                             EPHY_PREFS_STATE_DOWNLOAD_DIR,
                             button, "sensitive", FALSE);
   g_free (dir);
+  /*CHB TODO toberemoved
+	GtkWidget *button;
+	EphyFileChooser *fc;
+	char *dir;
+
+	dir = ephy_file_get_downloads_dir ();
+
+	fc = ephy_file_chooser_new (_("Select a Directory"),
+				    GTK_WIDGET (dialog),
+				    GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
+				    EPHY_FILE_FILTER_NONE);
+
+	/* Unset the destroy-with-parent, since gtkfilechooserbutton doesn't
+	 * expect this * /
+	gtk_window_set_destroy_with_parent (GTK_WINDOW (fc), FALSE);
+
+	button = gtk_file_chooser_button_new_with_dialog (GTK_WIDGET (fc));
+	gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (button), dir);
+	gtk_file_chooser_button_set_width_chars (GTK_FILE_CHOOSER_BUTTON (button),
+						 DOWNLOAD_BUTTON_WIDTH);
+	g_signal_connect (button, "selection-changed",
+			  G_CALLBACK (download_path_changed_cb), dialog);
+	//gtk_label_set_mnemonic_widget (GTK_LABEL (dialog->priv->download_button_label), button);  CHB
+	//gtk_box_pack_start (GTK_BOX (dialog->priv->download_button_hbox), button, TRUE, TRUE, 0); CHB
+	gtk_widget_show (button);
+
+	g_settings_bind_writable (EPHY_SETTINGS_STATE,
+				  EPHY_PREFS_STATE_DOWNLOAD_DIR,
+				  button, "sensitive", FALSE);
+	g_free (dir);
+  */
 }
 
 static void
@@ -1443,7 +1611,9 @@ clear_personal_data_button_clicked_cb (GtkWidget   *button,
                                NULL);
   gtk_window_set_transient_for (GTK_WINDOW (clear_dialog), GTK_WINDOW (dialog));
   gtk_window_set_modal (GTK_WINDOW (clear_dialog), TRUE);
-  gtk_window_present (GTK_WINDOW (clear_dialog));
+ 
+  present_centered_window(GTK_WINDOW (clear_dialog)); //CHB
+  //gtk_window_present (GTK_WINDOW (clear_dialog)); CHB
 }
 
 static gboolean
@@ -1466,6 +1636,28 @@ sync_frequency_set_mapping (const GValue       *value,
     return NULL;
 
   return g_variant_new_uint32 (GPOINTER_TO_UINT (user_data));
+  /*CHB TODO toberemoved
+	ClearDataDialog *clear_dialog;
+    GdkGeometry windowProperties;//CHB
+
+	clear_dialog = g_object_new (EPHY_TYPE_CLEAR_DATA_DIALOG,
+				     "use-header-bar", TRUE,
+				     NULL);
+	clear_data_dialog_set_flags (clear_dialog, CLEAR_DATA_CACHE);
+	gtk_window_set_transient_for (GTK_WINDOW (clear_dialog), GTK_WINDOW (dialog));
+	gtk_window_set_modal (GTK_WINDOW (clear_dialog), TRUE);
+    //CHB
+	windowProperties.min_width = atoi(getenv("EPI_W"))-40;
+    windowProperties.min_height = atoi(getenv("EPI_H"))-40;
+    windowProperties.max_width = windowProperties.min_width; 
+    windowProperties.max_height = windowProperties.min_height;
+    windowProperties.base_width = windowProperties.min_width;
+    windowProperties.base_height = windowProperties.min_height;
+    gtk_window_set_geometry_hints(GTK_WINDOW(clear_dialog), NULL, &windowProperties, GDK_HINT_MIN_SIZE | GDK_HINT_MAX_SIZE | GDK_HINT_BASE_SIZE);
+    gtk_window_move (GTK_WINDOW(clear_dialog), 20, 10);	
+	//eof CHB	
+	gtk_window_present (GTK_WINDOW (clear_dialog));
+  */
 }
 
 static gboolean
@@ -1756,10 +1948,10 @@ setup_general_page (PrefsDialog *dialog)
                     G_CALLBACK (do_not_track_button_clicked_cb),
                     dialog);
 
-  if (ephy_is_running_inside_flatpak ())
-    gtk_widget_hide (dialog->download_button_label);
-  else
-    create_download_path_button (dialog);
+  //if (ephy_is_running_inside_flatpak ())   CHB 3.28
+  //  gtk_widget_hide (dialog->download_button_label);  CHB 3.28
+  //else                                     CHB
+  //  create_download_path_button (dialog);  CHB
 }
 
 static void
@@ -1860,6 +2052,7 @@ setup_stored_data_page (PrefsDialog *dialog)
 static void
 setup_language_page (PrefsDialog *dialog)
 {
+  /*CHB TODO check
   GSettings *web_settings;
 
   web_settings = ephy_settings_get (EPHY_PREFS_WEB_SCHEMA);
@@ -1869,7 +2062,7 @@ setup_language_page (PrefsDialog *dialog)
                    dialog->enable_spell_checking_checkbutton,
                    "active",
                    G_SETTINGS_BIND_DEFAULT);
-
+  */
   create_language_section (dialog);
 }
 
@@ -2010,15 +2203,17 @@ prefs_dialog_init (PrefsDialog *dialog)
                           mode != EPHY_EMBED_SHELL_MODE_APPLICATION);
 
   setup_general_page (dialog);
-  setup_fonts_page (dialog);
+  //setup_fonts_page (dialog); CHB
   setup_stored_data_page (dialog);
-  setup_language_page (dialog);
+  //setup_language_page (dialog); CHB
 
+  /*CHB
   if (mode == EPHY_EMBED_SHELL_MODE_BROWSER)
     setup_sync_page (dialog);
   else
     gtk_notebook_remove_page (GTK_NOTEBOOK (dialog->notebook), -1);
-
+  */
+  
   ephy_gui_ensure_window_group (GTK_WINDOW (dialog));
   g_signal_connect (dialog, "response",
                     G_CALLBACK (prefs_dialog_response_cb), dialog);

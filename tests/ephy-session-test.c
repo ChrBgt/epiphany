@@ -30,7 +30,7 @@
 
 #include <glib.h>
 #include <glib/gstdio.h>
-#include <gdk/gdkx.h>
+//#include <gdk/gdkx.h> CHB
 #include <gtk/gtk.h>
 #include <string.h>
 
@@ -263,7 +263,7 @@ open_uris_after_loading_session (const char **uris, int final_num_windows)
 
   loop = ephy_test_utils_setup_ensure_web_views_are_loaded ();
 
-  user_time = gdk_x11_display_get_user_time (gdk_display_get_default ());
+  user_time = 0;//gdk_x11_display_get_user_time (gdk_display_get_default ()); CHB
 
   ret = load_session_from_string (session, session_data_many_windows);
   g_assert (ret);

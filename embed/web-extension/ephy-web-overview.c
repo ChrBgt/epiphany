@@ -129,6 +129,35 @@ apply_delayed_thumbnail_change (gpointer key,
   const char *url = key;
   const char *path = value;
   GList *l;
+  /*CHB TODO toberemoved
+  GList *items;
+  OverviewItem* item;
+
+  urls = ephy_web_overview_model_get_urls (model);
+
+  items = overview->priv->items;
+  for (l = urls; l; l = g_list_next (l)) {
+    EphyWebOverviewModelItem *url = (EphyWebOverviewModelItem *)l->data;
+    const char *thumbnail_path;
+
+    thumbnail_path = ephy_web_overview_model_get_url_thumbnail (model, url->url);
+
+    if (items) {
+      WebKitDOMDOMTokenList *class_list;
+
+      item = (OverviewItem *)items->data;
+
+      g_free (item->url);
+      item->url = g_strdup (url->url);
+
+      class_list = webkit_dom_element_get_class_list (webkit_dom_node_get_parent_element (WEBKIT_DOM_NODE (item->anchor)));
+      if (class_list && webkit_dom_dom_token_list_contains (class_list, "overview-removed", NULL))  //CHB   ,NULL added
+        webkit_dom_dom_token_list_remove (class_list, "overview-removed", NULL); //CHB  2nd parameter NULL removed
+
+      webkit_dom_element_set_attribute (item->anchor, "href", url->url, NULL);
+      webkit_dom_element_set_attribute (item->anchor, "title", url->title, NULL);
+      webkit_dom_node_set_text_content (WEBKIT_DOM_NODE (item->title), url->title, NULL);
+  */
 
   for (l = overview->items; l; l = g_list_next (l)) {
     OverviewItem *item = (OverviewItem *)l->data;
@@ -141,6 +170,30 @@ apply_delayed_thumbnail_change (gpointer key,
 
   return FALSE;
 }
+
+/* CHB double defined, see above
+static gboolean
+apply_delayed_thumbnail_change (gpointer key,
+                                gpointer value,
+                                gpointer user_data)
+{
+  EphyWebOverview *overview = EPHY_WEB_OVERVIEW (user_data);
+  const char *url = key;
+  const char *path = value;
+  GList *l;
+
+  for (l = overview->priv->items; l; l = g_list_next (l)) {
+    OverviewItem *item = (OverviewItem *)l->data;
+
+    if (g_strcmp0 (item->url, url) == 0) {
+      update_thumbnail_element_style (item->thumbnail, path);
+      return TRUE;
+    }
+  }
+
+  return FALSE;
+}
+*/
 
 static void
 ephy_web_overview_model_thumbnail_changed (EphyWebOverviewModel *model,
@@ -164,7 +217,6 @@ ephy_web_overview_model_thumbnail_changed (EphyWebOverviewModel *model,
                                                                  g_free,
                                                                  g_free);
   }
-
   /* We got the thumbnail change request before document-loaded. Save the
    * request, else we will wind up with an overview showing placeholder icons.
    * This isn't needed for title and URL changes because EphyAboutHandler is
@@ -269,6 +321,7 @@ ephy_web_overview_document_loaded (WebKitWebPage   *web_page,
     g_free (class);
   }
   g_object_unref (nodes);
+
   overview->items = g_list_reverse (overview->items);
 
   if (overview->delayed_thumbnail_changes) {
@@ -313,9 +366,11 @@ ephy_web_overview_model_urls_changed (EphyWebOverviewModel *model,
       item->url = g_strdup (url->url);
 
       class_list = webkit_dom_element_get_class_list (item->anchor);
-      if (class_list && webkit_dom_dom_token_list_contains (class_list, "overview-removed"))
-        webkit_dom_dom_token_list_remove (class_list, NULL, "overview-removed", NULL);
-
+	  //CHB
+	  if (class_list && webkit_dom_dom_token_list_contains (class_list, "overview-removed"))  //CHB in 3.18:   ,NULL added
+        webkit_dom_dom_token_list_remove (class_list, NULL, "overview-removed", NULL); //CHB  in 3.18: 2nd parameter NULL removed
+	  //eof CHB
+	  
       webkit_dom_element_set_attribute (item->anchor, "href", url->url, NULL);
       webkit_dom_element_set_attribute (item->anchor, "title", url->title, NULL);
       webkit_dom_node_set_text_content (WEBKIT_DOM_NODE (item->title), url->title, NULL);

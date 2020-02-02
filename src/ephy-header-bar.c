@@ -77,6 +77,7 @@ struct _EphyHeaderBar {
   GtkWidget *downloads_popover;
   GtkWidget *zoom_level_button;
   GtkWidget *open_in_browser_revealer;
+  GtkWidget *app_menu_button;//CHB
 
   guint navigation_buttons_menu_timeout;
 };
@@ -633,6 +634,7 @@ ephy_header_bar_constructed (GObject *object)
   EphyHeaderBar *header_bar = EPHY_HEADER_BAR (object);
   GtkWidget *box, *button, *notebook;
   GtkWidget *page_menu_popover;
+  GtkWidget *app_menu;//CHB
   EphyDownloadsManager *downloads_manager;
   GtkBuilder *builder;
   EphyEmbedShell *embed_shell;
@@ -642,6 +644,23 @@ ephy_header_bar_constructed (GObject *object)
   g_signal_connect_swapped (header_bar->window, "notify::chrome",
                             G_CALLBACK (sync_chromes_visibility), header_bar);
 
+  //CHB
+  button = gtk_menu_button_new ();
+  header_bar->app_menu_button = button;
+  gtk_button_set_image (GTK_BUTTON (button),
+                        gtk_image_new_from_icon_name ("web-browser-symbolic", GTK_ICON_SIZE_BUTTON));//emblem-system-symbolic
+  gtk_widget_set_valign (button, GTK_ALIGN_CENTER);
+  //gtk_widget_set_margin_start (button, 70); //only in case of full browser mode
+  
+  builder = gtk_builder_new_from_resource ("/org/gnome/epiphany/gtk/application-menu.ui");
+  app_menu = gtk_popover_new_from_model(button, G_MENU_MODEL (gtk_builder_get_object (builder, "app-menu")));
+  gtk_menu_button_set_popover (GTK_MENU_BUTTON (button), app_menu);
+  g_object_unref (builder);
+  
+  gtk_widget_show (GTK_WIDGET (button));
+  gtk_header_bar_pack_start (GTK_HEADER_BAR (header_bar), button);
+  //eof CHB  
+  
   /* Back and Forward */
   box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
   header_bar->navigation_box = box;
@@ -704,7 +723,7 @@ ephy_header_bar_constructed (GObject *object)
                                "image-button");
   gtk_widget_show (GTK_WIDGET (button));
   gtk_header_bar_pack_start (GTK_HEADER_BAR (header_bar), button);
-
+  
   /* Homepage */
   button = gtk_button_new ();
   gtk_button_set_image (GTK_BUTTON (button),
@@ -729,9 +748,10 @@ ephy_header_bar_constructed (GObject *object)
     header_bar->title_widget = EPHY_TITLE_WIDGET (ephy_title_box_new ());
   else
     header_bar->title_widget = EPHY_TITLE_WIDGET (ephy_location_entry_new ());
-  gtk_widget_set_margin_start (GTK_WIDGET (header_bar->title_widget), 54);
-  gtk_widget_set_margin_end (GTK_WIDGET (header_bar->title_widget), 54);
+  gtk_widget_set_margin_start (GTK_WIDGET (header_bar->title_widget), 34);//CHB 54
+  gtk_widget_set_margin_end (GTK_WIDGET (header_bar->title_widget), 34);//CHB 54
   gtk_header_bar_set_custom_title (GTK_HEADER_BAR (header_bar), GTK_WIDGET (header_bar->title_widget));
+  
   gtk_widget_show (GTK_WIDGET (header_bar->title_widget));
 
   if (EPHY_IS_LOCATION_ENTRY (header_bar->title_widget)) {
@@ -764,7 +784,7 @@ ephy_header_bar_constructed (GObject *object)
   g_object_unref (builder);
 
   gtk_header_bar_pack_end (GTK_HEADER_BAR (header_bar), button);
-
+  
   /* Bookmarks button */
   button = gtk_menu_button_new ();
   header_bar->bookmarks_button = button;
@@ -903,9 +923,9 @@ GtkWidget *
 ephy_header_bar_new (EphyWindow *window)
 {
   g_assert (EPHY_IS_WINDOW (window));
-
+  
   return GTK_WIDGET (g_object_new (EPHY_TYPE_HEADER_BAR,
-                                   "show-close-button", TRUE,
+                                   "show-close-button", FALSE,//CHB TRUE
                                    "window", window,
                                    NULL));
 }

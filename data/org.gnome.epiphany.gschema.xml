@@ -69,7 +69,7 @@
 			<default>true</default>
 		</key>
 		<key type="b" name="enable-smooth-scrolling">
-			<default>false</default>
+			<default>true</default>
 			<summary>Enable smooth scrolling</summary>
                         <description>
                           DEPRECATED: This key is deprecated and ignored. Use /org/gnome/epiphany/web/enable-smooth-scrolling instead.
@@ -149,7 +149,7 @@
 			<description>A value to be used to override monospace desktop font when use-gnome-fonts is set.</description>
 		</key>
 		<key type="b" name="enable-user-css">
-			<default>false</default>
+			<default>true</default>
 			<summary>Use a custom CSS</summary>
 			<description>Use a custom CSS file to modify websites own CSS.</description>
 		</key>
@@ -174,12 +174,12 @@
 			<description>Where to accept cookies from. Possible values are “always”, “no-third-party” and “never”.</description>
 		</key>
 		<key type="b" name="enable-popups">
-			<default>true</default>
+			<default>false</default>
 			<summary>Allow popups</summary>
 			<description>Allow sites to open new windows using JavaScript (if JavaScript is enabled).</description>
 		</key>
 		<key type="b" name="enable-plugins">
-			<default>true</default>
+			<default>false</default>
 			<summary>Enable Plugins</summary>
 		</key>
 		<key type="b" name="enable-webgl">
@@ -193,7 +193,7 @@
 			<description>Whether to enable support for WebAudio.</description>
 		</key>
 		<key type="b" name="enable-smooth-scrolling">
-			<default>false</default>
+			<default>true</default>
 			<summary>Enable smooth scrolling</summary>
                         <description>Whether to enable smooth scrolling.</description>
 		</key>
@@ -223,7 +223,7 @@
 			<description>Enable quirks to make specific websites work better. You might want to disable this setting if debugging a specific issue.</description>
 		</key>
 		<key type="b" name="enable-safe-browsing">
-			<default>true</default>
+			<default>false</default>
 			<summary>Enable safe browsing</summary>
 			<description>Whether to enable safe browsing. Safe browsing operates via Google Safe Browsing API v4.</description>
 		</key>
@@ -264,7 +264,7 @@
 	</schema>
 	<schema path="/org/gnome/epiphany/lockdown/" id="org.gnome.Epiphany.lockdown">
 		<key type="b" name="disable-fullscreen">
-			<default>false</default>
+			<default>true</default>
 		</key>
 		<key type="b" name="disable-arbitrary-url">
 			<default>false</default>
@@ -279,10 +279,10 @@
 			<default>false</default>
 		</key>
 		<key type="b" name="disable-printing">
-			<default>false</default>
+			<default>true</default>
 		</key>
 		<key type="b" name="disable-quit">
-			<default>false</default>
+			<default>true</default>
 		</key>
 	</schema>
 	<schema path="/org/gnome/epiphany/sync/" id="org.gnome.Epiphany.sync">

@@ -28,6 +28,7 @@
 #include <glib/gi18n.h>
 #include <libsoup/soup.h>
 
+
 /**
  * SECTION:ephy-certificate-dialog
  * @short_description: A dialog to show SSL certificate information
@@ -282,7 +283,7 @@ ephy_certificate_dialog_init (EphyCertificateDialog *dialog)
   GtkWidget *grid;
   GtkWidget *content_area;
 
-  gtk_window_set_default_size (GTK_WINDOW (dialog), -1, 500);
+  gtk_window_set_default_size (GTK_WINDOW (dialog), -1, 400);//CHB -1, 500
 
   gtk_container_set_border_width (GTK_CONTAINER (dialog), 10);
   gtk_window_set_skip_taskbar_hint (GTK_WINDOW (dialog), TRUE);
@@ -323,6 +324,7 @@ ephy_certificate_dialog_init (EphyCertificateDialog *dialog)
 
   content_area = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
   gtk_box_set_spacing (GTK_BOX (content_area), 14);
+
   gtk_box_pack_start (GTK_BOX (content_area), grid, FALSE, FALSE, 0);
   gtk_widget_show (grid);
 }
@@ -347,8 +349,9 @@ ephy_certificate_dialog_new (GtkWindow           *parent,
                                      "modal", TRUE,
                                      "use-header-bar", TRUE,
                                      NULL));
+ 
   if (parent)
     gtk_window_set_transient_for (GTK_WINDOW (dialog), parent);
-
+  
   return dialog;
 }
