@@ -225,15 +225,6 @@ main (int   argc,
   g_setenv ("GSETTINGS_SCHEMA_DIR", BUILD_ROOT "/data", FALSE);
 #endif
 
-/*CHB test
-{   unsigned int retTime;
-    g_printerr("begin delay\n");
-    retTime = time(0) + 60;   // Get finishing time.
-    while (time(0) < retTime);               // Loop until it arrives.
-	g_printerr("end delay\n");
-}
-//eof CHB test
-*/
   /* Initialize the i18n stuff */
   bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR);
   bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
@@ -474,11 +465,6 @@ main (int   argc,
   g_object_unref (ephy_shell);
   g_free (desktop_file_basename);
   g_free (profile_directory);
-
-  /*CHB removed
-  if (notify_is_initted ())
-    notify_uninit ();
-  */
 
   ephy_settings_shutdown ();
   ephy_file_helpers_shutdown ();

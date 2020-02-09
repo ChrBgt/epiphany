@@ -123,30 +123,6 @@ get_remaining_time (guint64 content_length,
   return remaining_time;
 }
 
-/* CHB check tobedeleted
-//CHB
-static gboolean
-delayed_widget_removal(EphyDownloadWidget *widget)
-{
-  nof_widgets_active--;
-  gtk_widget_destroy (GTK_WIDGET (widget));
-
-  return G_SOURCE_REMOVE;
-}
-//eof CHB
-
-static void
-download_clicked_cb (GtkButton *button,
-                     EphyDownloadWidget *widget)
-{
-  //CHB
-  if(widget->priv->timeout_id) g_source_remove(widget->priv->timeout_id);
-  gtk_label_set_text (widget->priv->text, "Click download button to the right!");
-  widget->priv->timeout_id = g_timeout_add(3000, (GSourceFunc)delayed_widget_removal, widget);
-  //eof CHB
-}
-*/
-
 static void
 update_download_icon (EphyDownloadWidget *widget)
 {
@@ -262,24 +238,6 @@ download_failed_cb (EphyDownload       *download,
                     GError             *error,
                     EphyDownloadWidget *widget)
 {
-/*CHB TODO check tobedeleted
-  widget->priv->finished = TRUE;
-  update_popup_menu (widget);
-  
-  //CHB
-  if(nof_widgets_active > MAX_NOF_WIDGETS_ACTIVE)
-    update_download_label_and_tooltip (widget, _("Download finished - click to close!"));
-  else //eof CHB
-    update_download_label_and_tooltip (widget, _("Download finished")); //CHB "Download" in string added
-  widget_attention_needed (widget);
-}
-
-static void
-widget_failed_cb (WebKitDownload *download,
-                  GError *error,
-                  EphyDownloadWidget *widget)
-{
-*/
   char *error_msg;
 
   g_signal_handlers_disconnect_by_func (download, download_progress_cb, widget);
@@ -300,63 +258,6 @@ download_content_type_changed_cb (EphyDownload       *download,
                                   EphyDownloadWidget *widget)
 {
   update_download_icon (widget);
-/*CHB TODO check tobedeleted
-  GtkWidget *item;
-  GtkWidget *menu;
-  char *basename, *name;
-  WebKitDownload *download;
-  const char *dest;
-
-  download = ephy_download_get_webkit_download (widget->priv->download);
-  dest = webkit_download_get_destination (download);
-  if (dest == NULL)
-    return;
-
-  basename = g_filename_display_basename (dest);
-  name = ephy_uri_safe_unescape (basename);
-
-  menu = gtk_menu_new ();
-  gtk_widget_set_halign (menu, GTK_ALIGN_END);
-
-  item = gtk_menu_item_new_with_label (name);
-  gtk_widget_set_sensitive (item, FALSE);
-  gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
-  g_free (basename);
-  g_free (name);
-
-  widget->priv->cancel_menuitem = item = gtk_menu_item_new_with_label (_("Cancel"));
-  gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
-  g_signal_connect (item, "activate",
-                    G_CALLBACK (cancel_activate_cb), widget);
-
-  item = gtk_separator_menu_item_new ();
-  gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
-
-  widget->priv->open_menuitem = item = gtk_menu_item_new_with_label (_("Open"));
-  gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
-  g_signal_connect (item, "activate",
-                    G_CALLBACK (open_activate_cb), widget);
-
-  widget->priv->show_folder_menuitem = item = gtk_menu_item_new_with_label (_("Show in folder"));
-  gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
-  g_signal_connect (item, "activate",
-                    G_CALLBACK (folder_activate_cb), widget);
-
-  update_popup_menu (widget);
-
-  gtk_widget_show_all (menu);
-
-  gtk_menu_button_set_popup (GTK_MENU_BUTTON (widget->priv->menu_button), menu);
-}
-
-static void
-widget_destination_changed_cb (WebKitDownload *download,
-                               GParamSpec *pspec,
-                               EphyDownloadWidget *widget)
-{
-  update_download_destination (widget);
-  //add_popup_menu (widget); CHB
-*/
 }
 
 static void
@@ -576,87 +477,6 @@ ephy_download_widget_class_init (EphyDownloadWidgetClass *klass)
                          G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS);
 
   g_object_class_install_properties (object_class, LAST_PROP, obj_properties);
-/*CHB TODO tobedeleted
-  g_object_class_install_property (object_class, PROP_DOWNLOAD,
-                                   g_param_spec_object ("download",
-                                                        "An EphyDownload object",
-                                                        "The EphyDownload shown by this widget",
-                                                        G_TYPE_OBJECT,
-                                                        G_PARAM_READWRITE |
-                                                        G_PARAM_CONSTRUCT_ONLY |
-                                                        G_PARAM_STATIC_NAME |
-                                                        G_PARAM_STATIC_NICK |
-                                                        G_PARAM_STATIC_BLURB));
-}
-
-static void
-smallify_label (GtkLabel *label)
-{
-        PangoAttrList *attrs;
-        attrs = pango_attr_list_new ();
-        pango_attr_list_insert (attrs, pango_attr_scale_new (PANGO_SCALE_SMALL));
-        gtk_label_set_attributes (label, attrs);
-        pango_attr_list_unref (attrs);
-}
-
-static void
-create_widget (EphyDownloadWidget *widget)
-{
-
-  GtkWidget *grid;
-  GtkWidget *icon;
-  GtkWidget *text;
-  GtkWidget *button;
-  GtkWidget *menu_button;
-  GtkWidget *remain;
-  
-  grid = gtk_grid_new ();
-  gtk_grid_set_column_spacing (GTK_GRID (grid), 6);
-
-  button = gtk_button_new ();
-  menu_button = gtk_menu_button_new ();
-  gtk_menu_button_set_direction (GTK_MENU_BUTTON (menu_button), GTK_ARROW_UP);
-
-  icon = gtk_image_new ();
-
-  text = gtk_label_new (NULL);
-  smallify_label (GTK_LABEL (text));
-  gtk_misc_set_alignment (GTK_MISC (text), 0, 0.5);
-  gtk_label_set_ellipsize (GTK_LABEL (text), PANGO_ELLIPSIZE_END);
-  gtk_style_context_add_class (gtk_widget_get_style_context (GTK_LABEL (text)), "filename");
-
-  remain = gtk_label_new (_("Starting…"));
-  smallify_label (GTK_LABEL (remain));
-  gtk_misc_set_alignment (GTK_MISC (remain), 0, 0.5);
-  gtk_label_set_ellipsize (GTK_LABEL (remain), PANGO_ELLIPSIZE_END);
-
-  gtk_grid_attach (GTK_GRID (grid), icon, 0, 0, 1, 2);
-  gtk_grid_attach (GTK_GRID (grid), text, 1, 0, 1, 1);
-  gtk_grid_attach (GTK_GRID (grid), remain, 1, 1, 1, 1);
-
-  widget->priv->text = text;
-  widget->priv->icon = icon;
-  widget->priv->button = button;
-  widget->priv->remaining = remain;
-  widget->priv->menu_button = menu_button;
-  widget->priv->finished = TRUE;//CHB assume success in any case
-  widget->priv->timeout_id = 0;//CHB
-  
-  gtk_button_set_relief (GTK_BUTTON (button), GTK_RELIEF_HALF);
-
-  gtk_container_add (GTK_CONTAINER (button), grid);
-
-  gtk_box_pack_start (GTK_BOX (widget), button, FALSE, FALSE, 0);
-  gtk_box_pack_end (GTK_BOX (widget), menu_button, FALSE, FALSE, 0);
-
-  g_signal_connect (button, "clicked",
-                    G_CALLBACK (download_clicked_cb), widget);
-  g_signal_connect_swapped (menu_button, "clicked",
-                            G_CALLBACK (widget_attention_unneeded), widget);
-
-  gtk_widget_show_all (button);
-  // gtk_widget_show_all (menu_button); CHB
-*/
 }
 
 static void
@@ -678,26 +498,6 @@ ephy_download_widget_get_download (EphyDownloadWidget *widget)
 
   g_assert (EPHY_IS_DOWNLOAD_WIDGET (widget));
   return widget->download;
-/*CHB TODO check tobedeleted
-  g_return_val_if_fail (EPHY_IS_DOWNLOAD_WIDGET (widget), NULL);
-  return widget->priv->download;
-}
-
-/**
- * ephy_download_widget_download_is_finished:
- * @widget: an #EphyDownloadWidget
- *
- * Whether the download finished
- *
- * Returns: %TRUE if download operation finished or %FALSE otherwise
- ** /
-gboolean
-ephy_download_widget_download_is_finished (EphyDownloadWidget *widget)
-{
-  nof_widgets_active = 0; //CHB
-  g_return_val_if_fail (EPHY_IS_DOWNLOAD_WIDGET (widget), FALSE);
-  return widget->priv->finished;
-*/
 }
 
 /**

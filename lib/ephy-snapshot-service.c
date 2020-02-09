@@ -36,12 +36,6 @@
 struct _EphySnapshotService {
   GObject parent_instance;
 
-/*CHB TODO check
-struct _EphySnapshotServicePrivate
-{
-  /* Disk cache * /
-//CHB     GnomeDesktopThumbnailFactory *factory;
-*/
   /* Memory cache */
   GHashTable *cache;
 };
@@ -219,13 +213,6 @@ save_thumbnail (GdkPixbuf  *pixbuf,
   g_free (tmp_path);
   g_free (dirname);
   return ret;
-/*CHB TODO check
-  self->priv = EPHY_SNAPSHOT_SERVICE_GET_PRIVATE (self);
-//CHB     self->priv->factory = gnome_desktop_thumbnail_factory_new (GNOME_DESKTOP_THUMBNAIL_SIZE_LARGE);
-  self->priv->cache = g_hash_table_new_full (g_str_hash, g_str_equal,
-                                             (GDestroyNotify)g_free,
-                                             (GDestroyNotify)snapshot_path_cached_data_free);
-*/
 }
 
 static GdkPixbuf *
@@ -670,10 +657,6 @@ get_snapshot_path_for_url_thread (GTask               *task,
 
   path = thumbnail_path (data->url);
   if (!validate_thumbnail_path (path, data->url)) {
-  /*CHB TODO toberemoved
-  data->path = NULL;  //CHB   gnome_desktop_thumbnail_factory_lookup (service->priv->factory, data->url, data->mtime);
-  if (data->path == NULL) {
-  */
     g_task_return_new_error (task,
                              EPHY_SNAPSHOT_SERVICE_ERROR,
                              EPHY_SNAPSHOT_SERVICE_ERROR_NOT_FOUND,
@@ -732,160 +715,6 @@ take_fresh_snapshot_in_background_if_stale (EphySnapshotService *service,
                           (GDestroyNotify)snapshot_async_data_free);
     ephy_snapshot_service_take_from_webview (task);
   }
-  /*CHB TODO toberemoved
-
-  /* Try to get the snapshot from the cache first if we have a URL, but only if
-   * the snapshot path is in memory cache; this is an indication that the
-   * snapshot is fresh. * /
-  uri = webkit_web_view_get_uri (web_view);
-  if (uri) {
-    ephy_snapshot_service_get_snapshot_for_url_async (service,
-                                                      uri, mtime, cancellable,
-                                                      (GAsyncReadyCallback)got_snapshot_for_url,
-                                                      task);
-    ensure_snapshot_freshness_for_web_view (service, web_view);
-  } else {
-    g_idle_add ((GSourceFunc)ephy_snapshot_service_take_from_webview, task);
-  }
-}
-
-/**
- * ephy_snapshot_service_get_snapshot_finish:
- * @service: a #EphySnapshotService
- * @result: a #GAsyncResult
- * @error: a location to store a #GError or %NULL
- *
- * Finishes the retrieval of a snapshot. Call from the
- * #GAsyncReadyCallback passed to
- * ephy_snapshot_service_get_snapshot_async().
- *
- * Returns: (transfer full): the snapshot.
- ** /
-GdkPixbuf *
-ephy_snapshot_service_get_snapshot_finish (EphySnapshotService *service,
-                                           GAsyncResult *result,
-                                           gchar **path,
-                                           GError **error)
-{
-  GTask *task = G_TASK (result);
-  GdkPixbuf *snapshot;
-
-  g_return_val_if_fail (g_task_is_valid (result, service), NULL);
-
-  snapshot = g_task_propagate_pointer (task, error);
-  if (!snapshot)
-    return NULL;
-
-  if (path) {
-    SnapshotAsyncData *data;
-
-    data = g_task_get_task_data (task);
-    *path = data->path;
-    data->path = NULL;
-  }
-
-  return snapshot;
-}
-
-typedef struct {
-  EphySnapshotService *service;
-  GdkPixbuf *snapshot;
-  char *url;
-  time_t mtime;
-  gint refcount;
-} SaveSnapshotAsyncData;
-
-static SaveSnapshotAsyncData *
-save_snapshot_async_data_new (EphySnapshotService *service,
-                              GdkPixbuf           *snapshot,
-                              const char          *url,
-                              time_t               mtime)
-{
-  SaveSnapshotAsyncData *data;
-
-  data = g_slice_new0 (SaveSnapshotAsyncData);
-  data->service = g_object_ref (service);
-  data->snapshot = g_object_ref (snapshot);
-  data->url = g_strdup (url);
-  data->mtime = mtime;
-  data->refcount = 1;
-
-  return data;
-}
-
-static SaveSnapshotAsyncData *
-save_snapshot_async_data_ref (SaveSnapshotAsyncData *data)
-{
-  g_atomic_int_add (&data->refcount, 1);
-  return data;
-}
-
-static void
-save_snapshot_async_data_unref (SaveSnapshotAsyncData *data)
-{
-  if (g_atomic_int_dec_and_test (&data->refcount)) {
-    g_object_unref (data->service);
-    g_object_unref (data->snapshot);
-    g_free (data->url);
-    g_slice_free (SaveSnapshotAsyncData, data);
-  }
-}
-
-static gboolean
-idle_emit_snapshot_saved (gpointer user_data)
-{
-  SaveSnapshotAsyncData *data = (SaveSnapshotAsyncData *)user_data;
-
-  g_signal_emit (data->service, signals[SNAPSHOT_SAVED], 0, data->url, data->mtime);
-
-  save_snapshot_async_data_unref (data);
-  return G_SOURCE_REMOVE;
-}
-
-static void
-save_snapshot_thread (GTask *task,
-                      EphySnapshotService *service,
-                      SaveSnapshotAsyncData *data,
-                      GCancellable *cancellable)
-{
-  char *path;
-/*CHB
-  gnome_desktop_thumbnail_factory_save_thumbnail (service->priv->factory,
-                                                  data->snapshot,
-                                                  data->url,
-                                                  data->mtime);
-* /
-  g_idle_add (idle_emit_snapshot_saved, save_snapshot_async_data_ref (data));
-
-  path = NULL; //CHB   gnome_desktop_thumbnail_path_for_uri (data->url, GNOME_DESKTOP_THUMBNAIL_SIZE_LARGE);
-  cache_snapshot_data_in_idle (service, data->url, path, SNAPSHOT_FRESH);
-
-  g_task_return_pointer (task, path, g_free);
-}
-
-void
-ephy_snapshot_service_save_snapshot_async (EphySnapshotService *service,
-                                           GdkPixbuf *snapshot,
-                                           const char *url,
-                                           time_t mtime,
-                                           GCancellable *cancellable,
-                                           GAsyncReadyCallback callback,
-                                           gpointer user_data)
-{
-  GTask *task;
-
-  g_return_if_fail (EPHY_IS_SNAPSHOT_SERVICE (service));
-  g_return_if_fail (GDK_IS_PIXBUF (snapshot));
-  g_return_if_fail (url != NULL);
-
-  task = g_task_new (service, cancellable, callback, user_data);
-  g_task_set_priority (task, G_PRIORITY_LOW);
-  g_task_set_task_data (task,
-                        save_snapshot_async_data_new (service, snapshot, url, mtime),
-                        (GDestroyNotify)save_snapshot_async_data_unref);
-  g_task_run_in_thread (task, (GTaskThreadFunc)save_snapshot_thread);
-  g_object_unref (task);
-*/
 }
 
 char *
@@ -914,20 +743,6 @@ got_snapshot_path_for_url (EphySnapshotService *service,
   } else {
     ephy_snapshot_service_take_from_webview (task);
   }
-  /*CHB TODO toberemoved
-  path = NULL;   //CHB   gnome_desktop_thumbnail_factory_lookup (service->priv->factory, data->url, data->mtime);
-  if (!path) {
-    g_task_return_new_error (task,
-                             EPHY_SNAPSHOT_SERVICE_ERROR,
-                             EPHY_SNAPSHOT_SERVICE_ERROR_NOT_FOUND,
-                             "Snapshot for url \"%s\" not found in cache", data->url);
-    return;
-  }
-
-  cache_snapshot_data_in_idle (service, data->url, path, SNAPSHOT_STALE);
-
-  g_task_return_pointer (task, path, g_free);
-  */
 }
 
 void

@@ -154,7 +154,7 @@
 			<description>Use a custom CSS file to modify websites own CSS.</description>
 		</key>
 		<key type="b" name="enable-spell-checking">
-			<default>true</default>
+			<default>false</default>
 			<summary>Enable spell checking</summary>
 			<description>Spell check any text typed in editable areas.</description>
 		</key>

@@ -197,7 +197,7 @@ homepage_url_changed (GSettings  *settings,
   gboolean show_button;
 
   setting = g_settings_get_string (settings, key);
-  show_button = setting && setting[0] && g_strcmp0 (setting, "about:blank") != 0;
+  show_button = TRUE; //CHB setting && setting[0] && g_strcmp0 (setting, "about:blank") != 0;
 
   gtk_widget_set_visible (button, show_button);
   g_free (setting);

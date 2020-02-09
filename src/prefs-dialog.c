@@ -263,27 +263,6 @@ sync_set_last_sync_time (PrefsDialog *dialog)
     g_free (text);
     g_free (time);
   }
-/*CHB TODO toberemoved
-	CookiesDialog *cookies_dialog;
-    GdkGeometry windowProperties;//CHB
-
-	cookies_dialog = g_object_new (EPHY_TYPE_COOKIES_DIALOG,
-				       "use-header-bar", TRUE,
-				       NULL);
-	gtk_window_set_transient_for (GTK_WINDOW (cookies_dialog), GTK_WINDOW (dialog));
-	gtk_window_set_modal (GTK_WINDOW (cookies_dialog), TRUE);
-	//CHB
-    windowProperties.min_width = atoi(getenv("EPI_W"))-40;
-    windowProperties.min_height = atoi(getenv("EPI_H"))-40;
-    windowProperties.max_width = windowProperties.min_width; 
-    windowProperties.max_height = windowProperties.min_height;
-    windowProperties.base_width = windowProperties.min_width;
-    windowProperties.base_height = windowProperties.min_height;
-    gtk_window_set_geometry_hints(GTK_WINDOW(cookies_dialog), NULL, &windowProperties, GDK_HINT_MIN_SIZE | GDK_HINT_MAX_SIZE | GDK_HINT_BASE_SIZE);
-    gtk_window_move (GTK_WINDOW(cookies_dialog), 20, 10);	
-	//eof CHB
-	gtk_window_present (GTK_WINDOW (cookies_dialog));
-*/
 }
 
 static void
@@ -295,26 +274,6 @@ sync_finished_cb (EphySyncService *service,
 
   gtk_widget_set_sensitive (dialog->sync_now_button, TRUE);
   sync_set_last_sync_time (dialog);
-  /*CHB TODO toberemoved
-	PasswordsDialog *passwords_dialog;
-    GdkGeometry windowProperties;//CHB
-
-	passwords_dialog = g_object_new (EPHY_TYPE_PASSWORDS_DIALOG,
-					 "use-header-bar", TRUE,
-					 NULL);
-	gtk_window_set_transient_for (GTK_WINDOW (passwords_dialog), GTK_WINDOW (dialog));
-	gtk_window_set_modal (GTK_WINDOW (passwords_dialog), TRUE);
-	windowProperties.min_width = atoi(getenv("EPI_W"))-40;
-    windowProperties.min_height = atoi(getenv("EPI_H"))-40;
-    windowProperties.max_width = windowProperties.min_width; 
-    windowProperties.max_height = windowProperties.min_height;
-    windowProperties.base_width = windowProperties.min_width;
-    windowProperties.base_height = windowProperties.min_height;
-    gtk_window_set_geometry_hints(GTK_WINDOW(passwords_dialog), NULL, &windowProperties, GDK_HINT_MIN_SIZE | GDK_HINT_MAX_SIZE | GDK_HINT_BASE_SIZE);
-    gtk_window_move (GTK_WINDOW(passwords_dialog), 20, 10);	
-	//eof CHB
-	gtk_window_present (GTK_WINDOW (passwords_dialog));
-  */
 }
 
 static void
@@ -330,56 +289,6 @@ sync_sign_in_details_show (PrefsDialog *dialog,
   gtk_widget_set_visible (dialog->sync_firefox_iframe_label, TRUE);
 
   g_free (message);
-/*CHB TODO toberemoved
-	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-	GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
-
-	object_class->finalize = prefs_dialog_finalize;
-
-	gtk_widget_class_set_template_from_resource (widget_class,
-	                                             "/org/gnome/epiphany/prefs-dialog.ui");
-	/* general * /
-	//gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, automatic_downloads_checkbutton); CHB
-	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, search_engine_combo);
-	//gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, popups_allow_checkbutton);CHB
-	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, adblock_allow_checkbutton);
-	//gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, enable_plugins_checkbutton);CHB
-	//gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, download_button_hbox);  CHB
-	//gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, download_button_label); CHB
-
-	/* fonts */
-	/*
-	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, use_gnome_fonts_checkbutton);
-	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, custom_fonts_table);
-	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, sans_fontbutton);
-	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, serif_fontbutton);
-	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, mono_fontbutton);
-	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, css_checkbox);
-	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, css_edit_button);
-    */
-	
-	/* privacy * /
-	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, always);
-	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, no_third_party);
-	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, never);
-	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, remember_passwords_checkbutton);
-	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, do_not_track_checkbutton);
-	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, clear_personal_data_button);
-
-	/* language */
-	/*CHB
-	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, default_encoding_combo);
-	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, lang_treeview);
-	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, lang_add_button);
-	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, lang_remove_button);
-	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, lang_up_button);
-	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, lang_down_button);
-	gtk_widget_class_bind_template_child_private (widget_class, PrefsDialog, enable_spell_checking_checkbutton);
-    * /
-	
-	gtk_widget_class_bind_template_callback (widget_class, on_manage_cookies_button_clicked);
-	gtk_widget_class_bind_template_callback (widget_class, on_manage_passwords_button_clicked);
-*/
 }
 
 static void
@@ -1541,37 +1450,6 @@ create_download_path_button (PrefsDialog *dialog)
                             EPHY_PREFS_STATE_DOWNLOAD_DIR,
                             button, "sensitive", FALSE);
   g_free (dir);
-  /*CHB TODO toberemoved
-	GtkWidget *button;
-	EphyFileChooser *fc;
-	char *dir;
-
-	dir = ephy_file_get_downloads_dir ();
-
-	fc = ephy_file_chooser_new (_("Select a Directory"),
-				    GTK_WIDGET (dialog),
-				    GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
-				    EPHY_FILE_FILTER_NONE);
-
-	/* Unset the destroy-with-parent, since gtkfilechooserbutton doesn't
-	 * expect this * /
-	gtk_window_set_destroy_with_parent (GTK_WINDOW (fc), FALSE);
-
-	button = gtk_file_chooser_button_new_with_dialog (GTK_WIDGET (fc));
-	gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (button), dir);
-	gtk_file_chooser_button_set_width_chars (GTK_FILE_CHOOSER_BUTTON (button),
-						 DOWNLOAD_BUTTON_WIDTH);
-	g_signal_connect (button, "selection-changed",
-			  G_CALLBACK (download_path_changed_cb), dialog);
-	//gtk_label_set_mnemonic_widget (GTK_LABEL (dialog->priv->download_button_label), button);  CHB
-	//gtk_box_pack_start (GTK_BOX (dialog->priv->download_button_hbox), button, TRUE, TRUE, 0); CHB
-	gtk_widget_show (button);
-
-	g_settings_bind_writable (EPHY_SETTINGS_STATE,
-				  EPHY_PREFS_STATE_DOWNLOAD_DIR,
-				  button, "sensitive", FALSE);
-	g_free (dir);
-  */
 }
 
 static void
@@ -1636,28 +1514,6 @@ sync_frequency_set_mapping (const GValue       *value,
     return NULL;
 
   return g_variant_new_uint32 (GPOINTER_TO_UINT (user_data));
-  /*CHB TODO toberemoved
-	ClearDataDialog *clear_dialog;
-    GdkGeometry windowProperties;//CHB
-
-	clear_dialog = g_object_new (EPHY_TYPE_CLEAR_DATA_DIALOG,
-				     "use-header-bar", TRUE,
-				     NULL);
-	clear_data_dialog_set_flags (clear_dialog, CLEAR_DATA_CACHE);
-	gtk_window_set_transient_for (GTK_WINDOW (clear_dialog), GTK_WINDOW (dialog));
-	gtk_window_set_modal (GTK_WINDOW (clear_dialog), TRUE);
-    //CHB
-	windowProperties.min_width = atoi(getenv("EPI_W"))-40;
-    windowProperties.min_height = atoi(getenv("EPI_H"))-40;
-    windowProperties.max_width = windowProperties.min_width; 
-    windowProperties.max_height = windowProperties.min_height;
-    windowProperties.base_width = windowProperties.min_width;
-    windowProperties.base_height = windowProperties.min_height;
-    gtk_window_set_geometry_hints(GTK_WINDOW(clear_dialog), NULL, &windowProperties, GDK_HINT_MIN_SIZE | GDK_HINT_MAX_SIZE | GDK_HINT_BASE_SIZE);
-    gtk_window_move (GTK_WINDOW(clear_dialog), 20, 10);	
-	//eof CHB	
-	gtk_window_present (GTK_WINDOW (clear_dialog));
-  */
 }
 
 static gboolean
@@ -2052,17 +1908,6 @@ setup_stored_data_page (PrefsDialog *dialog)
 static void
 setup_language_page (PrefsDialog *dialog)
 {
-  /*CHB TODO check
-  GSettings *web_settings;
-
-  web_settings = ephy_settings_get (EPHY_PREFS_WEB_SCHEMA);
-
-  g_settings_bind (web_settings,
-                   EPHY_PREFS_WEB_ENABLE_SPELL_CHECKING,
-                   dialog->enable_spell_checking_checkbutton,
-                   "active",
-                   G_SETTINGS_BIND_DEFAULT);
-  */
   create_language_section (dialog);
 }
 

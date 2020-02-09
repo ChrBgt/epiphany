@@ -154,7 +154,6 @@ web_page_send_request (WebKitWebPage     *web_page,
                        WebKitURIResponse *redirected_response,
                        EphyWebExtension  *extension)
 {
-  //const char *original_request_uri; CHB TODO toberemoved
   const char *request_uri;
   const char *redirected_response_uri;
   const char *page_uri;
@@ -166,15 +165,6 @@ web_page_send_request (WebKitWebPage     *web_page,
 
   if (g_settings_get_boolean (EPHY_SETTINGS_WEB, EPHY_PREFS_WEB_DO_NOT_TRACK)) {
     SoupMessageHeaders *headers = webkit_uri_request_get_http_headers (request);
-  /*CHB TODO toberemoved -- scheint jetzt gleich
-  original_request_uri = request_uri;
-
-  if (g_settings_get_boolean (EPHY_SETTINGS_WEB, EPHY_PREFS_WEB_DO_NOT_TRACK)) {//malloc CHB
-    SoupMessageHeaders *headers;
-    char *new_uri;
-
-    headers = webkit_uri_request_get_http_headers (request);//malloc CHB
-  */
     if (headers) {
       /* Do Not Track header. '1' means 'opt-out'. See:
        * http://tools.ietf.org/id/draft-mayer-do-not-track-00.txt */
@@ -186,20 +176,6 @@ web_page_send_request (WebKitWebPage     *web_page,
 
   if (should_use_adblocker (request_uri, page_uri, redirected_response_uri)) {
     char *result;
-  /*CHB TODO toberemoved
-
-    /* Remove analytics from URL before loading * /
-    new_uri = ephy_remove_tracking_from_uri (request_uri);//malloc CHB
-    if (new_uri) {
-      webkit_uri_request_set_uri (request, new_uri);
-      request_uri = webkit_uri_request_get_uri (request);
-    }
-    g_free (new_uri);
-  }
-
-  if (!g_settings_get_boolean (EPHY_SETTINGS_WEB, EPHY_PREFS_WEB_ENABLE_ADBLOCK))//malloc CHB
-      return FALSE;
-  */
 
     ephy_uri_tester_load (extension->uri_tester);
     result = ephy_uri_tester_rewrite_uri (extension->uri_tester,
