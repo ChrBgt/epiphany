@@ -247,7 +247,7 @@ ephy_downloads_popover_init (EphyDownloadsPopover *popover)
 
   //CHB
   {
-  GtkWidget *label = gtk_label_new ("Access downloads: click download button on the right ...");
+  GtkWidget *label = gtk_label_new ("Access downloads: click download button on the right in full view ...");
   gtk_box_pack_end (GTK_BOX (hbox), label, FALSE, FALSE, 0);
   gtk_widget_set_margin_start (label, 12);
   gtk_widget_show (label);
