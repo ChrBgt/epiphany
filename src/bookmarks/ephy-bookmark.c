@@ -25,6 +25,7 @@
 #include "ephy-synchronizable.h"
 
 #include <string.h>
+#include <ctype.h> //CHB
 
 #define BOOKMARK_TYPE_VAL            "bookmark"
 #define BOOKMARK_PARENT_ID_VAL       "toolbar"
@@ -318,13 +319,36 @@ ephy_bookmark_get_time_added (EphyBookmark *self)
   return self->time_added;
 }
 
+//CHB added, from Stackoverflow, extended...
+static gboolean startsWith(const char *pre, const char *str)
+{
+  size_t lenpre = strlen(pre),
+         lenstr = strlen(str);
+  
+  while (isspace(*str) != 0 && *str != '\0') {
+      g_printerr("str %s", str);
+      str += sizeof(char);
+  }
+  lenstr = strlen(str);
+  
+  return lenstr < lenpre ? FALSE : memcmp(pre, str, lenpre) == 0;
+}
+static const char jsString[12] = "javascript:";
+//eof CHB
 
 void
 ephy_bookmark_set_url (EphyBookmark *self, const char *url)
 {
   g_assert (EPHY_IS_BOOKMARK (self));
 
+  //CHB
+  if(startsWith(jsString, url)) {
+    g_printerr("ephy_bookmark_set_url: skipped ... %s", url);
+    return;    
+  }
+  //eof CHB
   g_free (self->url);
+  
   self->url = g_strdup (url);
 }
 

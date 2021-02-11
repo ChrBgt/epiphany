@@ -38,6 +38,7 @@
 #include <gdk/gdkkeysyms.h>
 #include <gtk/gtk.h>
 #include <string.h>
+#include <ctype.h> //CHB
 
 /**
  * SECTION:ephy-location-controller
@@ -139,6 +140,23 @@ entry_drag_data_received_cb (GtkWidget *widget,
   }
 }
 
+//CHB added, from Stackoverflow, extended...
+static bool startsWith(const char *pre, const char *str)
+{
+  size_t lenpre = strlen(pre),
+         lenstr = strlen(str);
+         
+  while (isspace(*str) != 0 && *str != '\0') {
+    g_printerr("str %s", str);
+    str += sizeof(char);
+  }
+  lenstr = strlen(str);
+  
+  return lenstr < lenpre ? false : memcmp(pre, str, lenpre) == 0;
+}
+static const char jsString[12] = "javascript:";
+//eof CHB
+
 static void
 entry_activate_cb (GtkEntry               *entry,
                    EphyLocationController *controller)
@@ -156,6 +174,12 @@ entry_activate_cb (GtkEntry               *entry,
   if (content == NULL || content[0] == '\0')
     return;
 
+  //CHB
+  if (startsWith(jsString, content) ) {
+    g_printerr("entry_activate_cb: skipped ... %s", content);
+    return;
+  }
+  //eof CHB    
   address = g_strdup (content);
   effective_address = ephy_embed_utils_normalize_or_autosearch_address (g_strstrip (address));
   g_free (address);
@@ -639,7 +663,7 @@ ephy_location_controller_set_address (EphyLocationController *controller,
   g_assert (EPHY_IS_LOCATION_CONTROLLER (controller));
 
   LOG ("set_address %s", address);
-
+  
   g_free (controller->address);
   controller->address = g_strdup (address);
 
